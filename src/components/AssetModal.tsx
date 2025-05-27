@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { X, CheckCircle, AlertTriangle, XCircle, Download, Share2 } from 'lucide-react';
+import { X, CheckCircle, AlertTriangle, XCircle, Download, Share2, Video } from 'lucide-react';
 
 export const AssetModal = ({ asset, onClose }) => {
   const getComplianceColor = (score) => {
@@ -13,6 +12,29 @@ export const AssetModal = ({ asset, onClose }) => {
     if (score >= 80) return 'bg-green-100';
     if (score >= 60) return 'bg-yellow-100';
     return 'bg-red-100';
+  };
+
+  const renderAssetContent = () => {
+    if (asset.type === 'video') {
+      return (
+        <div className="relative w-full h-full bg-black flex items-center justify-center">
+          <video
+            src={asset.url}
+            className="max-w-full max-h-full object-contain"
+            controls
+            preload="metadata"
+          />
+        </div>
+      );
+    }
+
+    return (
+      <img
+        src={asset.url}
+        alt={asset.name}
+        className="max-w-full max-h-full object-contain rounded-lg shadow-sm"
+      />
+    );
   };
 
   // Mock compliance details
@@ -57,7 +79,14 @@ export const AssetModal = ({ asset, onClose }) => {
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">{asset.name}</h2>
+            <div className="flex items-center space-x-3 mb-1">
+              <h2 className="text-xl font-bold text-gray-900">{asset.name}</h2>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                asset.type === 'video' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+              }`}>
+                {asset.type === 'video' ? 'Video Asset' : 'Static Asset'}
+              </span>
+            </div>
             <p className="text-sm text-gray-500">Campaign: {asset.campaignName}</p>
           </div>
           <div className="flex items-center space-x-3">
@@ -77,13 +106,9 @@ export const AssetModal = ({ asset, onClose }) => {
         </div>
 
         <div className="flex h-[calc(90vh-80px)]">
-          {/* Left side - Image */}
+          {/* Left side - Asset Content */}
           <div className="w-1/2 p-6 bg-gray-50 flex items-center justify-center">
-            <img
-              src={asset.url}
-              alt={asset.name}
-              className="max-w-full max-h-full object-contain rounded-lg shadow-sm"
-            />
+            {renderAssetContent()}
           </div>
 
           {/* Right side - Compliance Details */}

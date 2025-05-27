@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Eye, Clock, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { Eye, Clock, CheckCircle, AlertCircle, XCircle, Video } from 'lucide-react';
 
 export const AssetCard = ({ asset, onClick }) => {
   const getComplianceColor = (score) => {
@@ -35,22 +35,57 @@ export const AssetCard = ({ asset, onClick }) => {
     }
   };
 
+  const renderAssetPreview = () => {
+    if (asset.type === 'video') {
+      return (
+        <div className="relative w-full h-full bg-black flex items-center justify-center">
+          <video
+            src={asset.url}
+            className="w-full h-full object-cover"
+            muted
+            onMouseEnter={(e) => e.currentTarget.play()}
+            onMouseLeave={(e) => {
+              e.currentTarget.pause();
+              e.currentTarget.currentTime = 0;
+            }}
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+            <div className="p-3 bg-white bg-opacity-90 rounded-full">
+              <Video className="h-6 w-6 text-gray-700" />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <img
+        src={asset.url}
+        alt={asset.name}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+      />
+    );
+  };
+
   return (
     <div 
       className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer hover:border-blue-300"
       onClick={onClick}
     >
       <div className="relative aspect-video bg-gray-100 overflow-hidden">
-        <img
-          src={asset.url}
-          alt={asset.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-        />
+        {renderAssetPreview()}
         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-200" />
         <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <div className="p-2 bg-white bg-opacity-90 rounded-full">
             <Eye className="h-4 w-4 text-gray-700" />
           </div>
+        </div>
+        <div className="absolute top-2 left-2">
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+            asset.type === 'video' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+          }`}>
+            {asset.type === 'video' ? 'Video' : 'Image'}
+          </span>
         </div>
       </div>
       

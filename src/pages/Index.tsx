@@ -14,7 +14,7 @@ const mockCampaigns = [
       {
         id: '1',
         name: 'Hero Banner',
-        type: 'image',
+        type: 'static',
         url: '/lovable-uploads/a8091acd-6027-42fa-b4b6-4b1171819e6f.png',
         compliance: 92,
         uploadDate: '2024-01-15',
@@ -23,7 +23,7 @@ const mockCampaigns = [
       {
         id: '2',
         name: 'Social Media Post',
-        type: 'image',
+        type: 'static',
         url: '/lovable-uploads/a8091acd-6027-42fa-b4b6-4b1171819e6f.png',
         compliance: 78,
         uploadDate: '2024-01-14',
@@ -31,12 +31,12 @@ const mockCampaigns = [
       },
       {
         id: '3',
-        name: 'Email Header',
-        type: 'image',
-        url: '/lovable-uploads/a8091acd-6027-42fa-b4b6-4b1171819e6f.png',
-        compliance: 45,
+        name: 'Product Video',
+        type: 'video',
+        url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
+        compliance: 85,
         uploadDate: '2024-01-13',
-        status: 'rejected'
+        status: 'approved'
       }
     ]
   },
@@ -47,7 +47,7 @@ const mockCampaigns = [
       {
         id: '4',
         name: 'Landing Page Hero',
-        type: 'image',
+        type: 'static',
         url: '/lovable-uploads/a8091acd-6027-42fa-b4b6-4b1171819e6f.png',
         compliance: 88,
         uploadDate: '2023-12-01',
@@ -55,9 +55,9 @@ const mockCampaigns = [
       },
       {
         id: '5',
-        name: 'Product Showcase',
-        type: 'image',
-        url: '/lovable-uploads/a8091acd-6027-42fa-b4b6-4b1171819e6f.png',
+        name: 'Holiday Commercial',
+        type: 'video',
+        url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4',
         compliance: 95,
         uploadDate: '2023-11-28',
         status: 'approved'
@@ -71,10 +71,19 @@ const mockCampaigns = [
       {
         id: '6',
         name: 'Announcement Banner',
-        type: 'image',
+        type: 'static',
         url: '/lovable-uploads/a8091acd-6027-42fa-b4b6-4b1171819e6f.png',
         compliance: 67,
         uploadDate: '2024-03-01',
+        status: 'needs-review'
+      },
+      {
+        id: '7',
+        name: 'Launch Teaser',
+        type: 'video',
+        url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
+        compliance: 72,
+        uploadDate: '2024-02-28',
         status: 'needs-review'
       }
     ]
