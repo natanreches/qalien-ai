@@ -4,9 +4,10 @@ import { CampaignGrid } from '@/components/CampaignGrid';
 import { AssetModal } from '@/components/AssetModal';
 import { Header } from '@/components/Header';
 import { UploadButton } from '@/components/UploadButton';
+import { CreateCampaignDialog } from '@/components/CreateCampaignDialog';
 
 // Mock data for campaigns and assets
-const mockCampaigns = [
+const initialCampaigns = [
   {
     id: '1',
     name: 'Summer 2024 Collection',
@@ -92,7 +93,7 @@ const mockCampaigns = [
 
 const Index = () => {
   const [selectedAsset, setSelectedAsset] = useState(null);
-  const [campaigns] = useState(mockCampaigns);
+  const [campaigns, setCampaigns] = useState(initialCampaigns);
 
   const handleAssetClick = (asset, campaignName) => {
     setSelectedAsset({ ...asset, campaignName });
@@ -100,6 +101,15 @@ const Index = () => {
 
   const closeModal = () => {
     setSelectedAsset(null);
+  };
+
+  const handleCreateCampaign = (campaignName) => {
+    const newCampaign = {
+      id: Date.now().toString(),
+      name: campaignName,
+      assets: []
+    };
+    setCampaigns([newCampaign, ...campaigns]);
   };
 
   return (
@@ -112,7 +122,10 @@ const Index = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Brand Asset Management</h1>
             <p className="text-gray-600">Ensure your creative assets meet brand guidelines with AI-powered compliance scoring</p>
           </div>
-          <UploadButton />
+          <div className="flex items-center space-x-3">
+            <CreateCampaignDialog onCreateCampaign={handleCreateCampaign} />
+            <UploadButton />
+          </div>
         </div>
 
         <CampaignGrid 
