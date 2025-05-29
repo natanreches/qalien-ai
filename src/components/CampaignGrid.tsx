@@ -34,15 +34,7 @@ export const CampaignGrid = ({ campaigns, onAssetClick }) => {
                 </div>
               </div>
               
-              <div className="flex items-center space-x-4">
-                <div className="text-right">
-                  <div className="text-sm text-gray-500">Avg. Compliance</div>
-                  <div className="text-lg font-semibold text-gray-900">
-                    {Math.round(campaign.assets.reduce((acc, asset) => acc + asset.compliance, 0) / campaign.assets.length)}%
-                  </div>
-                </div>
-                <ChevronRight className="h-5 w-5 text-gray-400" />
-              </div>
+              <ChevronRight className="h-5 w-5 text-gray-400" />
             </div>
           </div>
           

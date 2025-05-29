@@ -1,9 +1,7 @@
-
 import React, { useState } from 'react';
 import { CampaignGrid } from '@/components/CampaignGrid';
 import { AssetModal } from '@/components/AssetModal';
 import { Header } from '@/components/Header';
-import { UploadButton } from '@/components/UploadButton';
 import { CreateCampaignDialog } from '@/components/CreateCampaignDialog';
 
 // Mock data for campaigns and assets
@@ -119,13 +117,10 @@ const Index = () => {
       <main className="container mx-auto px-6 py-8">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Brand Asset Management</h1>
-            <p className="text-gray-600">Ensure your creative assets meet brand guidelines with AI-powered compliance scoring</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Brand Asset Library</h1>
+            <p className="text-gray-600">Browse and manage your creative assets organized by campaign</p>
           </div>
-          <div className="flex items-center space-x-3">
-            <CreateCampaignDialog onCreateCampaign={handleCreateCampaign} />
-            <UploadButton />
-          </div>
+          <CreateCampaignDialog onCreateCampaign={handleCreateCampaign} />
         </div>
 
         <CampaignGrid 
