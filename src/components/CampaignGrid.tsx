@@ -1,9 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AssetCard } from './AssetCard';
 import { Calendar, Folder, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 export const CampaignGrid = ({ campaigns, onAssetClick }) => {
   const navigate = useNavigate();
@@ -13,11 +11,11 @@ export const CampaignGrid = ({ campaigns, onAssetClick }) => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {campaigns.map((campaign) => (
         <div key={campaign.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
           <div 
-            className="px-6 py-4 border-b border-gray-100 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
+            className="px-6 py-4 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
             onClick={() => handleCampaignClick(campaign.id)}
           >
             <div className="flex items-center justify-between">
@@ -35,31 +33,6 @@ export const CampaignGrid = ({ campaigns, onAssetClick }) => {
               </div>
               
               <ChevronRight className="h-5 w-5 text-gray-400" />
-            </div>
-          </div>
-          
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {campaign.assets.slice(0, 4).map((asset) => (
-                <AssetCard
-                  key={asset.id}
-                  asset={asset}
-                  onClick={() => onAssetClick(asset, campaign.name)}
-                />
-              ))}
-              {campaign.assets.length > 4 && (
-                <div 
-                  className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg aspect-video flex items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors"
-                  onClick={() => handleCampaignClick(campaign.id)}
-                >
-                  <div className="text-center">
-                    <div className="text-sm text-gray-500 font-medium">
-                      +{campaign.assets.length - 4} more
-                    </div>
-                    <div className="text-xs text-gray-400">Click to view all</div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
