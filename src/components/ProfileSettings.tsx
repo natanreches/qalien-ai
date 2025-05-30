@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -7,6 +6,7 @@ import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Save, RotateCcw } from 'lucide-react';
+import { BrandGuidelinesUpload } from './BrandGuidelinesUpload';
 
 interface ComplianceWeights {
   logoUsage: number;
@@ -77,6 +77,9 @@ export const ProfileSettings = () => {
           Customize how strictly the AI evaluates different aspects of brand compliance for your assets.
         </p>
       </div>
+
+      {/* Brand Guidelines Upload Section */}
+      <BrandGuidelinesUpload />
 
       <Card className="p-6">
         <div className="space-y-6">
