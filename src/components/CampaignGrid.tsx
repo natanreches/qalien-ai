@@ -1,13 +1,21 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Folder, ChevronRight } from 'lucide-react';
+import { Calendar, Folder, ChevronRight, FileText, Upload } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
-export const CampaignGrid = ({ campaigns, onAssetClick }) => {
+export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false }) => {
   const navigate = useNavigate();
 
   const handleCampaignClick = (campaignId) => {
     navigate(`/campaign/${campaignId}`);
+  };
+
+  const handleUploadBrief = (e, campaignId) => {
+    e.stopPropagation();
+    // In a real app, this would open a file upload dialog
+    console.log('Upload brief for campaign:', campaignId);
   };
 
   return (
@@ -32,8 +40,38 @@ export const CampaignGrid = ({ campaigns, onAssetClick }) => {
                 </div>
               </div>
               
-              <ChevronRight className="h-5 w-5 text-gray-400" />
+              <div className="flex items-center space-x-3">
+                {showBriefs && (
+                  <div className="flex items-center space-x-2">
+                    {campaign.brief ? (
+                      <Badge variant="secondary" className="flex items-center space-x-1">
+                        <FileText className="h-3 w-3" />
+                        <span>Brief Available</span>
+                      </Badge>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => handleUploadBrief(e, campaign.id)}
+                        className="flex items-center space-x-1"
+                      >
+                        <Upload className="h-3 w-3" />
+                        <span>Upload Brief</span>
+                      </Button>
+                    )}
+                  </div>
+                )}
+                <ChevronRight className="h-5 w-5 text-gray-400" />
+              </div>
             </div>
+            
+            {showBriefs && campaign.brief && (
+              <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+                <p className="text-sm text-gray-700">
+                  <strong>Campaign Brief:</strong> {campaign.brief}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       ))}

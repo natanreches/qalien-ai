@@ -1,0 +1,196 @@
+
+import React, { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { Header } from '@/components/Header';
+import { CampaignGrid } from '@/components/CampaignGrid';
+import { BrandGuidelinesUpload } from '@/components/BrandGuidelinesUpload';
+import { AssetModal } from '@/components/AssetModal';
+import { CreateCampaignDialog } from '@/components/CreateCampaignDialog';
+import { ArrowLeft, Building2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+// Mock data for different brands
+const brandData = {
+  jello: {
+    name: 'Jell-O',
+    parent: 'Kraft Heinz',
+    color: 'bg-red-500',
+    campaigns: [
+      {
+        id: '1',
+        name: 'Summer Gelatin Campaign 2024',
+        brief: 'Focus on refreshing summer treats and family gatherings',
+        assets: [
+          {
+            id: '1',
+            name: 'Summer Hero Banner',
+            type: 'static',
+            url: '/lovable-uploads/a8091acd-6027-42fa-b4b6-4b1171819e6f.png',
+            compliance: 92,
+            uploadDate: '2024-01-15',
+            status: 'approved'
+          }
+        ]
+      }
+    ]
+  },
+  philadelphia: {
+    name: 'Philadelphia Cream Cheese',
+    parent: 'Kraft Heinz',
+    color: 'bg-blue-500',
+    campaigns: [
+      {
+        id: '2',
+        name: 'Holiday Baking Campaign',
+        brief: 'Promote Philadelphia cream cheese for holiday baking recipes',
+        assets: [
+          {
+            id: '2',
+            name: 'Holiday Recipe Card',
+            type: 'static',
+            url: '/lovable-uploads/a8091acd-6027-42fa-b4b6-4b1171819e6f.png',
+            compliance: 88,
+            uploadDate: '2024-01-10',
+            status: 'approved'
+          }
+        ]
+      }
+    ]
+  },
+  caprisun: {
+    name: 'Capri Sun',
+    parent: 'Kraft Heinz',
+    color: 'bg-orange-500',
+    campaigns: [
+      {
+        id: '3',
+        name: 'Back to School 2024',
+        brief: 'Target parents with convenient, fun lunch options for kids',
+        assets: [
+          {
+            id: '3',
+            name: 'Lunch Box Hero',
+            type: 'static',
+            url: '/lovable-uploads/a8091acd-6027-42fa-b4b6-4b1171819e6f.png',
+            compliance: 85,
+            uploadDate: '2024-01-08',
+            status: 'needs-review'
+          }
+        ]
+      }
+    ]
+  }
+};
+
+const Brand = () => {
+  const { id } = useParams();
+  const [selectedAsset, setSelectedAsset] = useState(null);
+  const [campaigns, setCampaigns] = useState(brandData[id]?.campaigns || []);
+
+  const brand = brandData[id];
+
+  if (!brand) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <main className="container mx-auto px-6 py-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Brand not found</h1>
+            <Link to="/business-center">
+              <Button variant="outline">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Business Center
+              </Button>
+            </Link>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  const handleAssetClick = (asset, campaignName) => {
+    setSelectedAsset({ ...asset, campaignName });
+  };
+
+  const closeModal = () => {
+    setSelectedAsset(null);
+  };
+
+  const handleCreateCampaign = (campaignName) => {
+    const newCampaign = {
+      id: Date.now().toString(),
+      name: campaignName,
+      brief: '',
+      assets: []
+    };
+    setCampaigns([newCampaign, ...campaigns]);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      
+      <main className="container mx-auto px-6 py-8">
+        <div className="mb-6">
+          <Link to="/business-center">
+            <Button variant="outline" className="mb-4">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Business Center
+            </Button>
+          </Link>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+          <div className="px-6 py-6 border-b border-gray-100 bg-gray-50">
+            <div className="flex items-center space-x-4">
+              <div className={`p-3 rounded-lg ${brand.color}`}>
+                <Building2 className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">{brand.name}</h1>
+                <p className="text-gray-600">{brand.parent}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <Tabs defaultValue="assets" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="assets">Asset Library</TabsTrigger>
+            <TabsTrigger value="guidelines">Brand Guidelines</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="assets" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">Campaign Assets</h2>
+                <p className="text-gray-600">Manage your brand's creative assets organized by campaign</p>
+              </div>
+              <CreateCampaignDialog onCreateCampaign={handleCreateCampaign} />
+            </div>
+
+            <CampaignGrid 
+              campaigns={campaigns} 
+              onAssetClick={handleAssetClick}
+              showBriefs={true}
+            />
+          </TabsContent>
+
+          <TabsContent value="guidelines">
+            <BrandGuidelinesUpload />
+          </TabsContent>
+        </Tabs>
+      </main>
+
+      {selectedAsset && (
+        <AssetModal 
+          asset={selectedAsset} 
+          onClose={closeModal}
+        />
+      )}
+    </div>
+  );
+};
+
+export default Brand;
