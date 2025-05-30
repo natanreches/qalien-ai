@@ -21,19 +21,19 @@ export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false }) =>
   return (
     <div className="space-y-4">
       {campaigns.map((campaign) => (
-        <div key={campaign.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+        <div key={campaign.id} className="bg-gray-800 rounded-xl shadow-sm border border-gray-700 overflow-hidden hover:shadow-md transition-shadow">
           <div 
-            className="px-6 py-4 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
+            className="px-6 py-4 bg-gray-800 cursor-pointer hover:bg-gray-750 transition-colors"
             onClick={() => handleCampaignClick(campaign.id)}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Folder className="h-5 w-5 text-blue-600" />
+                <div className="p-2 bg-purple-600 rounded-lg">
+                  <Folder className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">{campaign.name}</h2>
-                  <p className="text-sm text-gray-500 flex items-center">
+                  <h2 className="text-lg font-semibold text-white">{campaign.name}</h2>
+                  <p className="text-sm text-gray-400 flex items-center">
                     <Calendar className="h-4 w-4 mr-1" />
                     {campaign.assets.length} assets
                   </p>
@@ -44,7 +44,7 @@ export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false }) =>
                 {showBriefs && (
                   <div className="flex items-center space-x-2">
                     {campaign.brief ? (
-                      <Badge variant="secondary" className="flex items-center space-x-1">
+                      <Badge variant="secondary" className="flex items-center space-x-1 bg-green-100 text-green-800">
                         <FileText className="h-3 w-3" />
                         <span>Brief Available</span>
                       </Badge>
@@ -53,7 +53,7 @@ export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false }) =>
                         variant="outline"
                         size="sm"
                         onClick={(e) => handleUploadBrief(e, campaign.id)}
-                        className="flex items-center space-x-1"
+                        className="flex items-center space-x-1 border-gray-600 text-gray-300"
                       >
                         <Upload className="h-3 w-3" />
                         <span>Upload Brief</span>
@@ -66,8 +66,8 @@ export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false }) =>
             </div>
             
             {showBriefs && campaign.brief && (
-              <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-                <p className="text-sm text-gray-700">
+              <div className="mt-3 p-3 bg-gray-700 rounded-lg">
+                <p className="text-sm text-gray-300">
                   <strong>Campaign Brief:</strong> {campaign.brief}
                 </p>
               </div>

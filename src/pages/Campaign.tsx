@@ -1,18 +1,22 @@
 
 import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { AssetCard } from '@/components/AssetCard';
 import { AssetModal } from '@/components/AssetModal';
 import { UploadButton } from '@/components/UploadButton';
-import { ArrowLeft, Calendar, Folder } from 'lucide-react';
+import { CreativeBriefUpload } from '@/components/CreativeBriefUpload';
+import { ArrowLeft, Calendar, Folder, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 // Mock data - in a real app this would come from an API
 const mockCampaigns = [
   {
     id: '1',
     name: 'Summer 2024 Collection',
+    brandId: 'jello',
+    brief: '',
     assets: [
       {
         id: '1',
@@ -46,6 +50,8 @@ const mockCampaigns = [
   {
     id: '2',
     name: 'Holiday Campaign 2023',
+    brandId: 'philadelphia',
+    brief: 'Focus on holiday baking and family traditions',
     assets: [
       {
         id: '4',
@@ -70,6 +76,8 @@ const mockCampaigns = [
   {
     id: '3',
     name: 'Spring Launch 2024',
+    brandId: 'caprisun',
+    brief: '',
     assets: [
       {
         id: '6',
@@ -95,21 +103,23 @@ const mockCampaigns = [
 
 const Campaign = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [selectedAsset, setSelectedAsset] = useState(null);
+  const [campaigns, setCampaigns] = useState(mockCampaigns);
   
-  const campaign = mockCampaigns.find(c => c.id === id);
+  const campaign = campaigns.find(c => c.id === id);
   
   if (!campaign) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-900 text-white">
         <Header />
         <main className="container mx-auto px-6 py-8">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Campaign not found</h1>
-            <Link to="/">
-              <Button variant="outline">
+            <h1 className="text-2xl font-bold text-white mb-4">Campaign not found</h1>
+            <Link to="/business-center">
+              <Button variant="outline" className="border-gray-600 text-gray-300">
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Dashboard
+                Back to Business Center
               </Button>
             </Link>
           </div>
@@ -126,34 +136,50 @@ const Campaign = () => {
     setSelectedAsset(null);
   };
 
+  const handleBriefUploaded = (briefContent: string) => {
+    setCampaigns(prev => 
+      prev.map(c => 
+        c.id === campaign.id 
+          ? { ...c, brief: briefContent }
+          : c
+      )
+    );
+  };
+
+  const handleBackToDashboard = () => {
+    if (campaign.brandId) {
+      navigate(`/brand/${campaign.brandId}`);
+    } else {
+      navigate('/business-center');
+    }
+  };
+
   const avgCompliance = Math.round(
     campaign.assets.reduce((acc, asset) => acc + asset.compliance, 0) / campaign.assets.length
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-900 text-white">
       <Header />
       
       <main className="container mx-auto px-6 py-8">
         <div className="mb-6">
-          <Link to="/">
-            <Button variant="outline" className="mb-4">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
-            </Button>
-          </Link>
+          <Button variant="outline" className="mb-4 border-gray-600 text-gray-300" onClick={handleBackToDashboard}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Dashboard
+          </Button>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-          <div className="px-6 py-6 border-b border-gray-100 bg-gray-50">
+        <div className="bg-gray-800 rounded-xl shadow-sm border border-gray-700 overflow-hidden mb-8">
+          <div className="px-6 py-6 border-b border-gray-700 bg-gray-800">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <Folder className="h-6 w-6 text-blue-600" />
+                <div className="p-3 bg-purple-600 rounded-lg">
+                  <Folder className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">{campaign.name}</h1>
-                  <p className="text-gray-600 flex items-center">
+                  <h1 className="text-2xl font-bold text-white">{campaign.name}</h1>
+                  <p className="text-gray-400 flex items-center">
                     <Calendar className="h-4 w-4 mr-1" />
                     {campaign.assets.length} assets
                   </p>
@@ -162,17 +188,42 @@ const Campaign = () => {
               
               <div className="flex items-center space-x-6">
                 <div className="text-right">
-                  <div className="text-sm text-gray-500">Avg. Compliance</div>
-                  <div className="text-2xl font-bold text-gray-900">{avgCompliance}%</div>
+                  <div className="text-sm text-gray-400">Avg. Compliance</div>
+                  <div className="text-2xl font-bold text-white">{avgCompliance}%</div>
                 </div>
                 <UploadButton />
               </div>
             </div>
+
+            {/* Creative Brief Section */}
+            <div className="mt-6 p-4 bg-gray-700 rounded-lg">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-lg font-semibold text-white flex items-center">
+                  <FileText className="h-5 w-5 mr-2" />
+                  Creative Brief
+                </h3>
+                <CreativeBriefUpload 
+                  campaignId={campaign.id}
+                  onBriefUploaded={handleBriefUploaded}
+                  hasExistingBrief={!!campaign.brief}
+                />
+              </div>
+              {campaign.brief ? (
+                <div className="space-y-2">
+                  <Badge variant="secondary" className="bg-green-100 text-green-800">
+                    Brief Available
+                  </Badge>
+                  <p className="text-gray-300 text-sm">{campaign.brief}</p>
+                </div>
+              ) : (
+                <p className="text-gray-400 text-sm">No creative brief uploaded yet. Upload one to provide guidance for this campaign.</p>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-6">Campaign Assets</h2>
+        <div className="bg-gray-800 rounded-xl shadow-sm border border-gray-700 p-6">
+          <h2 className="text-lg font-semibold text-white mb-6">Campaign Assets</h2>
           
           {campaign.assets.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -186,11 +237,11 @@ const Campaign = () => {
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="p-4 bg-gray-100 rounded-full w-16 h-16 mx-auto mb-4">
+              <div className="p-4 bg-gray-700 rounded-full w-16 h-16 mx-auto mb-4">
                 <Folder className="h-8 w-8 text-gray-400" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No assets yet</h3>
-              <p className="text-gray-500 mb-4">Start by uploading your first asset to this campaign</p>
+              <h3 className="text-lg font-medium text-white mb-2">No assets yet</h3>
+              <p className="text-gray-400 mb-4">Start by uploading your first asset to this campaign</p>
               <UploadButton />
             </div>
           )}

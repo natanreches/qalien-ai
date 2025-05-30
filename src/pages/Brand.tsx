@@ -92,13 +92,13 @@ const Brand = () => {
 
   if (!brand) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-900 text-white">
         <Header />
         <main className="container mx-auto px-6 py-8">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Brand not found</h1>
+            <h1 className="text-2xl font-bold text-white mb-4">Brand not found</h1>
             <Link to="/business-center">
-              <Button variant="outline">
+              <Button variant="outline" className="border-gray-600 text-gray-300">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Business Center
               </Button>
@@ -128,44 +128,44 @@ const Brand = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-900 text-white">
       <Header />
       
       <main className="container mx-auto px-6 py-8">
         <div className="mb-6">
           <Link to="/business-center">
-            <Button variant="outline" className="mb-4">
+            <Button variant="outline" className="mb-4 border-gray-600 text-gray-300">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Business Center
             </Button>
           </Link>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
-          <div className="px-6 py-6 border-b border-gray-100 bg-gray-50">
+        <div className="bg-gray-800 rounded-xl shadow-sm border border-gray-700 overflow-hidden mb-8">
+          <div className="px-6 py-6 border-b border-gray-700 bg-gray-800">
             <div className="flex items-center space-x-4">
               <div className={`p-3 rounded-lg ${brand.color}`}>
                 <Building2 className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">{brand.name}</h1>
-                <p className="text-gray-600">{brand.parent}</p>
+                <h1 className="text-2xl font-bold text-white">{brand.name}</h1>
+                <p className="text-gray-400">{brand.parent}</p>
               </div>
             </div>
           </div>
         </div>
 
         <Tabs defaultValue="assets" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="assets">Asset Library</TabsTrigger>
-            <TabsTrigger value="guidelines">Brand Guidelines</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 bg-gray-800 border-gray-700">
+            <TabsTrigger value="assets" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300">Asset Library</TabsTrigger>
+            <TabsTrigger value="guidelines" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300">Brand Guidelines</TabsTrigger>
           </TabsList>
 
           <TabsContent value="assets" className="space-y-6">
             <div className="flex justify-between items-center">
               <div>
-                <h2 className="text-xl font-semibold text-gray-900">Campaign Assets</h2>
-                <p className="text-gray-600">Manage your brand's creative assets organized by campaign</p>
+                <h2 className="text-xl font-semibold text-white">Campaign Assets</h2>
+                <p className="text-gray-400">Manage your brand's creative assets organized by campaign</p>
               </div>
               <CreateCampaignDialog onCreateCampaign={handleCreateCampaign} />
             </div>
