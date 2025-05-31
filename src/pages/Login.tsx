@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,25 +30,8 @@ const formSchema = z.object({
 })
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const navigate = useNavigate();
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Mock authentication - in a real app, this would make an API call
-    if (email && password) {
-      // Check if user has completed onboarding
-      const hasCompletedOnboarding = localStorage.getItem('onboarding_completed');
-      
-      if (hasCompletedOnboarding) {
-        navigate('/business-center');
-      } else {
-        navigate('/onboarding');
-      }
-    }
-  };
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,18 +41,22 @@ const Login = () => {
     },
   })
 
-  const { toast } = useToast()
-
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Here you would handle the form submission logic
-    // For example, sending the values to an API
+    // Mock authentication - in a real app, this would make an API call
+    if (values.email && values.password) {
+      // Check if user has completed onboarding
+      const hasCompletedOnboarding = localStorage.getItem('onboarding_completed');
+      
+      if (hasCompletedOnboarding) {
+        navigate('/business-center');
+      } else {
+        navigate('/onboarding');
+      }
+    }
+
     toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
+      title: "Login successful",
+      description: `Welcome back, ${values.email}!`,
     })
   }
 
@@ -98,7 +86,6 @@ const Login = () => {
                             type="email"
                             {...field}
                             className="bg-gray-700 border-gray-600 text-white"
-                            onChange={(e) => setEmail(e.target.value)}
                           />
                         </FormControl>
                         <FormDescription className="text-gray-500">
@@ -120,7 +107,6 @@ const Login = () => {
                             type="password"
                             {...field}
                             className="bg-gray-700 border-gray-600 text-white"
-                            onChange={(e) => setPassword(e.target.value)}
                           />
                         </FormControl>
                         <FormDescription className="text-gray-500">
