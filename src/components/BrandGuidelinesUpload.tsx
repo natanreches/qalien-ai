@@ -91,47 +91,49 @@ export const BrandGuidelinesUpload = () => {
   };
 
   return (
-    <Card className="p-6">
+    <Card className="p-6 bg-gray-800 border-gray-700">
       <div className="space-y-6">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Brand Guidelines</h3>
-          <p className="text-sm text-gray-600">
+          <h3 className="text-lg font-semibold text-white mb-2">Brand Guidelines</h3>
+          <p className="text-sm text-gray-400">
             Upload your brand guideline documents to help the AI better understand your brand standards.
           </p>
         </div>
 
         {/* Upload Form */}
-        <div className="space-y-4 border rounded-lg p-4 bg-gray-50">
+        <div className="space-y-4 border rounded-lg p-4 bg-gray-700 border-gray-600">
           <div className="space-y-2">
-            <Label htmlFor="guideline-name">Guideline Name</Label>
+            <Label htmlFor="guideline-name" className="text-gray-200">Guideline Name</Label>
             <Input
               id="guideline-name"
               placeholder="e.g., Brand Identity Guidelines 2024"
               value={newGuideline.name}
               onChange={(e) => setNewGuideline(prev => ({ ...prev, name: e.target.value }))}
+              className="bg-gray-800 border-gray-600 text-white"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="guideline-description">Description (Optional)</Label>
+            <Label htmlFor="guideline-description" className="text-gray-200">Description (Optional)</Label>
             <Textarea
               id="guideline-description"
               placeholder="Brief description of what this guideline covers..."
               value={newGuideline.description}
               onChange={(e) => setNewGuideline(prev => ({ ...prev, description: e.target.value }))}
               rows={3}
+              className="bg-gray-800 border-gray-600 text-white"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="guideline-file">Upload File</Label>
+            <Label htmlFor="guideline-file" className="text-gray-200">Upload File</Label>
             <div className="flex items-center space-x-2">
               <Input
                 id="guideline-file"
                 type="file"
                 accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                 onChange={handleFileSelect}
-                className="flex-1"
+                className="flex-1 bg-gray-800 border-gray-600 text-white"
               />
               <Button onClick={handleUpload} className="shrink-0">
                 <Upload className="h-4 w-4 mr-2" />
@@ -149,16 +151,16 @@ export const BrandGuidelinesUpload = () => {
         {/* Uploaded Guidelines List */}
         {guidelines.length > 0 && (
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900">Uploaded Guidelines</h4>
+            <h4 className="font-medium text-white">Uploaded Guidelines</h4>
             <div className="space-y-2">
               {guidelines.map((guideline) => (
-                <div key={guideline.id} className="flex items-center justify-between p-3 border rounded-lg bg-white">
+                <div key={guideline.id} className="flex items-center justify-between p-3 border rounded-lg bg-gray-700 border-gray-600">
                   <div className="flex items-center space-x-3">
-                    <FileText className="h-5 w-5 text-blue-600" />
+                    <FileText className="h-5 w-5 text-blue-400" />
                     <div>
-                      <p className="font-medium text-gray-900">{guideline.name}</p>
+                      <p className="font-medium text-white">{guideline.name}</p>
                       {guideline.description && (
-                        <p className="text-sm text-gray-600">{guideline.description}</p>
+                        <p className="text-sm text-gray-400">{guideline.description}</p>
                       )}
                       <p className="text-xs text-gray-500">
                         Uploaded on {guideline.uploadDate} • {guideline.file ? formatFileSize(guideline.file.size) : 'Unknown size'}
@@ -166,14 +168,14 @@ export const BrandGuidelinesUpload = () => {
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="border-gray-600 text-gray-300">
                       <Download className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleRemove(guideline.id)}
-                      className="text-red-600 hover:text-red-700"
+                      className="text-red-400 hover:text-red-300 border-gray-600"
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -186,7 +188,7 @@ export const BrandGuidelinesUpload = () => {
 
         {guidelines.length === 0 && (
           <div className="text-center py-8 text-gray-500">
-            <FileText className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+            <FileText className="h-12 w-12 mx-auto mb-3 text-gray-600" />
             <p>No brand guidelines uploaded yet</p>
             <p className="text-sm">Upload your first guideline document above</p>
           </div>

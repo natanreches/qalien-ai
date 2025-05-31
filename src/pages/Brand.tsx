@@ -6,6 +6,7 @@ import { CampaignGrid } from '@/components/CampaignGrid';
 import { BrandGuidelinesUpload } from '@/components/BrandGuidelinesUpload';
 import { AssetModal } from '@/components/AssetModal';
 import { CreateCampaignDialog } from '@/components/CreateCampaignDialog';
+import { BrandComplianceSettings } from '@/components/BrandComplianceSettings';
 import { ArrowLeft, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -156,9 +157,10 @@ const Brand = () => {
         </div>
 
         <Tabs defaultValue="assets" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 bg-gray-800 border-gray-700">
+          <TabsList className="grid w-full grid-cols-3 bg-gray-800 border-gray-700">
             <TabsTrigger value="assets" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300">Asset Library</TabsTrigger>
             <TabsTrigger value="guidelines" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300">Brand Guidelines</TabsTrigger>
+            <TabsTrigger value="settings" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300">Settings</TabsTrigger>
           </TabsList>
 
           <TabsContent value="assets" className="space-y-6">
@@ -179,6 +181,10 @@ const Brand = () => {
 
           <TabsContent value="guidelines">
             <BrandGuidelinesUpload />
+          </TabsContent>
+
+          <TabsContent value="settings">
+            <BrandComplianceSettings />
           </TabsContent>
         </Tabs>
       </main>
