@@ -1,9 +1,7 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { CampaignGrid } from '@/components/CampaignGrid';
-import { BrandGuidelinesUpload } from '@/components/BrandGuidelinesUpload';
 import { OnboardingGuidelinesView } from '@/components/OnboardingGuidelinesView';
 import { AssetModal } from '@/components/AssetModal';
 import { CreateCampaignDialog } from '@/components/CreateCampaignDialog';
@@ -158,10 +156,9 @@ const Brand = () => {
         </div>
 
         <Tabs defaultValue="assets" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 bg-gray-800 border-gray-700">
+          <TabsList className="grid w-full grid-cols-3 bg-gray-800 border-gray-700">
             <TabsTrigger value="assets" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300">Asset Library</TabsTrigger>
-            <TabsTrigger value="onboarding-guidelines" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300">Onboarding Guidelines</TabsTrigger>
-            <TabsTrigger value="guidelines" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300">Brand Guidelines</TabsTrigger>
+            <TabsTrigger value="brand-guidelines" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300">Brand Guidelines</TabsTrigger>
             <TabsTrigger value="settings" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-300">Settings</TabsTrigger>
           </TabsList>
 
@@ -181,12 +178,8 @@ const Brand = () => {
             />
           </TabsContent>
 
-          <TabsContent value="onboarding-guidelines">
+          <TabsContent value="brand-guidelines">
             <OnboardingGuidelinesView />
-          </TabsContent>
-
-          <TabsContent value="guidelines">
-            <BrandGuidelinesUpload />
           </TabsContent>
 
           <TabsContent value="settings">
