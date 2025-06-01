@@ -24,9 +24,26 @@ interface BrandElements {
   targetAudience: string;
 }
 
+interface CompanyInfo {
+  company: string;
+  brand: string;
+  jobTitle: string;
+}
+
+interface Collaborator {
+  id: string;
+  email: string;
+  role: string;
+}
+
 const Onboarding = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfo>({
+    company: '',
+    brand: '',
+    jobTitle: ''
+  });
   const [guidelines, setGuidelines] = useState<BrandGuideline[]>([]);
   const [brandElements, setBrandElements] = useState<BrandElements>({
     brandName: '',
@@ -36,8 +53,9 @@ const Onboarding = () => {
     tone: '',
     targetAudience: ''
   });
+  const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
 
-  const totalSteps = 3;
+  const totalSteps = 5;
   const progress = (currentStep / totalSteps) * 100;
 
   const handleNext = () => {
@@ -53,9 +71,19 @@ const Onboarding = () => {
   };
 
   const handleComplete = () => {
-    // Save onboarding completion to localStorage or API
+    // Save onboarding completion and data to localStorage or API
     localStorage.setItem('onboarding_completed', 'true');
+    localStorage.setItem('onboarding_data', JSON.stringify({
+      companyInfo,
+      guidelines: guidelines.length,
+      brandElements,
+      collaborators: collaborators.length
+    }));
     navigate('/business-center');
+  };
+
+  const handleCompanyInfoUpdated = (info: CompanyInfo) => {
+    setCompanyInfo(info);
   };
 
   const handleGuidelinesUploaded = (uploadedGuidelines: BrandGuideline[]) => {
@@ -66,14 +94,22 @@ const Onboarding = () => {
     setBrandElements(elements);
   };
 
+  const handleCollaboratorsUpdated = (updatedCollaborators: Collaborator[]) => {
+    setCollaborators(updatedCollaborators);
+  };
+
   const canProceed = () => {
     switch (currentStep) {
       case 1:
         return true; // Welcome step
       case 2:
-        return guidelines.length > 0; // Must have uploaded guidelines
+        return companyInfo.company.length > 0 && companyInfo.brand.length > 0 && companyInfo.jobTitle.length > 0;
       case 3:
+        return guidelines.length > 0; // Must have uploaded guidelines
+      case 4:
         return brandElements.brandName.length > 0; // Must have confirmed brand name at minimum
+      case 5:
+        return true; // Collaborators step is optional
       default:
         return false;
     }
@@ -100,10 +136,14 @@ const Onboarding = () => {
           <div className="bg-gray-800 rounded-xl border border-gray-700 p-8 min-h-[500px]">
             <OnboardingSteps
               currentStep={currentStep}
+              companyInfo={companyInfo}
               guidelines={guidelines}
               brandElements={brandElements}
+              collaborators={collaborators}
+              onCompanyInfoUpdated={handleCompanyInfoUpdated}
               onGuidelinesUploaded={handleGuidelinesUploaded}
               onBrandElementsConfirmed={handleBrandElementsConfirmed}
+              onCollaboratorsUpdated={handleCollaboratorsUpdated}
             />
           </div>
 
