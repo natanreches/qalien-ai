@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
 import { X, CheckCircle, AlertTriangle, XCircle, Download, Share2, Video, ChevronDown, ChevronRight } from 'lucide-react';
+import { FeedbackWidget } from './FeedbackWidget';
 
 export const AssetModal = ({ asset, onClose }) => {
   const [expandedCategory, setExpandedCategory] = useState(null);
@@ -38,6 +38,11 @@ export const AssetModal = ({ asset, onClose }) => {
         className="max-w-full max-h-full object-contain rounded-lg shadow-sm"
       />
     );
+  };
+
+  const handleFeedbackSubmitted = (feedback) => {
+    console.log('Feedback submitted:', feedback);
+    // In a real app, this would send the feedback to an API
   };
 
   // Mock compliance details with expanded analysis
@@ -210,6 +215,11 @@ export const AssetModal = ({ asset, onClose }) => {
                 Executive Summary
               </h3>
               <p className="text-gray-700 text-sm leading-relaxed">{complianceDetails.executiveSummary}</p>
+            </div>
+
+            {/* Feedback Widget */}
+            <div className="mb-6">
+              <FeedbackWidget onFeedbackSubmitted={handleFeedbackSubmitted} />
             </div>
 
             {/* Detailed Breakdown */}
