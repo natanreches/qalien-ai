@@ -3,7 +3,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { Card } from '@/components/ui/card';
-import { Building2, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Building2, ChevronRight, RotateCcw } from 'lucide-react';
 
 interface BrandAffiliate {
   id: string;
@@ -65,14 +66,30 @@ const BusinessCenter = () => {
     navigate(`/brand/${brandId}`);
   };
 
+  const handleRestartOnboarding = () => {
+    // Clear onboarding completion flag
+    localStorage.removeItem('onboarding_completed');
+    navigate('/onboarding');
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <Header />
       
       <main className="container mx-auto px-6 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Business Center</h1>
-          <p className="text-gray-400">Select a brand to manage assets and guidelines</p>
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">Business Center</h1>
+            <p className="text-gray-400">Select a brand to manage assets and guidelines</p>
+          </div>
+          <Button
+            onClick={handleRestartOnboarding}
+            variant="outline"
+            className="border-gray-600 text-gray-300 hover:bg-gray-700"
+          >
+            <RotateCcw className="h-4 w-4 mr-2" />
+            Restart Onboarding
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

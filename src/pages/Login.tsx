@@ -60,6 +60,12 @@ const Login = () => {
     })
   }
 
+  const handleRestartOnboarding = () => {
+    // Clear onboarding completion flag
+    localStorage.removeItem('onboarding_completed');
+    navigate('/onboarding');
+  };
+
   return (
     <div className="min-h-screen bg-gray-900">
       <Header />
@@ -121,6 +127,16 @@ const Login = () => {
                   </Button>
                 </form>
               </Form>
+              
+              <div className="pt-4 border-t border-gray-600">
+                <Button 
+                  variant="outline" 
+                  onClick={handleRestartOnboarding}
+                  className="w-full border-gray-600 text-gray-300 hover:bg-gray-700"
+                >
+                  Go Through Onboarding Again
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
