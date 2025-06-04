@@ -17,7 +17,16 @@ const initialCampaigns = [
         url: '/lovable-uploads/a8091acd-6027-42fa-b4b6-4b1171819e6f.png',
         compliance: 92,
         uploadDate: '2024-01-15',
-        status: 'approved'
+        status: 'approved',
+        campaignMetadata: {
+          campaignId: '1',
+          campaignName: 'Summer 2024 Collection',
+          brandName: 'Kraft Heinz',
+          createdDate: '2024-01-01',
+          status: 'active',
+          tags: ['summer', 'hero', 'banner'],
+          assignedTo: 'Marketing Team'
+        }
       },
       {
         id: '2',
@@ -26,7 +35,16 @@ const initialCampaigns = [
         url: '/lovable-uploads/a8091acd-6027-42fa-b4b6-4b1171819e6f.png',
         compliance: 78,
         uploadDate: '2024-01-14',
-        status: 'needs-review'
+        status: 'needs-review',
+        campaignMetadata: {
+          campaignId: '1',
+          campaignName: 'Summer 2024 Collection',
+          brandName: 'Kraft Heinz',
+          createdDate: '2024-01-01',
+          status: 'active',
+          tags: ['social', 'post', 'engagement'],
+          assignedTo: 'Social Media Team'
+        }
       },
       {
         id: '3',
@@ -35,7 +53,16 @@ const initialCampaigns = [
         url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
         compliance: 85,
         uploadDate: '2024-01-13',
-        status: 'approved'
+        status: 'approved',
+        campaignMetadata: {
+          campaignId: '1',
+          campaignName: 'Summer 2024 Collection',
+          brandName: 'Kraft Heinz',
+          createdDate: '2024-01-01',
+          status: 'active',
+          tags: ['video', 'product', 'demo'],
+          assignedTo: 'Video Production Team'
+        }
       }
     ]
   },
@@ -50,7 +77,16 @@ const initialCampaigns = [
         url: '/lovable-uploads/a8091acd-6027-42fa-b4b6-4b1171819e6f.png',
         compliance: 88,
         uploadDate: '2023-12-01',
-        status: 'approved'
+        status: 'approved',
+        campaignMetadata: {
+          campaignId: '2',
+          campaignName: 'Holiday Campaign 2023',
+          brandName: 'Kraft Heinz',
+          createdDate: '2023-11-01',
+          status: 'completed',
+          tags: ['holiday', 'landing', 'hero'],
+          assignedTo: 'Creative Team'
+        }
       },
       {
         id: '5',
@@ -59,7 +95,16 @@ const initialCampaigns = [
         url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4',
         compliance: 95,
         uploadDate: '2023-11-28',
-        status: 'approved'
+        status: 'approved',
+        campaignMetadata: {
+          campaignId: '2',
+          campaignName: 'Holiday Campaign 2023',
+          brandName: 'Kraft Heinz',
+          createdDate: '2023-11-01',
+          status: 'completed',
+          tags: ['holiday', 'commercial', 'tv'],
+          assignedTo: 'Video Production Team'
+        }
       }
     ]
   },
@@ -74,7 +119,16 @@ const initialCampaigns = [
         url: '/lovable-uploads/a8091acd-6027-42fa-b4b6-4b1171819e6f.png',
         compliance: 67,
         uploadDate: '2024-03-01',
-        status: 'needs-review'
+        status: 'needs-review',
+        campaignMetadata: {
+          campaignId: '3',
+          campaignName: 'Spring Launch 2024',
+          brandName: 'Kraft Heinz',
+          createdDate: '2024-02-15',
+          status: 'active',
+          tags: ['spring', 'launch', 'announcement'],
+          assignedTo: 'Launch Team'
+        }
       },
       {
         id: '7',
@@ -83,7 +137,16 @@ const initialCampaigns = [
         url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
         compliance: 72,
         uploadDate: '2024-02-28',
-        status: 'needs-review'
+        status: 'needs-review',
+        campaignMetadata: {
+          campaignId: '3',
+          campaignName: 'Spring Launch 2024',
+          brandName: 'Kraft Heinz',
+          createdDate: '2024-02-15',
+          status: 'active',
+          tags: ['spring', 'teaser', 'launch'],
+          assignedTo: 'Video Team'
+        }
       }
     ]
   }

@@ -6,6 +6,7 @@ import { ComplianceScore } from './ComplianceScore';
 import { ExecutiveSummary } from './ExecutiveSummary';
 import { ComplianceDetails } from './ComplianceDetails';
 import { FeedbackWidget } from './FeedbackWidget';
+import { CampaignMetadata } from './CampaignMetadata';
 
 export const AssetModal = ({ asset, onClose }) => {
   const handleFeedbackSubmitted = (feedback) => {
@@ -23,6 +24,11 @@ export const AssetModal = ({ asset, onClose }) => {
 
           {/* Right side - Compliance Details */}
           <div className="w-3/5 p-6 overflow-y-auto">
+            {/* Campaign Metadata */}
+            {asset.campaignMetadata && (
+              <CampaignMetadata campaignMetadata={asset.campaignMetadata} />
+            )}
+
             <ComplianceScore compliance={asset.compliance} />
             <ExecutiveSummary compliance={asset.compliance} />
             
