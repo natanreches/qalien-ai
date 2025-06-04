@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { CheckCircle, AlertTriangle, XCircle, ChevronDown, ChevronRight } from 'lucide-react';
+import { FeedbackWidget } from './FeedbackWidget';
 
 interface ComplianceCategoryProps {
   category: {
@@ -12,9 +13,14 @@ interface ComplianceCategoryProps {
   };
   isExpanded: boolean;
   onToggle: () => void;
+  onFeedbackSubmitted: (categoryName: string, feedback: { helpful: boolean; issue?: string; details?: string }) => void;
 }
 
-export const ComplianceCategory = ({ category, isExpanded, onToggle }: ComplianceCategoryProps) => {
+export const ComplianceCategory = ({ category, isExpanded, onToggle, onFeedbackSubmitted }: ComplianceCategoryProps) => {
+  const handleFeedback = (feedback: { helpful: boolean; issue?: string; details?: string }) => {
+    onFeedbackSubmitted(category.name, feedback);
+  };
+
   return (
     <div className="border border-gray-200 rounded-lg overflow-hidden">
       <div 
@@ -96,6 +102,11 @@ export const ComplianceCategory = ({ category, isExpanded, onToggle }: Complianc
                 </ul>
               </div>
             )}
+
+            {/* Category-specific feedback widget */}
+            <div className="pt-2">
+              <FeedbackWidget onFeedbackSubmitted={handleFeedback} />
+            </div>
           </div>
         </div>
       )}

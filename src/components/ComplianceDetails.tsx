@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ComplianceCategory } from './ComplianceCategory';
 
@@ -11,6 +10,11 @@ export const ComplianceDetails = ({ compliance }: ComplianceDetailsProps) => {
 
   const toggleCategory = (index: number) => {
     setExpandedCategory(expandedCategory === index ? null : index);
+  };
+
+  const handleCategoryFeedback = (categoryName: string, feedback: { helpful: boolean; issue?: string; details?: string }) => {
+    console.log(`Feedback for ${categoryName}:`, feedback);
+    // In a real app, this would send the feedback to an API with category context
   };
 
   // Mock compliance details with expanded analysis
@@ -113,6 +117,7 @@ export const ComplianceDetails = ({ compliance }: ComplianceDetailsProps) => {
             category={category}
             isExpanded={expandedCategory === index}
             onToggle={() => toggleCategory(index)}
+            onFeedbackSubmitted={handleCategoryFeedback}
           />
         ))}
       </div>
