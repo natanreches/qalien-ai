@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -22,6 +21,11 @@ interface BrandElements {
   logoStyle: string;
   tone: string;
   targetAudience: string;
+  brandVoice: string;
+  brandTone: string;
+  coreMessaging: string;
+  brandVocabulary: string;
+  brandStyle: string;
 }
 
 interface CompanyInfo {
@@ -51,7 +55,12 @@ const Onboarding = () => {
     fonts: [],
     logoStyle: '',
     tone: '',
-    targetAudience: ''
+    targetAudience: '',
+    brandVoice: '',
+    brandTone: '',
+    coreMessaging: '',
+    brandVocabulary: '',
+    brandStyle: ''
   });
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
 

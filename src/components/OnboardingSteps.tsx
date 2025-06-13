@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { OnboardingWelcome } from './OnboardingWelcome';
 import { OnboardingCompanyInfo } from './OnboardingCompanyInfo';
@@ -21,6 +20,11 @@ interface BrandElements {
   logoStyle: string;
   tone: string;
   targetAudience: string;
+  brandVoice: string;
+  brandTone: string;
+  coreMessaging: string;
+  brandVocabulary: string;
+  brandStyle: string;
 }
 
 interface CompanyInfo {

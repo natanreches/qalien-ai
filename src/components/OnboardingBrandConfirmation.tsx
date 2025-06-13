@@ -5,7 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Palette, Type, Target, MessageSquare, CheckCircle, Edit3 } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Palette, Type, Target, MessageSquare, CheckCircle, Edit3, Heart, Users, Lightbulb, BookOpen, Pen } from 'lucide-react';
 
 interface BrandGuideline {
   id: string;
@@ -22,6 +24,12 @@ interface BrandElements {
   logoStyle: string;
   tone: string;
   targetAudience: string;
+  // New verbal identity fields
+  brandVoice: string;
+  brandTone: string;
+  coreMessaging: string;
+  brandVocabulary: string;
+  brandStyle: string;
 }
 
 interface OnboardingBrandConfirmationProps {
@@ -35,8 +43,15 @@ export const OnboardingBrandConfirmation = ({
   brandElements,
   onBrandElementsConfirmed
 }: OnboardingBrandConfirmationProps) => {
-  const [elements, setElements] = useState<BrandElements>(brandElements);
-  const [isEditing, setIsEditing] = useState(!brandElements.brandName);
+  const [elements, setElements] = useState<BrandElements>({
+    ...brandElements,
+    brandVoice: brandElements.brandVoice || '',
+    brandTone: brandElements.brandTone || '',
+    coreMessaging: brandElements.coreMessaging || '',
+    brandVocabulary: brandElements.brandVocabulary || '',
+    brandStyle: brandElements.brandStyle || ''
+  });
+  const [isEditingVisual, setIsEditingVisual] = useState(!brandElements.brandName);
 
   // Auto-extract brand elements from guidelines (mock implementation)
   useEffect(() => {
@@ -48,16 +63,20 @@ export const OnboardingBrandConfirmation = ({
         fonts: ['Helvetica Neue', 'Arial', 'Georgia'],
         logoStyle: 'Modern and clean with bold typography',
         tone: 'Professional yet approachable, confident and innovative',
-        targetAudience: 'Young professionals aged 25-40'
+        targetAudience: 'Young professionals aged 25-40',
+        brandVoice: '',
+        brandTone: '',
+        coreMessaging: '',
+        brandVocabulary: '',
+        brandStyle: ''
       };
       setElements(extractedElements);
-      onBrandElementsConfirmed(extractedElements);
     }
-  }, [guidelines, brandElements, onBrandElementsConfirmed]);
+  }, [guidelines, brandElements]);
 
   const handleSave = () => {
     onBrandElementsConfirmed(elements);
-    setIsEditing(false);
+    setIsEditingVisual(false);
   };
 
   const addColor = () => {
@@ -103,53 +122,80 @@ export const OnboardingBrandConfirmation = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-white mb-2">Confirm Brand Elements</h2>
+        <h2 className="text-2xl font-bold text-white mb-2">Help Us Get to Know Your Brand</h2>
         <p className="text-gray-400">
-          We've analyzed your brand guidelines. Please review and confirm these brand elements.
+          We've analyzed your brand guidelines and extracted some key elements. Help us understand your brand's personality and voice.
         </p>
       </div>
 
-      <div className="flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <CheckCircle className="h-5 w-5 text-green-500" />
-          <span className="text-green-500 font-medium">
-            Analyzed {guidelines.length} guideline{guidelines.length !== 1 ? 's' : ''}
-          </span>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setIsEditing(!isEditing)}
-          className="border-gray-600 text-gray-300"
-        >
-          <Edit3 className="h-4 w-4 mr-2" />
-          {isEditing ? 'Cancel Edit' : 'Edit Elements'}
-        </Button>
+      <div className="flex items-center space-x-2 mb-6">
+        <CheckCircle className="h-5 w-5 text-green-500" />
+        <span className="text-green-500 font-medium">
+          Analyzed {guidelines.length} guideline{guidelines.length !== 1 ? 's' : ''}
+        </span>
       </div>
 
-      <div className="space-y-6">
-        {/* Brand Name */}
-        <div className="space-y-2">
-          <Label className="text-gray-200 flex items-center">
-            <Target className="h-4 w-4 mr-2" />
-            Brand Name
-          </Label>
-          {isEditing ? (
-            <Input
-              value={elements.brandName}
-              onChange={(e) => setElements(prev => ({ ...prev, brandName: e.target.value }))}
-              className="bg-gray-800 border-gray-600 text-white"
-              placeholder="Enter your brand name"
-            />
-          ) : (
-            <p className="text-white bg-gray-700 p-3 rounded-lg">{elements.brandName}</p>
-          )}
+      {/* Visual Brand Elements */}
+      <Card className="p-6 bg-gray-800 border-gray-700">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-white flex items-center">
+            <Palette className="h-5 w-5 mr-2" />
+            Visual Brand Elements
+          </h3>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsEditingVisual(!isEditingVisual)}
+            className="border-gray-600 text-gray-300"
+          >
+            <Edit3 className="h-4 w-4 mr-2" />
+            {isEditingVisual ? 'Save Changes' : 'Edit'}
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Brand Name */}
+          <div className="space-y-2">
+            <Label className="text-gray-200 flex items-center">
+              <Target className="h-4 w-4 mr-2" />
+              Brand Name
+            </Label>
+            {isEditingVisual ? (
+              <Input
+                value={elements.brandName}
+                onChange={(e) => setElements(prev => ({ ...prev, brandName: e.target.value }))}
+                className="bg-gray-700 border-gray-600 text-white"
+                placeholder="Enter your brand name"
+              />
+            ) : (
+              <p className="text-white bg-gray-700 p-3 rounded-lg">{elements.brandName}</p>
+            )}
+          </div>
+
+          {/* Target Audience */}
+          <div className="space-y-2">
+            <Label className="text-gray-200 flex items-center">
+              <Users className="h-4 w-4 mr-2" />
+              Target Audience
+            </Label>
+            {isEditingVisual ? (
+              <Textarea
+                value={elements.targetAudience}
+                onChange={(e) => setElements(prev => ({ ...prev, targetAudience: e.target.value }))}
+                className="bg-gray-700 border-gray-600 text-white"
+                placeholder="Describe your target audience..."
+                rows={2}
+              />
+            ) : (
+              <p className="text-white bg-gray-700 p-3 rounded-lg">{elements.targetAudience}</p>
+            )}
+          </div>
         </div>
 
         {/* Primary Colors */}
-        <div className="space-y-2">
+        <div className="space-y-2 mt-4">
           <Label className="text-gray-200 flex items-center">
             <Palette className="h-4 w-4 mr-2" />
             Primary Colors
@@ -161,12 +207,12 @@ export const OnboardingBrandConfirmation = ({
                   className="w-8 h-8 rounded border border-gray-600"
                   style={{ backgroundColor: color }}
                 />
-                {isEditing ? (
+                {isEditingVisual ? (
                   <>
                     <Input
                       value={color}
                       onChange={(e) => updateColor(index, e.target.value)}
-                      className="flex-1 bg-gray-800 border-gray-600 text-white"
+                      className="flex-1 bg-gray-700 border-gray-600 text-white"
                       placeholder="#000000"
                     />
                     <Button
@@ -183,7 +229,7 @@ export const OnboardingBrandConfirmation = ({
                 )}
               </div>
             ))}
-            {isEditing && (
+            {isEditingVisual && (
               <Button variant="outline" onClick={addColor} className="border-gray-600 text-gray-300">
                 Add Color
               </Button>
@@ -192,7 +238,7 @@ export const OnboardingBrandConfirmation = ({
         </div>
 
         {/* Fonts */}
-        <div className="space-y-2">
+        <div className="space-y-2 mt-4">
           <Label className="text-gray-200 flex items-center">
             <Type className="h-4 w-4 mr-2" />
             Brand Fonts
@@ -200,12 +246,12 @@ export const OnboardingBrandConfirmation = ({
           <div className="space-y-2">
             {elements.fonts.map((font, index) => (
               <div key={index} className="flex items-center space-x-2">
-                {isEditing ? (
+                {isEditingVisual ? (
                   <>
                     <Input
                       value={font}
                       onChange={(e) => updateFont(index, e.target.value)}
-                      className="flex-1 bg-gray-800 border-gray-600 text-white"
+                      className="flex-1 bg-gray-700 border-gray-600 text-white"
                       placeholder="Font name"
                     />
                     <Button
@@ -224,7 +270,7 @@ export const OnboardingBrandConfirmation = ({
                 )}
               </div>
             ))}
-            {isEditing && (
+            {isEditingVisual && (
               <Button variant="outline" onClick={addFont} className="border-gray-600 text-gray-300">
                 Add Font
               </Button>
@@ -233,13 +279,13 @@ export const OnboardingBrandConfirmation = ({
         </div>
 
         {/* Logo Style */}
-        <div className="space-y-2">
+        <div className="space-y-2 mt-4">
           <Label className="text-gray-200">Logo Style</Label>
-          {isEditing ? (
+          {isEditingVisual ? (
             <Textarea
               value={elements.logoStyle}
               onChange={(e) => setElements(prev => ({ ...prev, logoStyle: e.target.value }))}
-              className="bg-gray-800 border-gray-600 text-white"
+              className="bg-gray-700 border-gray-600 text-white"
               placeholder="Describe your logo style..."
               rows={2}
             />
@@ -248,50 +294,118 @@ export const OnboardingBrandConfirmation = ({
           )}
         </div>
 
-        {/* Brand Tone */}
-        <div className="space-y-2">
-          <Label className="text-gray-200 flex items-center">
-            <MessageSquare className="h-4 w-4 mr-2" />
-            Brand Tone & Voice
-          </Label>
-          {isEditing ? (
-            <Textarea
-              value={elements.tone}
-              onChange={(e) => setElements(prev => ({ ...prev, tone: e.target.value }))}
-              className="bg-gray-800 border-gray-600 text-white"
-              placeholder="Describe your brand's tone and voice..."
-              rows={2}
-            />
-          ) : (
-            <p className="text-white bg-gray-700 p-3 rounded-lg">{elements.tone}</p>
-          )}
-        </div>
-
-        {/* Target Audience */}
-        <div className="space-y-2">
-          <Label className="text-gray-200 flex items-center">
-            <Target className="h-4 w-4 mr-2" />
-            Target Audience
-          </Label>
-          {isEditing ? (
-            <Textarea
-              value={elements.targetAudience}
-              onChange={(e) => setElements(prev => ({ ...prev, targetAudience: e.target.value }))}
-              className="bg-gray-800 border-gray-600 text-white"
-              placeholder="Describe your target audience..."
-              rows={2}
-            />
-          ) : (
-            <p className="text-white bg-gray-700 p-3 rounded-lg">{elements.targetAudience}</p>
-          )}
-        </div>
-
-        {isEditing && (
-          <Button onClick={handleSave} className="w-full">
-            Save Brand Elements
+        {isEditingVisual && (
+          <Button onClick={handleSave} className="w-full mt-4">
+            Save Visual Elements
           </Button>
         )}
-      </div>
+      </Card>
+
+      <Separator className="bg-gray-700" />
+
+      {/* Verbal Identity Section */}
+      <Card className="p-6 bg-gray-800 border-gray-700">
+        <h3 className="text-lg font-semibold text-white mb-6 flex items-center">
+          <MessageSquare className="h-5 w-5 mr-2" />
+          Verbal Identity & Brand Personality
+        </h3>
+
+        <div className="space-y-6">
+          {/* Brand Voice */}
+          <div className="space-y-2">
+            <Label className="text-gray-200 flex items-center">
+              <Heart className="h-4 w-4 mr-2" />
+              Brand Voice
+            </Label>
+            <p className="text-sm text-gray-400 mb-2">
+              How would you describe your brand's personality? (e.g., friendly, authoritative, playful, sophisticated)
+            </p>
+            <Textarea
+              value={elements.brandVoice}
+              onChange={(e) => setElements(prev => ({ ...prev, brandVoice: e.target.value }))}
+              className="bg-gray-700 border-gray-600 text-white"
+              placeholder="Describe your brand's voice and personality..."
+              rows={3}
+            />
+          </div>
+
+          {/* Brand Tone */}
+          <div className="space-y-2">
+            <Label className="text-gray-200 flex items-center">
+              <Pen className="h-4 w-4 mr-2" />
+              Brand Tone
+            </Label>
+            <p className="text-sm text-gray-400 mb-2">
+              What tone does your brand use when communicating? (e.g., conversational, professional, casual, formal)
+            </p>
+            <Textarea
+              value={elements.brandTone}
+              onChange={(e) => setElements(prev => ({ ...prev, brandTone: e.target.value }))}
+              className="bg-gray-700 border-gray-600 text-white"
+              placeholder="Describe your brand's tone of communication..."
+              rows={3}
+            />
+          </div>
+
+          {/* Core Messaging */}
+          <div className="space-y-2">
+            <Label className="text-gray-200 flex items-center">
+              <Lightbulb className="h-4 w-4 mr-2" />
+              Core Messaging
+            </Label>
+            <p className="text-sm text-gray-400 mb-2">
+              What are the key messages or value propositions your brand consistently communicates?
+            </p>
+            <Textarea
+              value={elements.coreMessaging}
+              onChange={(e) => setElements(prev => ({ ...prev, coreMessaging: e.target.value }))}
+              className="bg-gray-700 border-gray-600 text-white"
+              placeholder="List your brand's core messages and value propositions..."
+              rows={4}
+            />
+          </div>
+
+          {/* Brand Vocabulary */}
+          <div className="space-y-2">
+            <Label className="text-gray-200 flex items-center">
+              <BookOpen className="h-4 w-4 mr-2" />
+              Brand Vocabulary
+            </Label>
+            <p className="text-sm text-gray-400 mb-2">
+              Are there specific words, phrases, or terminology your brand uses (or avoids)?
+            </p>
+            <Textarea
+              value={elements.brandVocabulary}
+              onChange={(e) => setElements(prev => ({ ...prev, brandVocabulary: e.target.value }))}
+              className="bg-gray-700 border-gray-600 text-white"
+              placeholder="List preferred words, phrases, or terminology guidelines..."
+              rows={3}
+            />
+          </div>
+
+          {/* Brand Style */}
+          <div className="space-y-2">
+            <Label className="text-gray-200 flex items-center">
+              <Type className="h-4 w-4 mr-2" />
+              Brand Writing Style
+            </Label>
+            <p className="text-sm text-gray-400 mb-2">
+              How does your brand write? (e.g., sentence structure, punctuation preferences, use of emojis, capitalization)
+            </p>
+            <Textarea
+              value={elements.brandStyle}
+              onChange={(e) => setElements(prev => ({ ...prev, brandStyle: e.target.value }))}
+              className="bg-gray-700 border-gray-600 text-white"
+              placeholder="Describe your brand's writing style and preferences..."
+              rows={3}
+            />
+          </div>
+        </div>
+
+        <Button onClick={handleSave} className="w-full mt-6">
+          Save Brand Profile
+        </Button>
+      </Card>
     </div>
   );
 };
