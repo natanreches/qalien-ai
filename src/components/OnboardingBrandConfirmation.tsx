@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Palette, Type, Target, MessageSquare, CheckCircle, Edit3, Heart, Users, Lightbulb, BookOpen, Pen } from 'lucide-react';
+import { Palette, Type, Target, MessageSquare, CheckCircle, Edit3, Heart, Users, Lightbulb, BookOpen, Pen, Volume2 } from 'lucide-react';
 
 interface BrandGuideline {
   id: string;
@@ -30,6 +29,7 @@ interface BrandElements {
   coreMessaging: string;
   brandVocabulary: string;
   brandStyle: string;
+  brandPronunciation: string;
 }
 
 interface OnboardingBrandConfirmationProps {
@@ -49,7 +49,8 @@ export const OnboardingBrandConfirmation = ({
     brandTone: brandElements.brandTone || '',
     coreMessaging: brandElements.coreMessaging || '',
     brandVocabulary: brandElements.brandVocabulary || '',
-    brandStyle: brandElements.brandStyle || ''
+    brandStyle: brandElements.brandStyle || '',
+    brandPronunciation: brandElements.brandPronunciation || ''
   });
   const [isEditingVisual, setIsEditingVisual] = useState(!brandElements.brandName);
 
@@ -68,7 +69,8 @@ export const OnboardingBrandConfirmation = ({
         brandTone: '',
         coreMessaging: '',
         brandVocabulary: '',
-        brandStyle: ''
+        brandStyle: '',
+        brandPronunciation: ''
       };
       setElements(extractedElements);
     }
@@ -311,6 +313,23 @@ export const OnboardingBrandConfirmation = ({
         </h3>
 
         <div className="space-y-6">
+          {/* Brand Pronunciation */}
+          <div className="space-y-2">
+            <Label className="text-gray-200 flex items-center">
+              <Volume2 className="h-4 w-4 mr-2" />
+              Brand Pronunciation
+            </Label>
+            <p className="text-sm text-gray-400 mb-2">
+              How should your brand name be pronounced? (e.g., "Nike" is pronounced "NYE-kee", "Adidas" is "ah-DEE-das")
+            </p>
+            <Input
+              value={elements.brandPronunciation}
+              onChange={(e) => setElements(prev => ({ ...prev, brandPronunciation: e.target.value }))}
+              className="bg-gray-700 border-gray-600 text-white"
+              placeholder="Write the phonetic pronunciation of your brand name..."
+            />
+          </div>
+
           {/* Brand Voice */}
           <div className="space-y-2">
             <Label className="text-gray-200 flex items-center">
