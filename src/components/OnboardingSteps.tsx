@@ -25,6 +25,7 @@ interface BrandElements {
   coreMessaging: string;
   brandVocabulary: string;
   brandStyle: string;
+  brandPronunciation: string;
 }
 
 interface CompanyInfo {

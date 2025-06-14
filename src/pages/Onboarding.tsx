@@ -26,6 +26,7 @@ interface BrandElements {
   coreMessaging: string;
   brandVocabulary: string;
   brandStyle: string;
+  brandPronunciation: string;
 }
 
 interface CompanyInfo {
@@ -60,7 +61,8 @@ const Onboarding = () => {
     brandTone: '',
     coreMessaging: '',
     brandVocabulary: '',
-    brandStyle: ''
+    brandStyle: '',
+    brandPronunciation: ''
   });
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
 
