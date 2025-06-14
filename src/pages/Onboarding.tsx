@@ -4,7 +4,7 @@ import { Header } from '@/components/Header';
 import { OnboardingSteps } from '@/components/OnboardingSteps';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle, ArrowRight, ArrowLeft } from 'lucide-react';
+import { CheckCircle, ArrowRight, ArrowLeft, SkipForward } from 'lucide-react';
 
 interface BrandGuideline {
   id: string;
@@ -93,6 +93,13 @@ const Onboarding = () => {
     navigate('/business-center');
   };
 
+  const handleSkipOnboarding = () => {
+    // Mark onboarding as completed but with minimal data
+    localStorage.setItem('onboarding_completed', 'true');
+    localStorage.setItem('onboarding_skipped', 'true');
+    navigate('/business-center');
+  };
+
   const handleCompanyInfoUpdated = (info: CompanyInfo) => {
     setCompanyInfo(info);
   };
@@ -136,9 +143,19 @@ const Onboarding = () => {
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
               <h1 className="text-2xl font-bold text-white">Brand Setup</h1>
-              <span className="text-sm text-gray-400">
-                Step {currentStep} of {totalSteps}
-              </span>
+              <div className="flex items-center space-x-4">
+                <Button
+                  variant="ghost"
+                  onClick={handleSkipOnboarding}
+                  className="text-gray-400 hover:text-white"
+                >
+                  <SkipForward className="h-4 w-4 mr-2" />
+                  Skip for Now
+                </Button>
+                <span className="text-sm text-gray-400">
+                  Step {currentStep} of {totalSteps}
+                </span>
+              </div>
             </div>
             <Progress value={progress} className="h-2" />
           </div>
