@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Palette, Type, Target, MessageSquare, CheckCircle, Edit3, Heart, Users, Lightbulb, BookOpen, Pen, Volume2 } from 'lucide-react';
+import { Palette, Type, Target, MessageSquare, CheckCircle, Edit3, Heart, Users, Lightbulb, BookOpen, Pen, Volume2, Image } from 'lucide-react';
 
 interface BrandGuideline {
   id: string;
@@ -53,6 +54,7 @@ export const OnboardingBrandConfirmation = ({
     brandPronunciation: brandElements.brandPronunciation || ''
   });
   const [isEditingVisual, setIsEditingVisual] = useState(!brandElements.brandName);
+  const [logoConfirmed, setLogoConfirmed] = useState(false);
 
   // Auto-extract brand elements from guidelines (mock implementation)
   useEffect(() => {
@@ -155,6 +157,53 @@ export const OnboardingBrandConfirmation = ({
             <Edit3 className="h-4 w-4 mr-2" />
             {isEditingVisual ? 'Save Changes' : 'Edit'}
           </Button>
+        </div>
+
+        {/* Logo Confirmation Section */}
+        <div className="space-y-4 mb-6 p-4 border rounded-lg bg-gray-700 border-gray-600">
+          <Label className="text-gray-200 flex items-center">
+            <Image className="h-4 w-4 mr-2" />
+            Brand Logo
+          </Label>
+          <p className="text-sm text-gray-400">
+            We've extracted your logo from the uploaded brand guidelines. Please confirm this is correct.
+          </p>
+          
+          <div className="flex items-center space-x-4">
+            <div className="w-24 h-24 bg-gray-600 border-2 border-dashed border-gray-500 rounded-lg flex items-center justify-center">
+              <div className="text-center">
+                <Image className="h-8 w-8 mx-auto text-gray-400 mb-1" />
+                <span className="text-xs text-gray-400">Logo Preview</span>
+              </div>
+            </div>
+            
+            <div className="flex-1 space-y-2">
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant={logoConfirmed ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setLogoConfirmed(true)}
+                  className={logoConfirmed ? "bg-green-600 hover:bg-green-700" : "border-gray-600 text-gray-300"}
+                >
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  This is correct
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-gray-600 text-gray-300"
+                >
+                  Upload different logo
+                </Button>
+              </div>
+              {logoConfirmed && (
+                <p className="text-sm text-green-400 flex items-center">
+                  <CheckCircle className="h-3 w-3 mr-1" />
+                  Logo confirmed
+                </p>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
