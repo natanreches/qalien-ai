@@ -1,9 +1,11 @@
+
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { AssetCard } from '@/components/AssetCard';
 import { AssetModal } from '@/components/AssetModal';
 import { UploadButton } from '@/components/UploadButton';
+import { BatchUploadModal } from '@/components/BatchUploadModal';
 import { CreativeBriefUpload } from '@/components/CreativeBriefUpload';
 import { ArrowLeft, Calendar, Folder, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -216,6 +218,35 @@ const Campaign = () => {
     }
   };
 
+  const handleBatchUploadComplete = (files, campaignId, campaignName) => {
+    const newAssets = files.map(file => ({
+      id: Math.random().toString(36).substr(2, 9),
+      name: file.name,
+      type: file.type,
+      url: URL.createObjectURL(file.file), // In a real app, this would be uploaded to a server
+      compliance: Math.floor(Math.random() * 30) + 70, // Mock compliance score
+      uploadDate: new Date().toISOString().split('T')[0],
+      status: 'needs-review',
+      campaignMetadata: {
+        campaignId: campaign.id,
+        campaignName: campaign.name,
+        brandName: campaign.brandId === 'jello' ? 'Jell-O' : campaign.brandId === 'philadelphia' ? 'Philadelphia Cream Cheese' : 'Capri Sun',
+        createdDate: new Date().toISOString().split('T')[0],
+        status: 'active',
+        tags: [file.type],
+        assignedTo: 'Content Team'
+      }
+    }));
+
+    setCampaigns(prev => 
+      prev.map(c => 
+        c.id === campaign.id 
+          ? { ...c, assets: [...c.assets, ...newAssets] }
+          : c
+      )
+    );
+  };
+
   const avgCompliance = Math.round(
     campaign.assets.reduce((acc, asset) => acc + asset.compliance, 0) / campaign.assets.length
   );
@@ -253,7 +284,13 @@ const Campaign = () => {
                   <div className="text-sm text-gray-400">Avg. Compliance</div>
                   <div className="text-2xl font-bold text-white">{avgCompliance}%</div>
                 </div>
-                <UploadButton />
+                <div className="flex space-x-2">
+                  <UploadButton />
+                  <BatchUploadModal
+                    campaigns={[{ id: campaign.id, name: campaign.name }]}
+                    onUploadComplete={handleBatchUploadComplete}
+                  />
+                </div>
               </div>
             </div>
 
@@ -303,8 +340,14 @@ const Campaign = () => {
                 <Folder className="h-8 w-8 text-gray-400" />
               </div>
               <h3 className="text-lg font-medium text-white mb-2">No assets yet</h3>
-              <p className="text-gray-400 mb-4">Start by uploading your first asset to this campaign</p>
-              <UploadButton />
+              <p className="text-gray-400 mb-4">Start by uploading your first assets to this campaign</p>
+              <div className="flex justify-center space-x-2">
+                <UploadButton />
+                <BatchUploadModal
+                  campaigns={[{ id: campaign.id, name: campaign.name }]}
+                  onUploadComplete={handleBatchUploadComplete}
+                />
+              </div>
             </div>
           )}
         </div>

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -5,6 +6,7 @@ import { CampaignGrid } from '@/components/CampaignGrid';
 import { OnboardingGuidelinesView } from '@/components/OnboardingGuidelinesView';
 import { AssetModal } from '@/components/AssetModal';
 import { CreateCampaignDialog } from '@/components/CreateCampaignDialog';
+import { BatchUploadModal } from '@/components/BatchUploadModal';
 import { BrandComplianceSettings } from '@/components/BrandComplianceSettings';
 import { ArrowLeft, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -127,6 +129,41 @@ const Brand = () => {
     setCampaigns([newCampaign, ...campaigns]);
   };
 
+  const handleBatchUploadComplete = (files, campaignId, campaignName) => {
+    const newAssets = files.map(file => ({
+      id: Math.random().toString(36).substr(2, 9),
+      name: file.name,
+      type: file.type,
+      url: URL.createObjectURL(file.file), // In a real app, this would be uploaded to a server
+      compliance: Math.floor(Math.random() * 30) + 70, // Mock compliance score
+      uploadDate: new Date().toISOString().split('T')[0],
+      status: 'needs-review'
+    }));
+
+    setCampaigns(prev => {
+      // Check if campaign exists
+      const existingCampaignIndex = prev.findIndex(c => c.id === campaignId);
+      
+      if (existingCampaignIndex >= 0) {
+        // Add to existing campaign
+        return prev.map(c => 
+          c.id === campaignId 
+            ? { ...c, assets: [...c.assets, ...newAssets] }
+            : c
+        );
+      } else {
+        // Create new campaign
+        const newCampaign = {
+          id: campaignId,
+          name: campaignName,
+          brief: '',
+          assets: newAssets
+        };
+        return [newCampaign, ...prev];
+      }
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <Header />
@@ -168,7 +205,14 @@ const Brand = () => {
                 <h2 className="text-xl font-semibold text-white">Campaign Assets</h2>
                 <p className="text-gray-400">Manage your brand's creative assets organized by campaign</p>
               </div>
-              <CreateCampaignDialog onCreateCampaign={handleCreateCampaign} />
+              <div className="flex space-x-2">
+                <CreateCampaignDialog onCreateCampaign={handleCreateCampaign} />
+                <BatchUploadModal
+                  campaigns={campaigns.map(c => ({ id: c.id, name: c.name }))}
+                  onUploadComplete={handleBatchUploadComplete}
+                  onCreateCampaign={handleCreateCampaign}
+                />
+              </div>
             </div>
 
             <CampaignGrid 
