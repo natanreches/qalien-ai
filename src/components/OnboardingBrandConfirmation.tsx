@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -206,43 +205,22 @@ export const OnboardingBrandConfirmation = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Brand Name */}
-          <div className="space-y-2">
-            <Label className="text-gray-200 flex items-center">
-              <Target className="h-4 w-4 mr-2" />
-              Brand Name
-            </Label>
-            {isEditingVisual ? (
-              <Input
-                value={elements.brandName}
-                onChange={(e) => setElements(prev => ({ ...prev, brandName: e.target.value }))}
-                className="bg-gray-700 border-gray-600 text-white"
-                placeholder="Enter your brand name"
-              />
-            ) : (
-              <p className="text-white bg-gray-700 p-3 rounded-lg">{elements.brandName}</p>
-            )}
-          </div>
-
-          {/* Target Audience */}
-          <div className="space-y-2">
-            <Label className="text-gray-200 flex items-center">
-              <Users className="h-4 w-4 mr-2" />
-              Target Audience
-            </Label>
-            {isEditingVisual ? (
-              <Textarea
-                value={elements.targetAudience}
-                onChange={(e) => setElements(prev => ({ ...prev, targetAudience: e.target.value }))}
-                className="bg-gray-700 border-gray-600 text-white"
-                placeholder="Describe your target audience..."
-                rows={2}
-              />
-            ) : (
-              <p className="text-white bg-gray-700 p-3 rounded-lg">{elements.targetAudience}</p>
-            )}
-          </div>
+        {/* Brand Name - single column now */}
+        <div className="space-y-2 mb-6">
+          <Label className="text-gray-200 flex items-center">
+            <Target className="h-4 w-4 mr-2" />
+            Brand Name
+          </Label>
+          {isEditingVisual ? (
+            <Input
+              value={elements.brandName}
+              onChange={(e) => setElements(prev => ({ ...prev, brandName: e.target.value }))}
+              className="bg-gray-700 border-gray-600 text-white"
+              placeholder="Enter your brand name"
+            />
+          ) : (
+            <p className="text-white bg-gray-700 p-3 rounded-lg">{elements.brandName}</p>
+          )}
         </div>
 
         {/* Primary Colors */}
@@ -362,6 +340,60 @@ export const OnboardingBrandConfirmation = ({
         </h3>
 
         <div className="space-y-6">
+          {/* Target Audience - Expanded Section */}
+          <div className="space-y-4 p-4 border rounded-lg bg-gray-700 border-gray-600">
+            <Label className="text-gray-200 flex items-center text-lg">
+              <Users className="h-5 w-5 mr-2" />
+              Target Audience
+            </Label>
+            <p className="text-sm text-gray-400 mb-4">
+              Help us understand who you're trying to reach. Be as specific as possible about demographics, psychographics, behaviors, and needs.
+            </p>
+
+            {/* Primary Target Audience */}
+            <div className="space-y-2">
+              <Label className="text-gray-200 font-medium">Primary Target Audience</Label>
+              <p className="text-sm text-gray-400">
+                Your main audience - the people most likely to engage with and purchase from your brand.
+              </p>
+              <Textarea
+                value={elements.targetAudience}
+                onChange={(e) => setElements(prev => ({ ...prev, targetAudience: e.target.value }))}
+                className="bg-gray-600 border-gray-500 text-white"
+                placeholder="e.g., Working professionals aged 28-45, household income $75k+, tech-savvy, value efficiency and quality, live in urban/suburban areas, prioritize work-life balance..."
+                rows={4}
+              />
+            </div>
+
+            {/* Secondary Target Audience */}
+            <div className="space-y-2">
+              <Label className="text-gray-200 font-medium">Secondary Target Audience</Label>
+              <p className="text-sm text-gray-400">
+                Additional audience segments that are important to your brand but may not be your primary focus.
+              </p>
+              <Textarea
+                value={elements.tone} // Using tone field temporarily for secondary audience
+                onChange={(e) => setElements(prev => ({ ...prev, tone: e.target.value }))}
+                className="bg-gray-600 border-gray-500 text-white"
+                placeholder="e.g., Recent college graduates aged 22-28, early career professionals, price-conscious but brand-aware, social media active, aspiring to lifestyle of primary audience..."
+                rows={3}
+              />
+            </div>
+
+            {/* Other Audience Considerations */}
+            <div className="space-y-2">
+              <Label className="text-gray-200 font-medium">Other Audience Considerations</Label>
+              <p className="text-sm text-gray-400">
+                Any other audience segments, influencers, or stakeholders that impact your brand strategy.
+              </p>
+              <Textarea
+                className="bg-gray-600 border-gray-500 text-white"
+                placeholder="e.g., Industry influencers, decision-makers in partner companies, parents of primary audience, specific geographic markets, niche communities..."
+                rows={3}
+              />
+            </div>
+          </div>
+
           {/* Brand Pronunciation */}
           <div className="space-y-2">
             <Label className="text-gray-200 flex items-center">
