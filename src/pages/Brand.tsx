@@ -1,11 +1,9 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { CampaignGrid } from '@/components/CampaignGrid';
 import { OnboardingGuidelinesView } from '@/components/OnboardingGuidelinesView';
 import { AssetModal } from '@/components/AssetModal';
-import { CreateCampaignDialog } from '@/components/CreateCampaignDialog';
 import { BatchUploadModal } from '@/components/BatchUploadModal';
 import { BrandComplianceSettings } from '@/components/BrandComplianceSettings';
 import { ArrowLeft, Building2 } from 'lucide-react';
@@ -119,16 +117,6 @@ const Brand = () => {
     setSelectedAsset(null);
   };
 
-  const handleCreateCampaign = (campaignName) => {
-    const newCampaign = {
-      id: Date.now().toString(),
-      name: campaignName,
-      brief: '',
-      assets: []
-    };
-    setCampaigns([newCampaign, ...campaigns]);
-  };
-
   const handleBatchUploadComplete = (files, campaignId, campaignName) => {
     const newAssets = files.map(file => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -205,14 +193,10 @@ const Brand = () => {
                 <h2 className="text-xl font-semibold text-white">Campaign Assets</h2>
                 <p className="text-gray-400">Manage your brand's creative assets organized by campaign</p>
               </div>
-              <div className="flex space-x-2">
-                <CreateCampaignDialog onCreateCampaign={handleCreateCampaign} />
-                <BatchUploadModal
-                  campaigns={campaigns.map(c => ({ id: c.id, name: c.name }))}
-                  onUploadComplete={handleBatchUploadComplete}
-                  onCreateCampaign={handleCreateCampaign}
-                />
-              </div>
+              <BatchUploadModal
+                campaigns={campaigns.map(c => ({ id: c.id, name: c.name }))}
+                onUploadComplete={handleBatchUploadComplete}
+              />
             </div>
 
             <CampaignGrid 

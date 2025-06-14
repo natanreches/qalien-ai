@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { CampaignGrid } from '@/components/CampaignGrid';
 import { AssetModal } from '@/components/AssetModal';
 import { Header } from '@/components/Header';
-import { CreateCampaignDialog } from '@/components/CreateCampaignDialog';
 import { BatchUploadModal } from '@/components/BatchUploadModal';
 
 // Mock data for campaigns and assets
@@ -165,15 +164,6 @@ const Index = () => {
     setSelectedAsset(null);
   };
 
-  const handleCreateCampaign = (campaignName) => {
-    const newCampaign = {
-      id: Date.now().toString(),
-      name: campaignName,
-      assets: []
-    };
-    setCampaigns([newCampaign, ...campaigns]);
-  };
-
   const handleBatchUploadComplete = (files, campaignId, campaignName) => {
     const newAssets = files.map(file => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -227,14 +217,10 @@ const Index = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Brand Asset Library</h1>
             <p className="text-gray-600">Browse and manage your creative assets organized by campaign</p>
           </div>
-          <div className="flex space-x-2">
-            <CreateCampaignDialog onCreateCampaign={handleCreateCampaign} />
-            <BatchUploadModal
-              campaigns={campaigns.map(c => ({ id: c.id, name: c.name }))}
-              onUploadComplete={handleBatchUploadComplete}
-              onCreateCampaign={handleCreateCampaign}
-            />
-          </div>
+          <BatchUploadModal
+            campaigns={campaigns.map(c => ({ id: c.id, name: c.name }))}
+            onUploadComplete={handleBatchUploadComplete}
+          />
         </div>
 
         <CampaignGrid 

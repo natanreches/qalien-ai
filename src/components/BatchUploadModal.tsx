@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -25,10 +24,9 @@ interface Campaign {
 interface BatchUploadModalProps {
   campaigns: Campaign[];
   onUploadComplete: (files: UploadFile[], campaignId: string, campaignName: string) => void;
-  onCreateCampaign?: (campaignName: string) => void;
 }
 
-export const BatchUploadModal = ({ campaigns, onUploadComplete, onCreateCampaign }: BatchUploadModalProps) => {
+export const BatchUploadModal = ({ campaigns, onUploadComplete }: BatchUploadModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [files, setFiles] = useState<UploadFile[]>([]);
   const [selectedCampaign, setSelectedCampaign] = useState<string>('');
@@ -93,7 +91,6 @@ export const BatchUploadModal = ({ campaigns, onUploadComplete, onCreateCampaign
       }
       campaignId = Date.now().toString();
       campaignName = newCampaignName.trim();
-      onCreateCampaign?.(campaignName);
     } else {
       if (!selectedCampaign) {
         toast({
