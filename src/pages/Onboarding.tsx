@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -235,7 +234,7 @@ const Onboarding = () => {
               Back
             </Button>
 
-            {currentStep ===Steps ? (
+            {currentStep === totalSteps ? (
               <Button
                 onClick={handleComplete}
                 disabled={!canProceed()}
