@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -12,6 +13,26 @@ interface BrandGuideline {
   description: string;
   file: File | null;
   uploadDate: string;
+}
+
+interface LegalGuideline {
+  id: string;
+  name: string;
+  description: string;
+  file: File | null;
+  uploadDate: string;
+  category: 'advertising' | 'claims' | 'disclosure' | 'privacy' | 'accessibility' | 'other';
+}
+
+interface LegalCompliance {
+  requiresDisclosures: boolean;
+  hasHealthClaims: boolean;
+  hasFinancialClaims: boolean;
+  targetMinors: boolean;
+  operatesGlobally: boolean;
+  requiresAccessibility: boolean;
+  hasDataCollection: boolean;
+  additionalNotes: string;
 }
 
 interface BrandElements {
@@ -50,6 +71,17 @@ const Onboarding = () => {
     jobTitle: ''
   });
   const [guidelines, setGuidelines] = useState<BrandGuideline[]>([]);
+  const [legalGuidelines, setLegalGuidelines] = useState<LegalGuideline[]>([]);
+  const [legalCompliance, setLegalCompliance] = useState<LegalCompliance>({
+    requiresDisclosures: false,
+    hasHealthClaims: false,
+    hasFinancialClaims: false,
+    targetMinors: false,
+    operatesGlobally: false,
+    requiresAccessibility: false,
+    hasDataCollection: false,
+    additionalNotes: ''
+  });
   const [brandElements, setBrandElements] = useState<BrandElements>({
     brandName: '',
     primaryColors: [],
@@ -66,7 +98,7 @@ const Onboarding = () => {
   });
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
 
-  const totalSteps = 5;
+  const totalSteps = 6;
   const progress = (currentStep / totalSteps) * 100;
 
   const handleNext = () => {
@@ -87,6 +119,8 @@ const Onboarding = () => {
     localStorage.setItem('onboarding_data', JSON.stringify({
       companyInfo,
       guidelines: guidelines.length,
+      legalGuidelines: legalGuidelines.length,
+      legalCompliance,
       brandElements,
       collaborators: collaborators.length
     }));
@@ -108,6 +142,14 @@ const Onboarding = () => {
     setGuidelines(uploadedGuidelines);
   };
 
+  const handleLegalGuidelinesUpdated = (uploadedLegalGuidelines: LegalGuideline[]) => {
+    setLegalGuidelines(uploadedLegalGuidelines);
+  };
+
+  const handleLegalComplianceUpdated = (compliance: LegalCompliance) => {
+    setLegalCompliance(compliance);
+  };
+
   const handleBrandElementsConfirmed = (elements: BrandElements) => {
     setBrandElements(elements);
   };
@@ -123,10 +165,12 @@ const Onboarding = () => {
       case 2:
         return companyInfo.company.length > 0 && companyInfo.brand.length > 0 && companyInfo.jobTitle.length > 0;
       case 3:
-        return guidelines.length > 0; // Must have uploaded guidelines
+        return guidelines.length > 0; // Must have uploaded brand guidelines
       case 4:
-        return brandElements.brandName.length > 0; // Must have confirmed brand name at minimum
+        return true; // Legal guidelines are optional but the step should be completed
       case 5:
+        return brandElements.brandName.length > 0; // Must have confirmed brand name at minimum
+      case 6:
         return true; // Collaborators step is optional
       default:
         return false;
@@ -166,10 +210,14 @@ const Onboarding = () => {
               currentStep={currentStep}
               companyInfo={companyInfo}
               guidelines={guidelines}
+              legalGuidelines={legalGuidelines}
+              legalCompliance={legalCompliance}
               brandElements={brandElements}
               collaborators={collaborators}
               onCompanyInfoUpdated={handleCompanyInfoUpdated}
               onGuidelinesUploaded={handleGuidelinesUploaded}
+              onLegalGuidelinesUpdated={handleLegalGuidelinesUpdated}
+              onLegalComplianceUpdated={handleLegalComplianceUpdated}
               onBrandElementsConfirmed={handleBrandElementsConfirmed}
               onCollaboratorsUpdated={handleCollaboratorsUpdated}
             />
@@ -187,7 +235,7 @@ const Onboarding = () => {
               Back
             </Button>
 
-            {currentStep === totalSteps ? (
+            {currentStep ===Steps ? (
               <Button
                 onClick={handleComplete}
                 disabled={!canProceed()}

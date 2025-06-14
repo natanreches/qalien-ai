@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { OnboardingWelcome } from './OnboardingWelcome';
 import { OnboardingCompanyInfo } from './OnboardingCompanyInfo';
 import { OnboardingGuidelinesUpload } from './OnboardingGuidelinesUpload';
+import { OnboardingLegalGuidelines } from './OnboardingLegalGuidelines';
 import { OnboardingBrandConfirmation } from './OnboardingBrandConfirmation';
 import { OnboardingInviteCollaborators } from './OnboardingInviteCollaborators';
 
@@ -11,6 +13,26 @@ interface BrandGuideline {
   description: string;
   file: File | null;
   uploadDate: string;
+}
+
+interface LegalGuideline {
+  id: string;
+  name: string;
+  description: string;
+  file: File | null;
+  uploadDate: string;
+  category: 'advertising' | 'claims' | 'disclosure' | 'privacy' | 'accessibility' | 'other';
+}
+
+interface LegalCompliance {
+  requiresDisclosures: boolean;
+  hasHealthClaims: boolean;
+  hasFinancialClaims: boolean;
+  targetMinors: boolean;
+  operatesGlobally: boolean;
+  requiresAccessibility: boolean;
+  hasDataCollection: boolean;
+  additionalNotes: string;
 }
 
 interface BrandElements {
@@ -44,10 +66,14 @@ interface OnboardingStepsProps {
   currentStep: number;
   companyInfo: CompanyInfo;
   guidelines: BrandGuideline[];
+  legalGuidelines: LegalGuideline[];
+  legalCompliance: LegalCompliance;
   brandElements: BrandElements;
   collaborators: Collaborator[];
   onCompanyInfoUpdated: (info: CompanyInfo) => void;
   onGuidelinesUploaded: (guidelines: BrandGuideline[]) => void;
+  onLegalGuidelinesUpdated: (guidelines: LegalGuideline[]) => void;
+  onLegalComplianceUpdated: (compliance: LegalCompliance) => void;
   onBrandElementsConfirmed: (elements: BrandElements) => void;
   onCollaboratorsUpdated: (collaborators: Collaborator[]) => void;
 }
@@ -56,10 +82,14 @@ export const OnboardingSteps = ({
   currentStep,
   companyInfo,
   guidelines,
+  legalGuidelines,
+  legalCompliance,
   brandElements,
   collaborators,
   onCompanyInfoUpdated,
   onGuidelinesUploaded,
+  onLegalGuidelinesUpdated,
+  onLegalComplianceUpdated,
   onBrandElementsConfirmed,
   onCollaboratorsUpdated
 }: OnboardingStepsProps) => {
@@ -82,13 +112,22 @@ export const OnboardingSteps = ({
       );
     case 4:
       return (
+        <OnboardingLegalGuidelines
+          legalGuidelines={legalGuidelines}
+          legalCompliance={legalCompliance}
+          onLegalGuidelinesUpdated={onLegalGuidelinesUpdated}
+          onLegalComplianceUpdated={onLegalComplianceUpdated}
+        />
+      );
+    case 5:
+      return (
         <OnboardingBrandConfirmation
           guidelines={guidelines}
           brandElements={brandElements}
           onBrandElementsConfirmed={onBrandElementsConfirmed}
         />
       );
-    case 5:
+    case 6:
       return (
         <OnboardingInviteCollaborators
           collaborators={collaborators}
