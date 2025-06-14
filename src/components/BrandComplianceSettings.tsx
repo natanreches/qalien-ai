@@ -6,14 +6,18 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Save, RotateCcw } from 'lucide-react';
+import { Save, RotateCcw, Palette, Type, MessageSquare, Users, Volume2, Heart, Pen, Lightbulb, BookOpen } from 'lucide-react';
 
 interface ComplianceWeights {
   logoUsage: number;
   colorPalette: number;
   typography: number;
-  messagingTone: number;
-  layoutComposition: number;
+  brandVoice: number;
+  brandTone: number;
+  coreMessaging: number;
+  brandVocabulary: number;
+  targetAudience: number;
+  brandPronunciation: number;
 }
 
 export const BrandComplianceSettings = () => {
@@ -21,8 +25,12 @@ export const BrandComplianceSettings = () => {
     logoUsage: 80,
     colorPalette: 75,
     typography: 70,
-    messagingTone: 85,
-    layoutComposition: 65
+    brandVoice: 85,
+    brandTone: 80,
+    coreMessaging: 90,
+    brandVocabulary: 75,
+    targetAudience: 85,
+    brandPronunciation: 70
   });
 
   const [strictMode, setStrictMode] = useState(false);
@@ -40,8 +48,12 @@ export const BrandComplianceSettings = () => {
       logoUsage: 80,
       colorPalette: 75,
       typography: 70,
-      messagingTone: 85,
-      layoutComposition: 65
+      brandVoice: 85,
+      brandTone: 80,
+      coreMessaging: 90,
+      brandVocabulary: 75,
+      targetAudience: 85,
+      brandPronunciation: 70
     });
     setStrictMode(false);
     setAutoApproval(false);
@@ -72,16 +84,20 @@ export const BrandComplianceSettings = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-white mb-2">Compliance Settings</h2>
+        <h2 className="text-2xl font-bold text-white mb-2">Brand Compliance Settings</h2>
         <p className="text-gray-400">
-          Customize how strictly the AI evaluates different aspects of brand compliance for your assets.
+          Configure how strictly the AI evaluates different aspects of your brand identity for compliance scoring.
         </p>
       </div>
 
+      {/* Visual Brand Elements */}
       <Card className="p-6 bg-gray-800 border-gray-700">
         <div className="space-y-6">
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Visual Compliance Weights</h3>
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <Palette className="h-5 w-5 mr-2" />
+              Visual Brand Elements
+            </h3>
             <div className="space-y-6">
               {/* Logo Usage */}
               <div className="space-y-3">
@@ -114,7 +130,7 @@ export const BrandComplianceSettings = () => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <Label htmlFor="color-weight" className="text-sm font-medium text-gray-200">
-                    Color Palette Adherence
+                    Primary Colors & Palette
                   </Label>
                   <div className="flex items-center space-x-2">
                     <span className="text-sm text-gray-400">{weights.colorPalette}%</span>
@@ -133,7 +149,7 @@ export const BrandComplianceSettings = () => {
                   className="w-full"
                 />
                 <p className="text-xs text-gray-500">
-                  Determines tolerance for color variations and brand color consistency.
+                  Evaluates adherence to your brand's primary color palette and color consistency.
                 </p>
               </div>
 
@@ -141,7 +157,7 @@ export const BrandComplianceSettings = () => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <Label htmlFor="typography-weight" className="text-sm font-medium text-gray-200">
-                    Typography & Font Usage
+                    Typography & Brand Fonts
                   </Label>
                   <div className="flex items-center space-x-2">
                     <span className="text-sm text-gray-400">{weights.typography}%</span>
@@ -160,34 +176,7 @@ export const BrandComplianceSettings = () => {
                   className="w-full"
                 />
                 <p className="text-xs text-gray-500">
-                  Controls strictness of font family, weight, and sizing compliance.
-                </p>
-              </div>
-
-              {/* Layout & Composition */}
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <Label htmlFor="layout-weight" className="text-sm font-medium text-gray-200">
-                    Layout & Composition
-                  </Label>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-400">{weights.layoutComposition}%</span>
-                    <span className={`text-xs font-medium ${getWeightColor(weights.layoutComposition)}`}>
-                      {getWeightDescription(weights.layoutComposition)}
-                    </span>
-                  </div>
-                </div>
-                <Slider
-                  id="layout-weight"
-                  min={0}
-                  max={100}
-                  step={5}
-                  value={[weights.layoutComposition]}
-                  onValueChange={(value) => handleWeightChange('layoutComposition', value)}
-                  className="w-full"
-                />
-                <p className="text-xs text-gray-500">
-                  Evaluates adherence to grid systems, hierarchy, and composition guidelines.
+                  Controls strictness of brand font usage, hierarchy, and typographic guidelines.
                 </p>
               </div>
             </div>
@@ -195,19 +184,80 @@ export const BrandComplianceSettings = () => {
 
           <Separator />
 
+          {/* Brand Voice & Personality */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Verbal Compliance Weights</h3>
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <MessageSquare className="h-5 w-5 mr-2" />
+              Brand Voice & Personality
+            </h3>
             <div className="space-y-6">
-              {/* Messaging Tone */}
+              {/* Brand Voice */}
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <Label htmlFor="messaging-weight" className="text-sm font-medium text-gray-200">
-                    Messaging Tone & Voice
+                  <Label htmlFor="voice-weight" className="text-sm font-medium text-gray-200 flex items-center">
+                    <Heart className="h-4 w-4 mr-2" />
+                    Brand Voice Consistency
                   </Label>
                   <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-400">{weights.messagingTone}%</span>
-                    <span className={`text-xs font-medium ${getWeightColor(weights.messagingTone)}`}>
-                      {getWeightDescription(weights.messagingTone)}
+                    <span className="text-sm text-gray-400">{weights.brandVoice}%</span>
+                    <span className={`text-xs font-medium ${getWeightColor(weights.brandVoice)}`}>
+                      {getWeightDescription(weights.brandVoice)}
+                    </span>
+                  </div>
+                </div>
+                <Slider
+                  id="voice-weight"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={[weights.brandVoice]}
+                  onValueChange={(value) => handleWeightChange('brandVoice', value)}
+                  className="w-full"
+                />
+                <p className="text-xs text-gray-500">
+                  Evaluates how well content matches your brand's personality and voice characteristics.
+                </p>
+              </div>
+
+              {/* Brand Tone */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="tone-weight" className="text-sm font-medium text-gray-200 flex items-center">
+                    <Pen className="h-4 w-4 mr-2" />
+                    Brand Tone Adherence
+                  </Label>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-400">{weights.brandTone}%</span>
+                    <span className={`text-xs font-medium ${getWeightColor(weights.brandTone)}`}>
+                      {getWeightDescription(weights.brandTone)}
+                    </span>
+                  </div>
+                </div>
+                <Slider
+                  id="tone-weight"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={[weights.brandTone]}
+                  onValueChange={(value) => handleWeightChange('brandTone', value)}
+                  className="w-full"
+                />
+                <p className="text-xs text-gray-500">
+                  Controls how strictly the communication tone aligns with your brand guidelines.
+                </p>
+              </div>
+
+              {/* Core Messaging */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="messaging-weight" className="text-sm font-medium text-gray-200 flex items-center">
+                    <Lightbulb className="h-4 w-4 mr-2" />
+                    Core Messaging Alignment
+                  </Label>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-400">{weights.coreMessaging}%</span>
+                    <span className={`text-xs font-medium ${getWeightColor(weights.coreMessaging)}`}>
+                      {getWeightDescription(weights.coreMessaging)}
                     </span>
                   </div>
                 </div>
@@ -216,12 +266,106 @@ export const BrandComplianceSettings = () => {
                   min={0}
                   max={100}
                   step={5}
-                  value={[weights.messagingTone]}
-                  onValueChange={(value) => handleWeightChange('messagingTone', value)}
+                  value={[weights.coreMessaging]}
+                  onValueChange={(value) => handleWeightChange('coreMessaging', value)}
                   className="w-full"
                 />
                 <p className="text-xs text-gray-500">
-                  Controls how strictly messaging aligns with brand voice and communication guidelines.
+                  Evaluates alignment with your brand's key messages and value propositions.
+                </p>
+              </div>
+
+              {/* Brand Vocabulary */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="vocabulary-weight" className="text-sm font-medium text-gray-200 flex items-center">
+                    <BookOpen className="h-4 w-4 mr-2" />
+                    Brand Vocabulary Usage
+                  </Label>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-400">{weights.brandVocabulary}%</span>
+                    <span className={`text-xs font-medium ${getWeightColor(weights.brandVocabulary)}`}>
+                      {getWeightDescription(weights.brandVocabulary)}
+                    </span>
+                  </div>
+                </div>
+                <Slider
+                  id="vocabulary-weight"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={[weights.brandVocabulary]}
+                  onValueChange={(value) => handleWeightChange('brandVocabulary', value)}
+                  className="w-full"
+                />
+                <p className="text-xs text-gray-500">
+                  Controls adherence to preferred terminology, phrases, and language guidelines.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Target Audience & Context */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+              <Users className="h-5 w-5 mr-2" />
+              Target Audience & Context
+            </h3>
+            <div className="space-y-6">
+              {/* Target Audience Alignment */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="audience-weight" className="text-sm font-medium text-gray-200">
+                    Target Audience Alignment
+                  </Label>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-400">{weights.targetAudience}%</span>
+                    <span className={`text-xs font-medium ${getWeightColor(weights.targetAudience)}`}>
+                      {getWeightDescription(weights.targetAudience)}
+                    </span>
+                  </div>
+                </div>
+                <Slider
+                  id="audience-weight"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={[weights.targetAudience]}
+                  onValueChange={(value) => handleWeightChange('targetAudience', value)}
+                  className="w-full"
+                />
+                <p className="text-xs text-gray-500">
+                  Evaluates how well content resonates with your defined target audience.
+                </p>
+              </div>
+
+              {/* Brand Pronunciation */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="pronunciation-weight" className="text-sm font-medium text-gray-200 flex items-center">
+                    <Volume2 className="h-4 w-4 mr-2" />
+                    Brand Name Pronunciation
+                  </Label>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-400">{weights.brandPronunciation}%</span>
+                    <span className={`text-xs font-medium ${getWeightColor(weights.brandPronunciation)}`}>
+                      {getWeightDescription(weights.brandPronunciation)}
+                    </span>
+                  </div>
+                </div>
+                <Slider
+                  id="pronunciation-weight"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={[weights.brandPronunciation]}
+                  onValueChange={(value) => handleWeightChange('brandPronunciation', value)}
+                  className="w-full"
+                />
+                <p className="text-xs text-gray-500">
+                  Controls evaluation of correct brand name pronunciation in audio/video content.
                 </p>
               </div>
             </div>
