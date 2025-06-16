@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -14,39 +15,31 @@ interface BrandGuideline {
   uploadDate: string;
 }
 
-interface LegalGuideline {
-  id: string;
-  name: string;
-  description: string;
-  file: File | null;
-  uploadDate: string;
-  category: 'advertising' | 'claims' | 'disclosure' | 'privacy' | 'accessibility' | 'other';
+interface VisualIdentity {
+  logoFiles: File[];
+  colorPalette: string[];
+  typography: string[];
+  photographyStyle: string;
+  iconography: File[];
+  layoutRules: string;
+  accessibilityRequirements: boolean;
 }
 
-interface LegalCompliance {
-  requiresDisclosures: boolean;
-  hasHealthClaims: boolean;
-  hasFinancialClaims: boolean;
-  targetMinors: boolean;
-  operatesGlobally: boolean;
-  requiresAccessibility: boolean;
-  hasDataCollection: boolean;
-  additionalNotes: string;
-}
-
-interface BrandElements {
-  brandName: string;
-  primaryColors: string[];
-  fonts: string[];
-  logoStyle: string;
-  tone: string;
-  targetAudience: string;
-  brandVoice: string;
-  brandTone: string;
-  coreMessaging: string;
+interface VerbalIdentity {
+  toneOfVoice: string[];
   brandVocabulary: string;
-  brandStyle: string;
-  brandPronunciation: string;
+  prohibitedWords: string;
+  claimsDisclosures: string;
+  localizationRules: string;
+  grammarPreferences: string;
+}
+
+interface LegalRegulatory {
+  industryRules: string;
+  regulatoryRequirements: string[];
+  disclosures: string;
+  ipRightsManagement: File[];
+  jurisdictionNotes: string[];
 }
 
 interface CompanyInfo {
@@ -70,30 +63,29 @@ const Onboarding = () => {
     jobTitle: ''
   });
   const [guidelines, setGuidelines] = useState<BrandGuideline[]>([]);
-  const [legalGuidelines, setLegalGuidelines] = useState<LegalGuideline[]>([]);
-  const [legalCompliance, setLegalCompliance] = useState<LegalCompliance>({
-    requiresDisclosures: false,
-    hasHealthClaims: false,
-    hasFinancialClaims: false,
-    targetMinors: false,
-    operatesGlobally: false,
-    requiresAccessibility: false,
-    hasDataCollection: false,
-    additionalNotes: ''
+  const [visualIdentity, setVisualIdentity] = useState<VisualIdentity>({
+    logoFiles: [],
+    colorPalette: [],
+    typography: [],
+    photographyStyle: '',
+    iconography: [],
+    layoutRules: '',
+    accessibilityRequirements: false
   });
-  const [brandElements, setBrandElements] = useState<BrandElements>({
-    brandName: '',
-    primaryColors: [],
-    fonts: [],
-    logoStyle: '',
-    tone: '',
-    targetAudience: '',
-    brandVoice: '',
-    brandTone: '',
-    coreMessaging: '',
+  const [verbalIdentity, setVerbalIdentity] = useState<VerbalIdentity>({
+    toneOfVoice: [],
     brandVocabulary: '',
-    brandStyle: '',
-    brandPronunciation: ''
+    prohibitedWords: '',
+    claimsDisclosures: '',
+    localizationRules: '',
+    grammarPreferences: ''
+  });
+  const [legalRegulatory, setLegalRegulatory] = useState<LegalRegulatory>({
+    industryRules: '',
+    regulatoryRequirements: [],
+    disclosures: '',
+    ipRightsManagement: [],
+    jurisdictionNotes: []
   });
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
 
@@ -118,9 +110,9 @@ const Onboarding = () => {
     localStorage.setItem('onboarding_data', JSON.stringify({
       companyInfo,
       guidelines: guidelines.length,
-      legalGuidelines: legalGuidelines.length,
-      legalCompliance,
-      brandElements,
+      visualIdentity,
+      verbalIdentity,
+      legalRegulatory,
       collaborators: collaborators.length
     }));
     navigate('/business-center');
@@ -141,16 +133,16 @@ const Onboarding = () => {
     setGuidelines(uploadedGuidelines);
   };
 
-  const handleLegalGuidelinesUpdated = (uploadedLegalGuidelines: LegalGuideline[]) => {
-    setLegalGuidelines(uploadedLegalGuidelines);
+  const handleVisualIdentityUpdated = (identity: VisualIdentity) => {
+    setVisualIdentity(identity);
   };
 
-  const handleLegalComplianceUpdated = (compliance: LegalCompliance) => {
-    setLegalCompliance(compliance);
+  const handleVerbalIdentityUpdated = (identity: VerbalIdentity) => {
+    setVerbalIdentity(identity);
   };
 
-  const handleBrandElementsConfirmed = (elements: BrandElements) => {
-    setBrandElements(elements);
+  const handleLegalRegulatoryUpdated = (legal: LegalRegulatory) => {
+    setLegalRegulatory(legal);
   };
 
   const handleCollaboratorsUpdated = (updatedCollaborators: Collaborator[]) => {
@@ -164,15 +156,27 @@ const Onboarding = () => {
       case 2:
         return companyInfo.company.length > 0 && companyInfo.brand.length > 0 && companyInfo.jobTitle.length > 0;
       case 3:
-        return guidelines.length > 0; // Must have uploaded brand guidelines
+        return visualIdentity.colorPalette.length > 0 || visualIdentity.logoFiles.length > 0; // Must have some visual elements
       case 4:
-        return true; // Legal guidelines are optional but the step should be completed
+        return verbalIdentity.toneOfVoice.length > 0; // Must have selected at least one tone
       case 5:
-        return brandElements.brandName.length > 0; // Must have confirmed brand name at minimum
+        return legalRegulatory.industryRules.length > 0; // Must have selected industry
       case 6:
         return true; // Collaborators step is optional
       default:
         return false;
+    }
+  };
+
+  const getStepTitle = () => {
+    switch (currentStep) {
+      case 1: return 'Welcome';
+      case 2: return 'Company Information';
+      case 3: return 'Visual Identity';
+      case 4: return 'Verbal Identity';
+      case 5: return 'Legal & Regulatory';
+      case 6: return 'Invite Collaborators';
+      default: return '';
     }
   };
 
@@ -185,7 +189,7 @@ const Onboarding = () => {
           {/* Progress Header */}
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
-              <h1 className="text-2xl font-bold text-white">Brand Setup</h1>
+              <h1 className="text-2xl font-bold text-white">Brand Setup - {getStepTitle()}</h1>
               <div className="flex items-center space-x-4">
                 <Button
                   variant="ghost"
@@ -209,15 +213,15 @@ const Onboarding = () => {
               currentStep={currentStep}
               companyInfo={companyInfo}
               guidelines={guidelines}
-              legalGuidelines={legalGuidelines}
-              legalCompliance={legalCompliance}
-              brandElements={brandElements}
+              visualIdentity={visualIdentity}
+              verbalIdentity={verbalIdentity}
+              legalRegulatory={legalRegulatory}
               collaborators={collaborators}
               onCompanyInfoUpdated={handleCompanyInfoUpdated}
               onGuidelinesUploaded={handleGuidelinesUploaded}
-              onLegalGuidelinesUpdated={handleLegalGuidelinesUpdated}
-              onLegalComplianceUpdated={handleLegalComplianceUpdated}
-              onBrandElementsConfirmed={handleBrandElementsConfirmed}
+              onVisualIdentityUpdated={handleVisualIdentityUpdated}
+              onVerbalIdentityUpdated={handleVerbalIdentityUpdated}
+              onLegalRegulatoryUpdated={handleLegalRegulatoryUpdated}
               onCollaboratorsUpdated={handleCollaboratorsUpdated}
             />
           </div>

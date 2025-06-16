@@ -2,9 +2,9 @@
 import React from 'react';
 import { OnboardingWelcome } from './OnboardingWelcome';
 import { OnboardingCompanyInfo } from './OnboardingCompanyInfo';
-import { OnboardingGuidelinesUpload } from './OnboardingGuidelinesUpload';
-import { OnboardingLegalGuidelines } from './OnboardingLegalGuidelines';
-import { OnboardingBrandConfirmation } from './OnboardingBrandConfirmation';
+import { OnboardingVisualIdentity } from './OnboardingVisualIdentity';
+import { OnboardingVerbalIdentity } from './OnboardingVerbalIdentity';
+import { OnboardingLegalRegulatory } from './OnboardingLegalRegulatory';
 import { OnboardingInviteCollaborators } from './OnboardingInviteCollaborators';
 
 interface BrandGuideline {
@@ -24,30 +24,31 @@ interface LegalGuideline {
   category: 'advertising' | 'claims' | 'disclosure' | 'privacy' | 'accessibility' | 'other';
 }
 
-interface LegalCompliance {
-  requiresDisclosures: boolean;
-  hasHealthClaims: boolean;
-  hasFinancialClaims: boolean;
-  targetMinors: boolean;
-  operatesGlobally: boolean;
-  requiresAccessibility: boolean;
-  hasDataCollection: boolean;
-  additionalNotes: string;
+interface VisualIdentity {
+  logoFiles: File[];
+  colorPalette: string[];
+  typography: string[];
+  photographyStyle: string;
+  iconography: File[];
+  layoutRules: string;
+  accessibilityRequirements: boolean;
 }
 
-interface BrandElements {
-  brandName: string;
-  primaryColors: string[];
-  fonts: string[];
-  logoStyle: string;
-  tone: string;
-  targetAudience: string;
-  brandVoice: string;
-  brandTone: string;
-  coreMessaging: string;
+interface VerbalIdentity {
+  toneOfVoice: string[];
   brandVocabulary: string;
-  brandStyle: string;
-  brandPronunciation: string;
+  prohibitedWords: string;
+  claimsDisclosures: string;
+  localizationRules: string;
+  grammarPreferences: string;
+}
+
+interface LegalRegulatory {
+  industryRules: string;
+  regulatoryRequirements: string[];
+  disclosures: string;
+  ipRightsManagement: File[];
+  jurisdictionNotes: string[];
 }
 
 interface CompanyInfo {
@@ -66,15 +67,15 @@ interface OnboardingStepsProps {
   currentStep: number;
   companyInfo: CompanyInfo;
   guidelines: BrandGuideline[];
-  legalGuidelines: LegalGuideline[];
-  legalCompliance: LegalCompliance;
-  brandElements: BrandElements;
+  visualIdentity: VisualIdentity;
+  verbalIdentity: VerbalIdentity;
+  legalRegulatory: LegalRegulatory;
   collaborators: Collaborator[];
   onCompanyInfoUpdated: (info: CompanyInfo) => void;
   onGuidelinesUploaded: (guidelines: BrandGuideline[]) => void;
-  onLegalGuidelinesUpdated: (guidelines: LegalGuideline[]) => void;
-  onLegalComplianceUpdated: (compliance: LegalCompliance) => void;
-  onBrandElementsConfirmed: (elements: BrandElements) => void;
+  onVisualIdentityUpdated: (identity: VisualIdentity) => void;
+  onVerbalIdentityUpdated: (identity: VerbalIdentity) => void;
+  onLegalRegulatoryUpdated: (legal: LegalRegulatory) => void;
   onCollaboratorsUpdated: (collaborators: Collaborator[]) => void;
 }
 
@@ -82,15 +83,15 @@ export const OnboardingSteps = ({
   currentStep,
   companyInfo,
   guidelines,
-  legalGuidelines,
-  legalCompliance,
-  brandElements,
+  visualIdentity,
+  verbalIdentity,
+  legalRegulatory,
   collaborators,
   onCompanyInfoUpdated,
   onGuidelinesUploaded,
-  onLegalGuidelinesUpdated,
-  onLegalComplianceUpdated,
-  onBrandElementsConfirmed,
+  onVisualIdentityUpdated,
+  onVerbalIdentityUpdated,
+  onLegalRegulatoryUpdated,
   onCollaboratorsUpdated
 }: OnboardingStepsProps) => {
   switch (currentStep) {
@@ -105,26 +106,25 @@ export const OnboardingSteps = ({
       );
     case 3:
       return (
-        <OnboardingGuidelinesUpload
+        <OnboardingVisualIdentity
           guidelines={guidelines}
+          visualIdentity={visualIdentity}
           onGuidelinesUploaded={onGuidelinesUploaded}
+          onVisualIdentityUpdated={onVisualIdentityUpdated}
         />
       );
     case 4:
       return (
-        <OnboardingLegalGuidelines
-          legalGuidelines={legalGuidelines}
-          legalCompliance={legalCompliance}
-          onLegalGuidelinesUpdated={onLegalGuidelinesUpdated}
-          onLegalComplianceUpdated={onLegalComplianceUpdated}
+        <OnboardingVerbalIdentity
+          verbalIdentity={verbalIdentity}
+          onVerbalIdentityUpdated={onVerbalIdentityUpdated}
         />
       );
     case 5:
       return (
-        <OnboardingBrandConfirmation
-          guidelines={guidelines}
-          brandElements={brandElements}
-          onBrandElementsConfirmed={onBrandElementsConfirmed}
+        <OnboardingLegalRegulatory
+          legalRegulatory={legalRegulatory}
+          onLegalRegulatoryUpdated={onLegalRegulatoryUpdated}
         />
       );
     case 6:
