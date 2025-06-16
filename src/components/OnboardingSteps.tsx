@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { OnboardingWelcome } from './OnboardingWelcome';
 import { OnboardingCompanyInfo } from './OnboardingCompanyInfo';
+import { OnboardingGuidelinesUpload } from './OnboardingGuidelinesUpload';
 import { OnboardingVisualIdentity } from './OnboardingVisualIdentity';
 import { OnboardingVerbalIdentity } from './OnboardingVerbalIdentity';
 import { OnboardingLegalRegulatory } from './OnboardingLegalRegulatory';
@@ -110,6 +110,13 @@ export const OnboardingSteps = ({
       );
     case 3:
       return (
+        <OnboardingGuidelinesUpload
+          guidelines={guidelines}
+          onGuidelinesUploaded={onGuidelinesUploaded}
+        />
+      );
+    case 4:
+      return (
         <OnboardingVisualIdentity
           guidelines={guidelines}
           visualIdentity={visualIdentity}
@@ -118,21 +125,21 @@ export const OnboardingSteps = ({
           onNavigateToGuidelines={onNavigateToGuidelines}
         />
       );
-    case 4:
+    case 5:
       return (
         <OnboardingVerbalIdentity
           verbalIdentity={verbalIdentity}
           onVerbalIdentityUpdated={onVerbalIdentityUpdated}
         />
       );
-    case 5:
+    case 6:
       return (
         <OnboardingLegalRegulatory
           legalRegulatory={legalRegulatory}
           onLegalRegulatoryUpdated={onLegalRegulatoryUpdated}
         />
       );
-    case 6:
+    case 7:
       return (
         <OnboardingInviteCollaborators
           collaborators={collaborators}

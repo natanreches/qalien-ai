@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -92,7 +93,7 @@ const Onboarding = () => {
   });
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
 
-  const totalSteps = 6;
+  const totalSteps = 7; // Updated to include brand guidelines step
   const progress = (currentStep / totalSteps) * 100;
 
   const handleNext = () => {
@@ -108,8 +109,8 @@ const Onboarding = () => {
   };
 
   const handleNavigateToGuidelines = () => {
-    // Navigate to step 2 which is the brand guidelines upload step
-    setCurrentStep(2);
+    // Navigate to step 3 which is now the brand guidelines upload step
+    setCurrentStep(3);
   };
 
   const handleComplete = () => {
@@ -164,12 +165,14 @@ const Onboarding = () => {
       case 2:
         return companyInfo.company.length > 0 && companyInfo.brand.length > 0 && companyInfo.jobTitle.length > 0;
       case 3:
-        return visualIdentity.colorPalette.length > 0 || visualIdentity.logoFiles.length > 0; // Must have some visual elements
+        return true; // Brand guidelines step - optional
       case 4:
-        return verbalIdentity.toneOfVoice.length > 0; // Must have selected at least one tone
+        return visualIdentity.colorPalette.length > 0 || visualIdentity.logoFiles.length > 0; // Must have some visual elements
       case 5:
-        return legalRegulatory.industryRules.length > 0; // Must have selected industry
+        return verbalIdentity.toneOfVoice.length > 0; // Must have selected at least one tone
       case 6:
+        return legalRegulatory.industryRules.length > 0; // Must have selected industry
+      case 7:
         return true; // Collaborators step is optional
       default:
         return false;
@@ -180,10 +183,11 @@ const Onboarding = () => {
     switch (currentStep) {
       case 1: return 'Welcome';
       case 2: return 'Company Information';
-      case 3: return 'Visual Identity';
-      case 4: return 'Verbal Identity';
-      case 5: return 'Legal & Regulatory';
-      case 6: return 'Invite Collaborators';
+      case 3: return 'Brand Guidelines';
+      case 4: return 'Visual Identity';
+      case 5: return 'Verbal Identity';
+      case 6: return 'Legal & Regulatory';
+      case 7: return 'Invite Collaborators';
       default: return '';
     }
   };
