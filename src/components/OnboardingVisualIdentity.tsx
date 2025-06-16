@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Upload, Palette, Type, Camera, Image, Layout, Eye, CheckCircle, Plus, X, AlertCircle, FileText } from 'lucide-react';
+import { Upload, Palette, Type, Camera, Image, Layout, Eye, CheckCircle, Plus, X, FileText } from 'lucide-react';
 
 interface BrandGuideline {
   id: string;
@@ -146,7 +145,6 @@ export const OnboardingVisualIdentity = ({
         </div>
 
         <Card className="p-8 bg-gray-800 border-gray-700 text-center">
-          <AlertCircle className="h-12 w-12 mx-auto text-amber-500 mb-4" />
           <h3 className="text-lg font-semibold text-white mb-2">Brand Guidelines Required</h3>
           <p className="text-gray-400 mb-6">
             To automatically extract your visual identity elements, please upload your brand guidelines first. 
