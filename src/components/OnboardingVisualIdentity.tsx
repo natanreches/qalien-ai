@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,13 +35,15 @@ interface OnboardingVisualIdentityProps {
   visualIdentity: VisualIdentity;
   onGuidelinesUploaded: (guidelines: BrandGuideline[]) => void;
   onVisualIdentityUpdated: (identity: VisualIdentity) => void;
+  onNavigateToGuidelines?: () => void;
 }
 
 export const OnboardingVisualIdentity = ({
   guidelines,
   visualIdentity,
   onGuidelinesUploaded,
-  onVisualIdentityUpdated
+  onVisualIdentityUpdated,
+  onNavigateToGuidelines
 }: OnboardingVisualIdentityProps) => {
   const [identity, setIdentity] = useState<VisualIdentity>({
     ...visualIdentity,
@@ -150,7 +153,7 @@ export const OnboardingVisualIdentity = ({
             This will help us pre-populate colors, fonts, and other brand elements.
           </p>
           <Button
-            onClick={() => window.history.back()}
+            onClick={onNavigateToGuidelines}
             variant="outline"
             className="border-gray-600 text-gray-300"
           >

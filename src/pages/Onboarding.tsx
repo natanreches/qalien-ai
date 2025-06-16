@@ -107,6 +107,11 @@ const Onboarding = () => {
     }
   };
 
+  const handleNavigateToGuidelines = () => {
+    // Navigate to step 2 which is the brand guidelines upload step
+    setCurrentStep(2);
+  };
+
   const handleComplete = () => {
     // Save onboarding completion and data to localStorage or API
     localStorage.setItem('onboarding_completed', 'true');
@@ -226,6 +231,7 @@ const Onboarding = () => {
               onVerbalIdentityUpdated={handleVerbalIdentityUpdated}
               onLegalRegulatoryUpdated={handleLegalRegulatoryUpdated}
               onCollaboratorsUpdated={handleCollaboratorsUpdated}
+              onNavigateToGuidelines={handleNavigateToGuidelines}
             />
           </div>
 
