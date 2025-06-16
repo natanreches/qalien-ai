@@ -29,8 +29,10 @@ interface VisualIdentity {
   colorPalette: string[];
   typography: string[];
   photographyStyle: string;
+  photographyFiles: File[];
   iconography: File[];
   layoutRules: string;
+  layoutFiles: File[];
   accessibilityRequirements: boolean;
 }
 
