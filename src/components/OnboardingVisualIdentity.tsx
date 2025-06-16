@@ -155,7 +155,7 @@ export const OnboardingVisualIdentity = ({
             className="border-gray-600 text-gray-300"
           >
             <FileText className="h-4 w-4 mr-2" />
-            Go Back to Upload Guidelines
+            Upload Brand Guidelines
           </Button>
         </Card>
       </div>
