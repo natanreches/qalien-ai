@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -137,7 +136,6 @@ export const OnboardingLegalRegulatory = ({
               >
                 <Checkbox
                   checked={selectedRegulations.includes(regulation)}
-                  readOnly
                   className="pointer-events-none"
                 />
                 <span className="text-white text-sm">{regulation}</span>
@@ -233,7 +231,6 @@ export const OnboardingLegalRegulatory = ({
               >
                 <Checkbox
                   checked={selectedJurisdictions.includes(jurisdiction)}
-                  readOnly
                   className="pointer-events-none"
                 />
                 <span className="text-white text-sm">{jurisdiction}</span>

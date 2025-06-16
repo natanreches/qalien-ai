@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -86,7 +85,6 @@ export const OnboardingVerbalIdentity = ({
                 >
                   <Checkbox
                     checked={selectedTones.includes(tone)}
-                    readOnly
                     className="pointer-events-none"
                   />
                   <span className="text-white text-sm">{tone}</span>
