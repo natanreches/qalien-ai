@@ -79,6 +79,7 @@ interface OnboardingStepsProps {
   onVerbalIdentityUpdated: (identity: VerbalIdentity) => void;
   onLegalRegulatoryUpdated: (legal: LegalRegulatory) => void;
   onCollaboratorsUpdated: (collaborators: Collaborator[]) => void;
+  onNavigateToGuidelines: () => void;
 }
 
 export const OnboardingSteps = ({
@@ -94,7 +95,8 @@ export const OnboardingSteps = ({
   onVisualIdentityUpdated,
   onVerbalIdentityUpdated,
   onLegalRegulatoryUpdated,
-  onCollaboratorsUpdated
+  onCollaboratorsUpdated,
+  onNavigateToGuidelines
 }: OnboardingStepsProps) => {
   switch (currentStep) {
     case 1:
@@ -113,6 +115,7 @@ export const OnboardingSteps = ({
           visualIdentity={visualIdentity}
           onGuidelinesUploaded={onGuidelinesUploaded}
           onVisualIdentityUpdated={onVisualIdentityUpdated}
+          onNavigateToGuidelines={onNavigateToGuidelines}
         />
       );
     case 4:
