@@ -1,0 +1,115 @@
+
+import React from 'react';
+import { Layout, Upload, CheckCircle, AlertCircle } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
+
+interface OnboardingVisualIdentityLayoutSectionProps {
+  layoutRules: string;
+  layoutFiles: File[];
+  extractionStatus: boolean;
+  onLayoutRulesChange: (rules: string) => void;
+  onFileUpload: (files: FileList | null) => void;
+}
+
+export const OnboardingVisualIdentityLayoutSection = ({
+  layoutRules,
+  layoutFiles,
+  extractionStatus,
+  onLayoutRulesChange,
+  onFileUpload
+}: OnboardingVisualIdentityLayoutSectionProps) => {
+  return (
+    <Card className="p-6 bg-gray-800 border-gray-700">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <Layout className="h-5 w-5 mr-2 text-blue-400" />
+          <h3 className="text-lg font-semibold text-white">Layout Rules</h3>
+        </div>
+        {extractionStatus && (
+          <Badge variant="secondary" className="bg-green-600 text-white">
+            Auto-extracted
+          </Badge>
+        )}
+      </div>
+
+      {extractionStatus ? (
+        <div className="flex items-start space-x-2 mb-4 p-3 bg-green-900/20 border border-green-600/30 rounded-lg">
+          <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-green-400 text-sm font-medium">Based on your brand guidelines</p>
+            <p className="text-gray-300 text-sm">Layout rules and guidelines have been automatically extracted from your uploaded brand documents.</p>
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-start space-x-2 mb-4 p-3 bg-orange-900/20 border border-orange-600/30 rounded-lg">
+          <AlertCircle className="h-5 w-5 text-orange-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-orange-400 text-sm font-medium">Element not found in brand guidelines</p>
+            <p className="text-gray-300 text-sm">Please upload grid templates, layout guides, or describe your layout principles below.</p>
+          </div>
+        </div>
+      )}
+      
+      <div className="space-y-4 mb-6">
+        <div className="border-2 border-dashed border-gray-600 rounded-lg p-6 text-center">
+          <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+          <p className="text-gray-400 mb-2">
+            {extractionStatus 
+              ? 'Upload additional layout templates (optional)'
+              : 'Upload layout templates or grid guides'
+            }
+          </p>
+          <input
+            type="file"
+            multiple
+            accept="image/*,.pdf"
+            onChange={(e) => onFileUpload(e.target.files)}
+            className="hidden"
+            id="layout-upload"
+          />
+          <Button
+            variant="outline"
+            onClick={() => document.getElementById('layout-upload')?.click()}
+            className="border-gray-600 text-gray-300"
+          >
+            Choose Files
+          </Button>
+        </div>
+        
+        {layoutFiles.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {layoutFiles.map((file, index) => (
+              <div key={index} className="text-center">
+                <div className="w-full h-20 bg-gray-700 rounded border flex items-center justify-center mb-2">
+                  <Layout className="h-8 w-8 text-gray-400" />
+                </div>
+                <p className="text-xs text-gray-400 truncate">{file.name}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <Separator className="my-4 bg-gray-600" />
+      
+      <div className="space-y-2">
+        <Label className="text-gray-200">Layout Guidelines</Label>
+        <Textarea
+          value={layoutRules}
+          onChange={(e) => onLayoutRulesChange(e.target.value)}
+          className="bg-gray-700 border-gray-600 text-white"
+          placeholder={extractionStatus 
+            ? "Extracted layout rules (you can edit this)"
+            : "Describe layout rules and guidelines..."
+          }
+          rows={3}
+        />
+      </div>
+    </Card>
+  );
+};
