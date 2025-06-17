@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Upload, Palette, Type, Camera, Image, Layout, Eye, CheckCircle, Plus, X, FileText } from 'lucide-react';
+import { Upload, Palette, Type, Camera, Image, Layout, Eye, CheckCircle, Plus, X, FileText, AlertCircle } from 'lucide-react';
 
 interface BrandGuideline {
   id: string;
@@ -37,6 +37,12 @@ interface OnboardingVisualIdentityProps {
   onNavigateToGuidelines?: () => void;
 }
 
+interface ExtractionStatus {
+  photography: boolean;
+  iconography: boolean;
+  layout: boolean;
+}
+
 export const OnboardingVisualIdentity = ({
   guidelines,
   visualIdentity,
@@ -50,8 +56,13 @@ export const OnboardingVisualIdentity = ({
     layoutFiles: visualIdentity.layoutFiles || []
   });
   const [extractedFromGuidelines, setExtractedFromGuidelines] = useState(false);
+  const [extractionStatus, setExtractionStatus] = useState<ExtractionStatus>({
+    photography: false,
+    iconography: false,
+    layout: false
+  });
 
-  // Enhanced extraction from brand guidelines including logo files
+  // Enhanced extraction from brand guidelines including auto-detection of specific elements
   useEffect(() => {
     if (guidelines.length > 0 && !extractedFromGuidelines) {
       // Create mock logo files extracted from guidelines
@@ -60,22 +71,62 @@ export const OnboardingVisualIdentity = ({
         return new File([blob], name, { type });
       };
 
-      // Simulate comprehensive extraction based on multiple guidelines
-      const extractedLogos = [
-        createMockLogoFile('brand-logo-primary.png'),
-        createMockLogoFile('brand-logo-horizontal.png'),
-        createMockLogoFile('brand-logo-monochrome.png')
-      ];
+      // Create mock iconography files if detected in guidelines
+      const createMockIconFile = (name: string, type: string = 'image/svg+xml') => {
+        const blob = new Blob(['mock icon data'], { type });
+        return new File([blob], name, { type });
+      };
+
+      // Simulate intelligent extraction based on guideline content analysis
+      // In a real implementation, this would analyze the actual file content
+      const hasPhotographyGuidelines = guidelines.some(g => 
+        g.name.toLowerCase().includes('photography') || 
+        g.description.toLowerCase().includes('photo') ||
+        g.description.toLowerCase().includes('image')
+      );
+
+      const hasIconographyGuidelines = guidelines.some(g => 
+        g.name.toLowerCase().includes('icon') || 
+        g.description.toLowerCase().includes('graphic') ||
+        g.name.toLowerCase().includes('visual elements')
+      );
+
+      const hasLayoutGuidelines = guidelines.some(g => 
+        g.name.toLowerCase().includes('layout') || 
+        g.description.toLowerCase().includes('grid') ||
+        g.description.toLowerCase().includes('spacing')
+      );
+
+      // Extract iconography files if guidelines contain iconography information
+      const extractedIconography = hasIconographyGuidelines ? [
+        createMockIconFile('brand-icons-primary.svg'),
+        createMockIconFile('brand-icons-secondary.svg')
+      ] : [];
 
       const extractedIdentity: VisualIdentity = {
         ...identity,
-        logoFiles: extractedLogos,
+        logoFiles: [
+          createMockLogoFile('brand-logo-primary.png'),
+          createMockLogoFile('brand-logo-horizontal.png'),
+          createMockLogoFile('brand-logo-monochrome.png')
+        ],
         colorPalette: ['#FF6B35', '#004E89', '#FFFFFF', '#F4F4F4', '#2C3E50'],
         typography: ['Helvetica Neue', 'Arial', 'Georgia', 'Open Sans'],
-        photographyStyle: 'Clean, modern photography with consistent lighting and minimal backgrounds. Focus on lifestyle imagery that reflects brand values.',
-        layoutRules: 'Maintain generous white space, use grid-based layouts, ensure minimum 8px margins, and follow 4:3 aspect ratios for hero images.'
+        photographyStyle: hasPhotographyGuidelines 
+          ? 'Clean, modern photography with consistent lighting and minimal backgrounds. Focus on lifestyle imagery that reflects brand values.'
+          : '',
+        iconography: extractedIconography,
+        layoutRules: hasLayoutGuidelines 
+          ? 'Maintain generous white space, use grid-based layouts, ensure minimum 8px margins, and follow 4:3 aspect ratios for hero images.'
+          : ''
       };
+
       setIdentity(extractedIdentity);
+      setExtractionStatus({
+        photography: hasPhotographyGuidelines,
+        iconography: hasIconographyGuidelines,
+        layout: hasLayoutGuidelines
+      });
       setExtractedFromGuidelines(true);
     }
   }, [guidelines, extractedFromGuidelines, identity]);
@@ -356,28 +407,49 @@ export const OnboardingVisualIdentity = ({
           </div>
         </Card>
 
-        {/* Photography Style - Enhanced with Upload Option */}
+        {/* Photography Style - Enhanced with Smart Extraction */}
         <Card className="p-6 bg-gray-800 border-gray-700">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <Camera className="h-5 w-5 mr-2 text-blue-400" />
               <h3 className="text-lg font-semibold text-white">Photography Style</h3>
             </div>
-            {extractedFromGuidelines && (
+            {extractionStatus.photography && (
               <Badge variant="secondary" className="bg-green-600 text-white">
                 Auto-extracted
               </Badge>
             )}
           </div>
-          <p className="text-gray-400 text-sm mb-4">
-            Upload style guide PDFs or images, or describe your approved photography style and tone
-          </p>
+
+          {/* Smart messaging based on extraction status */}
+          {extractionStatus.photography ? (
+            <div className="flex items-start space-x-2 mb-4 p-3 bg-green-900/20 border border-green-600/30 rounded-lg">
+              <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-green-400 text-sm font-medium">Based on your brand guidelines</p>
+                <p className="text-gray-300 text-sm">Photography style guidelines have been automatically extracted from your uploaded brand documents.</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-start space-x-2 mb-4 p-3 bg-orange-900/20 border border-orange-600/30 rounded-lg">
+              <AlertCircle className="h-5 w-5 text-orange-500 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-orange-400 text-sm font-medium">Element not found in brand guidelines</p>
+                <p className="text-gray-300 text-sm">Please upload photography style examples or describe your preferred style below.</p>
+              </div>
+            </div>
+          )}
           
           {/* Upload Section */}
           <div className="space-y-4 mb-6">
             <div className="border-2 border-dashed border-gray-600 rounded-lg p-6 text-center">
               <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-              <p className="text-gray-400 mb-2">Upload photography style guides or examples</p>
+              <p className="text-gray-400 mb-2">
+                {extractionStatus.photography 
+                  ? 'Upload additional photography examples (optional)'
+                  : 'Upload photography style guides or examples'
+                }
+              </p>
               <input
                 type="file"
                 multiple
@@ -418,24 +490,74 @@ export const OnboardingVisualIdentity = ({
               value={identity.photographyStyle}
               onChange={(e) => setIdentity(prev => ({ ...prev, photographyStyle: e.target.value }))}
               className="bg-gray-700 border-gray-600 text-white"
-              placeholder="Describe your photography style preferences..."
+              placeholder={extractionStatus.photography 
+                ? "Extracted style description (you can edit this)"
+                : "Describe your photography style preferences..."
+              }
               rows={3}
             />
           </div>
         </Card>
 
-        {/* Iconography / Graphic Elements */}
+        {/* Iconography / Graphic Elements - Enhanced with Smart Extraction */}
         <Card className="p-6 bg-gray-800 border-gray-700">
-          <div className="flex items-center mb-4">
-            <Layout className="h-5 w-5 mr-2 text-blue-400" />
-            <h3 className="text-lg font-semibold text-white">Iconography / Graphic Elements</h3>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <Layout className="h-5 w-5 mr-2 text-blue-400" />
+              <h3 className="text-lg font-semibold text-white">Iconography / Graphic Elements</h3>
+            </div>
+            {extractionStatus.iconography && (
+              <Badge variant="secondary" className="bg-green-600 text-white">
+                Auto-extracted
+              </Badge>
+            )}
           </div>
-          <p className="text-gray-400 text-sm mb-4">
-            Upload icon packs, graphic treatments, watermark usage
-          </p>
+
+          {/* Smart messaging based on extraction status */}
+          {extractionStatus.iconography ? (
+            <div className="flex items-start space-x-2 mb-4 p-3 bg-green-900/20 border border-green-600/30 rounded-lg">
+              <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-green-400 text-sm font-medium">Based on your brand guidelines</p>
+                <p className="text-gray-300 text-sm">Iconography and graphic elements have been automatically extracted from your uploaded brand documents.</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-start space-x-2 mb-4 p-3 bg-orange-900/20 border border-orange-600/30 rounded-lg">
+              <AlertCircle className="h-5 w-5 text-orange-500 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-orange-400 text-sm font-medium">Element not found in brand guidelines</p>
+                <p className="text-gray-300 text-sm">Please upload icon packs, graphic treatments, or watermark files.</p>
+              </div>
+            </div>
+          )}
+
+          {/* Show extracted iconography if available */}
+          {extractionStatus.iconography && identity.iconography.length > 0 && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              {identity.iconography.map((file, index) => (
+                <div key={index} className="text-center">
+                  <div className="w-full h-20 bg-gray-700 rounded border flex items-center justify-center mb-2">
+                    <Layout className="h-8 w-8 text-gray-400" />
+                  </div>
+                  <p className="text-xs text-gray-400 truncate">{file.name}</p>
+                  <Badge variant="secondary" className="mt-1 text-xs bg-green-600 text-white">
+                    Extracted
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Upload interface */}
           <div className="border-2 border-dashed border-gray-600 rounded-lg p-6 text-center">
             <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-            <p className="text-gray-400 mb-2">Upload iconography files</p>
+            <p className="text-gray-400 mb-2">
+              {extractionStatus.iconography 
+                ? 'Upload additional iconography files (optional)'
+                : 'Upload iconography files'
+              }
+            </p>
             <input
               type="file"
               multiple
@@ -452,30 +574,65 @@ export const OnboardingVisualIdentity = ({
               Choose Files
             </Button>
           </div>
+
+          {/* Show uploaded files if any */}
+          {!extractionStatus.iconography && identity.iconography.length > 0 && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+              {identity.iconography.map((file, index) => (
+                <div key={index} className="text-center">
+                  <div className="w-full h-20 bg-gray-700 rounded border flex items-center justify-center mb-2">
+                    <Layout className="h-8 w-8 text-gray-400" />
+                  </div>
+                  <p className="text-xs text-gray-400 truncate">{file.name}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </Card>
 
-        {/* Layout Rules - Enhanced with Upload Option */}
+        {/* Layout Rules - Enhanced with Smart Extraction */}
         <Card className="p-6 bg-gray-800 border-gray-700">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <Layout className="h-5 w-5 mr-2 text-blue-400" />
               <h3 className="text-lg font-semibold text-white">Layout Rules</h3>
             </div>
-            {extractedFromGuidelines && (
+            {extractionStatus.layout && (
               <Badge variant="secondary" className="bg-green-600 text-white">
                 Auto-extracted
               </Badge>
             )}
           </div>
-          <p className="text-gray-400 text-sm mb-4">
-            Upload grid templates, layout guides, or describe safe zones, margins, and layout principles
-          </p>
+
+          {/* Smart messaging based on extraction status */}
+          {extractionStatus.layout ? (
+            <div className="flex items-start space-x-2 mb-4 p-3 bg-green-900/20 border border-green-600/30 rounded-lg">
+              <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-green-400 text-sm font-medium">Based on your brand guidelines</p>
+                <p className="text-gray-300 text-sm">Layout rules and guidelines have been automatically extracted from your uploaded brand documents.</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-start space-x-2 mb-4 p-3 bg-orange-900/20 border border-orange-600/30 rounded-lg">
+              <AlertCircle className="h-5 w-5 text-orange-500 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-orange-400 text-sm font-medium">Element not found in brand guidelines</p>
+                <p className="text-gray-300 text-sm">Please upload grid templates, layout guides, or describe your layout principles below.</p>
+              </div>
+            </div>
+          )}
           
           {/* Upload Section */}
           <div className="space-y-4 mb-6">
             <div className="border-2 border-dashed border-gray-600 rounded-lg p-6 text-center">
               <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-              <p className="text-gray-400 mb-2">Upload layout templates or grid guides</p>
+              <p className="text-gray-400 mb-2">
+                {extractionStatus.layout 
+                  ? 'Upload additional layout templates (optional)'
+                  : 'Upload layout templates or grid guides'
+                }
+              </p>
               <input
                 type="file"
                 multiple
@@ -516,7 +673,10 @@ export const OnboardingVisualIdentity = ({
               value={identity.layoutRules}
               onChange={(e) => setIdentity(prev => ({ ...prev, layoutRules: e.target.value }))}
               className="bg-gray-700 border-gray-600 text-white"
-              placeholder="Describe layout rules and guidelines..."
+              placeholder={extractionStatus.layout 
+                ? "Extracted layout rules (you can edit this)"
+                : "Describe layout rules and guidelines..."
+              }
               rows={3}
             />
           </div>
