@@ -7,68 +7,14 @@ import { OnboardingVisualIdentity } from './OnboardingVisualIdentity';
 import { OnboardingVerbalIdentity } from './OnboardingVerbalIdentity';
 import { OnboardingLegalRegulatory } from './OnboardingLegalRegulatory';
 import { OnboardingInviteCollaborators } from './OnboardingInviteCollaborators';
-
-interface BrandGuideline {
-  id: string;
-  name: string;
-  description: string;
-  file: File | null;
-  uploadDate: string;
-}
-
-interface LegalGuideline {
-  id: string;
-  name: string;
-  description: string;
-  file: File | null;
-  uploadDate: string;
-  category: 'advertising' | 'claims' | 'disclosure' | 'privacy' | 'accessibility' | 'other';
-}
-
-interface VisualIdentity {
-  logoFiles: File[];
-  colorPalette: string[];
-  typography: string[];
-  photographyStyle: string;
-  photographyFiles: File[];
-  iconography: File[];
-  layoutRules: string;
-  layoutFiles: File[];
-  accessibilityRequirements: {
-    contrast: boolean;
-    fontSizes: boolean;
-    altText: boolean;
-  };
-}
-
-interface VerbalIdentity {
-  toneOfVoice: string[];
-  brandVocabulary: string;
-  prohibitedWords: string;
-  claimsDisclosures: string;
-  localizationRules: string;
-  grammarPreferences: string;
-}
-
-interface LegalRegulatory {
-  industryRules: string;
-  regulatoryRequirements: string[];
-  disclosures: string;
-  ipRightsManagement: File[];
-  jurisdictionNotes: string[];
-}
-
-interface CompanyInfo {
-  company: string;
-  brands: string[];
-  jobTitle: string;
-}
-
-interface Collaborator {
-  id: string;
-  email: string;
-  role: string;
-}
+import type { 
+  BrandGuideline, 
+  VisualIdentity, 
+  VerbalIdentity, 
+  LegalRegulatory, 
+  CompanyInfo, 
+  Collaborator 
+} from '@/types/onboarding';
 
 interface OnboardingStepsProps {
   currentStep: number;
