@@ -11,6 +11,7 @@ interface BrandGuideline {
   description: string;
   file: File | null;
   uploadDate: string;
+  brandName?: string;
 }
 
 export const OnboardingGuidelinesView = () => {
@@ -22,9 +23,19 @@ export const OnboardingGuidelinesView = () => {
       name: 'Brand Identity Guidelines 2024',
       description: 'Complete brand identity guidelines including logo usage, colors, and typography',
       file: null, // In real app, this would be the actual file reference
-      uploadDate: '2024-01-15'
+      uploadDate: '2024-01-15',
+      brandName: 'Main Brand'
     }
   ]);
+
+  // Extract unique brand names from existing guidelines, or provide a default
+  const getBrands = () => {
+    const brandNames = onboardingGuidelines
+      .map(g => g.brandName)
+      .filter((name): name is string => !!name);
+    const uniqueBrands = [...new Set(brandNames)];
+    return uniqueBrands.length > 0 ? uniqueBrands : ['Main Brand'];
+  };
 
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes';
@@ -55,6 +66,7 @@ export const OnboardingGuidelinesView = () => {
         <OnboardingGuidelinesUpload
           guidelines={onboardingGuidelines}
           onGuidelinesUploaded={handleGuidelinesUpdated}
+          brands={getBrands()}
         />
       </div>
     );
@@ -88,7 +100,14 @@ export const OnboardingGuidelinesView = () => {
                   <div className="flex items-center space-x-3">
                     <FileText className="h-5 w-5 text-blue-400" />
                     <div>
-                      <p className="font-medium text-white">{guideline.name}</p>
+                      <div className="flex items-center space-x-2">
+                        <p className="font-medium text-white">{guideline.name}</p>
+                        {guideline.brandName && (
+                          <span className="px-2 py-1 bg-blue-600 text-blue-100 rounded text-xs">
+                            {guideline.brandName}
+                          </span>
+                        )}
+                      </div>
                       {guideline.description && (
                         <p className="text-sm text-gray-400">{guideline.description}</p>
                       )}
