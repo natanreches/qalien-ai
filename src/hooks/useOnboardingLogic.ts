@@ -1,7 +1,6 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { OnboardingData, CompanyInfo, BrandGuideline, VisualIdentity, VerbalIdentity, LegalRegulatory, Collaborator } from '@/types/onboarding';
+import type { OnboardingData, CompanyInfo, BrandGuideline, VisualIdentity, VerbalIdentity, AdCreative, LegalRegulatory, Collaborator } from '@/types/onboarding';
 
 export const useOnboardingLogic = () => {
   const navigate = useNavigate();
