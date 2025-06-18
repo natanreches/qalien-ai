@@ -49,7 +49,7 @@ interface LegalRegulatory {
 
 interface CompanyInfo {
   company: string;
-  brand: string;
+  brands: string[];
   jobTitle: string;
 }
 
@@ -64,7 +64,7 @@ const Onboarding = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [companyInfo, setCompanyInfo] = useState<CompanyInfo>({
     company: '',
-    brand: '',
+    brands: [''],
     jobTitle: ''
   });
   const [guidelines, setGuidelines] = useState<BrandGuideline[]>([]);
@@ -170,7 +170,7 @@ const Onboarding = () => {
       case 1:
         return true; // Welcome step
       case 2:
-        return companyInfo.company.length > 0 && companyInfo.brand.length > 0 && companyInfo.jobTitle.length > 0;
+        return companyInfo.company.length > 0 && companyInfo.brands.some(brand => brand.length > 0) && companyInfo.jobTitle.length > 0;
       case 3:
         return true; // Brand guidelines step - optional
       case 4:

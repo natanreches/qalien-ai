@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { OnboardingWelcome } from './OnboardingWelcome';
 import { OnboardingCompanyInfo } from './OnboardingCompanyInfo';
@@ -59,7 +60,7 @@ interface LegalRegulatory {
 
 interface CompanyInfo {
   company: string;
-  brand: string;
+  brands: string[];
   jobTitle: string;
 }
 
