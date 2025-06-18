@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { OnboardingVisualIdentityHeader } from './OnboardingVisualIdentityHeader';
@@ -27,7 +26,11 @@ interface VisualIdentity {
   iconography: File[];
   layoutRules: string;
   layoutFiles: File[];
-  accessibilityRequirements: boolean;
+  accessibilityRequirements: {
+    contrast: boolean;
+    fontSizes: boolean;
+    altText: boolean;
+  };
 }
 
 interface OnboardingVisualIdentityProps {
@@ -64,7 +67,12 @@ export const OnboardingVisualIdentity = ({
   const [identity, setIdentity] = useState<VisualIdentity>({
     ...visualIdentity,
     photographyFiles: visualIdentity.photographyFiles || [],
-    layoutFiles: visualIdentity.layoutFiles || []
+    layoutFiles: visualIdentity.layoutFiles || [],
+    accessibilityRequirements: visualIdentity.accessibilityRequirements || {
+      contrast: false,
+      fontSizes: false,
+      altText: false
+    }
   });
   const [extractedFromGuidelines, setExtractedFromGuidelines] = useState(false);
   const [extractionStatus, setExtractionStatus] = useState<ExtractionStatus>({
@@ -308,7 +316,7 @@ export const OnboardingVisualIdentity = ({
 
         <OnboardingVisualIdentityAccessibilitySection
           accessibilityRequirements={identity.accessibilityRequirements}
-          onAccessibilityChange={(checked) => setIdentity(prev => ({ ...prev, accessibilityRequirements: checked }))}
+          onAccessibilityChange={(requirements) => setIdentity(prev => ({ ...prev, accessibilityRequirements: requirements }))}
           extractedFromGuidelines={extractedFromGuidelines}
           onVerifyExtraction={(isCorrect) => handleVerifyExtraction('accessibility', isCorrect)}
           extractionVerified={verificationStatus.accessibility}

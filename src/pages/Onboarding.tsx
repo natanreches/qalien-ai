@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -24,7 +23,11 @@ interface VisualIdentity {
   iconography: File[];
   layoutRules: string;
   layoutFiles: File[];
-  accessibilityRequirements: boolean;
+  accessibilityRequirements: {
+    contrast: boolean;
+    fontSizes: boolean;
+    altText: boolean;
+  };
 }
 
 interface VerbalIdentity {
@@ -74,7 +77,11 @@ const Onboarding = () => {
     iconography: [],
     layoutRules: '',
     layoutFiles: [],
-    accessibilityRequirements: false
+    accessibilityRequirements: {
+      contrast: false,
+      fontSizes: false,
+      altText: false
+    }
   });
   const [verbalIdentity, setVerbalIdentity] = useState<VerbalIdentity>({
     toneOfVoice: [],
