@@ -7,6 +7,7 @@ import { OnboardingVisualIdentity } from './OnboardingVisualIdentity';
 import { OnboardingVerbalIdentity } from './OnboardingVerbalIdentity';
 import { OnboardingAdCreatives } from './OnboardingAdCreatives';
 import { OnboardingLegalRegulatory } from './OnboardingLegalRegulatory';
+import { OnboardingInviteCollaborators } from './OnboardingInviteCollaborators';
 import { OnboardingReviewConfirm } from './OnboardingReviewConfirm';
 import type { 
   BrandGuideline, 
@@ -107,6 +108,13 @@ export const OnboardingSteps = ({
         />
       );
     case 8:
+      return (
+        <OnboardingInviteCollaborators
+          collaborators={collaborators}
+          onCollaboratorsUpdated={onCollaboratorsUpdated}
+        />
+      );
+    case 9:
       return (
         <OnboardingReviewConfirm
           companyInfo={companyInfo}

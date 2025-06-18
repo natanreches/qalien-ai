@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { OnboardingData, CompanyInfo, BrandGuideline, VisualIdentity, VerbalIdentity, AdCreative, LegalRegulatory, Collaborator } from '@/types/onboarding';
@@ -44,7 +45,7 @@ export const useOnboardingLogic = () => {
   });
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
 
-  const totalSteps = 8;
+  const totalSteps = 9;
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
@@ -109,6 +110,8 @@ export const useOnboardingLogic = () => {
       case 7:
         return legalRegulatory.industryRules.length > 0;
       case 8:
+        return true; // Collaborators step is optional
+      case 9:
         return true; // Review step - always allow completion
       default:
         return false;
@@ -124,7 +127,8 @@ export const useOnboardingLogic = () => {
       case 5: return 'Verbal Identity';
       case 6: return 'Ad Creatives';
       case 7: return 'Legal & Regulatory';
-      case 8: return 'Review & Confirm';
+      case 8: return 'Invite Collaborators';
+      case 9: return 'Review & Confirm';
       default: return '';
     }
   };
