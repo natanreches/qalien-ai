@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -55,11 +55,18 @@ export const OnboardingVerbalIdentity = ({
     'Arabic', 'Russian', 'Hindi', 'Swedish', 'Norwegian', 'Danish'
   ];
 
+  // Update parent state whenever identity changes
+  useEffect(() => {
+    console.log('Updating parent with identity:', identity);
+    onVerbalIdentityUpdated(identity);
+  }, [identity, onVerbalIdentityUpdated]);
+
   const handleToneToggle = (tone: string) => {
     const newTones = selectedTones.includes(tone)
       ? selectedTones.filter(t => t !== tone)
       : [...selectedTones, tone];
     
+    console.log('New tones selected:', newTones);
     setSelectedTones(newTones);
     setIdentity(prev => ({ ...prev, toneOfVoice: newTones }));
   };
@@ -97,11 +104,24 @@ export const OnboardingVerbalIdentity = ({
     }));
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     updateGrammarPreferences();
   }, [spellingPreference, oxfordComma, dateFormat, numberFormat, selectedLanguages]);
 
+  const handleBrandVocabularyChange = (value: string) => {
+    setIdentity(prev => ({ ...prev, brandVocabulary: value }));
+  };
+
+  const handleProhibitedWordsChange = (value: string) => {
+    setIdentity(prev => ({ ...prev, prohibitedWords: value }));
+  };
+
+  const handleClaimsDisclosuresChange = (value: string) => {
+    setIdentity(prev => ({ ...prev, claimsDisclosures: value }));
+  };
+
   const handleSave = () => {
+    console.log('Saving identity:', identity);
     onVerbalIdentityUpdated(identity);
   };
 
@@ -178,7 +198,7 @@ export const OnboardingVerbalIdentity = ({
             
             <Textarea
               value={identity.brandVocabulary}
-              onChange={(e) => setIdentity(prev => ({ ...prev, brandVocabulary: e.target.value }))}
+              onChange={(e) => handleBrandVocabularyChange(e.target.value)}
               className="bg-gray-700 border-gray-600 text-white"
               placeholder="Or manually enter approved keywords, phrases, and terminology..."
               rows={4}
@@ -198,7 +218,7 @@ export const OnboardingVerbalIdentity = ({
           
           <Textarea
             value={identity.prohibitedWords}
-            onChange={(e) => setIdentity(prev => ({ ...prev, prohibitedWords: e.target.value }))}
+            onChange={(e) => handleProhibitedWordsChange(e.target.value)}
             className="bg-gray-700 border-gray-600 text-white"
             placeholder="Enter words or phrases that should never be used in your brand communications..."
             rows={4}
@@ -217,7 +237,7 @@ export const OnboardingVerbalIdentity = ({
           
           <Textarea
             value={identity.claimsDisclosures}
-            onChange={(e) => setIdentity(prev => ({ ...prev, claimsDisclosures: e.target.value }))}
+            onChange={(e) => handleClaimsDisclosuresChange(e.target.value)}
             className="bg-gray-700 border-gray-600 text-white"
             placeholder="Enter claims that require legal disclaimers or substantiation..."
             rows={4}
