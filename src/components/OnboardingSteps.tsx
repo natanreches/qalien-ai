@@ -33,7 +33,11 @@ interface VisualIdentity {
   iconography: File[];
   layoutRules: string;
   layoutFiles: File[];
-  accessibilityRequirements: boolean;
+  accessibilityRequirements: {
+    contrast: boolean;
+    fontSizes: boolean;
+    altText: boolean;
+  };
 }
 
 interface VerbalIdentity {
