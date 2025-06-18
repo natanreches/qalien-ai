@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { OnboardingVisualIdentityHeader } from './OnboardingVisualIdentityHeader';
@@ -44,6 +43,14 @@ interface ExtractionStatus {
   layout: boolean;
 }
 
+interface VerificationStatus {
+  typography?: boolean;
+  accessibility?: boolean;
+  photography?: boolean;
+  iconography?: boolean;
+  layout?: boolean;
+}
+
 export const OnboardingVisualIdentity = ({
   guidelines,
   visualIdentity,
@@ -62,6 +69,7 @@ export const OnboardingVisualIdentity = ({
     iconography: false,
     layout: false
   });
+  const [verificationStatus, setVerificationStatus] = useState<VerificationStatus>({});
 
   // Enhanced extraction from brand guidelines including auto-detection of specific elements
   useEffect(() => {
@@ -193,6 +201,14 @@ export const OnboardingVisualIdentity = ({
     }));
   };
 
+  const clearTypography = () => {
+    setIdentity(prev => ({ ...prev, typography: [] }));
+  };
+
+  const handleVerifyExtraction = (section: keyof VerificationStatus, isCorrect: boolean) => {
+    setVerificationStatus(prev => ({ ...prev, [section]: isCorrect }));
+  };
+
   const handleSave = () => {
     onVisualIdentityUpdated(identity);
   };
@@ -237,6 +253,9 @@ export const OnboardingVisualIdentity = ({
           onAddTypography={addTypography}
           onUpdateTypography={updateTypography}
           onRemoveTypography={removeTypography}
+          onVerifyExtraction={(isCorrect) => handleVerifyExtraction('typography', isCorrect)}
+          extractionVerified={verificationStatus.typography}
+          onClearExtracted={clearTypography}
         />
 
         <OnboardingVisualIdentityPhotographySection
@@ -245,12 +264,18 @@ export const OnboardingVisualIdentity = ({
           extractionStatus={extractionStatus.photography}
           onPhotographyStyleChange={(style) => setIdentity(prev => ({ ...prev, photographyStyle: style }))}
           onFileUpload={(files) => handleFileUpload(files, 'photography')}
+          onVerifyExtraction={(isCorrect) => handleVerifyExtraction('photography', isCorrect)}
+          extractionVerified={verificationStatus.photography}
+          onClearExtracted={() => setIdentity(prev => ({ ...prev, photographyStyle: '', photographyFiles: [] }))}
         />
 
         <OnboardingVisualIdentityIconographySection
           iconography={identity.iconography}
           extractionStatus={extractionStatus.iconography}
           onFileUpload={(files) => handleFileUpload(files, 'iconography')}
+          onVerifyExtraction={(isCorrect) => handleVerifyExtraction('iconography', isCorrect)}
+          extractionVerified={verificationStatus.iconography}
+          onClearExtracted={() => setIdentity(prev => ({ ...prev, iconography: [] }))}
         />
 
         <OnboardingVisualIdentityLayoutSection
@@ -259,11 +284,17 @@ export const OnboardingVisualIdentity = ({
           extractionStatus={extractionStatus.layout}
           onLayoutRulesChange={(rules) => setIdentity(prev => ({ ...prev, layoutRules: rules }))}
           onFileUpload={(files) => handleFileUpload(files, 'layout')}
+          onVerifyExtraction={(isCorrect) => handleVerifyExtraction('layout', isCorrect)}
+          extractionVerified={verificationStatus.layout}
+          onClearExtracted={() => setIdentity(prev => ({ ...prev, layoutRules: '', layoutFiles: [] }))}
         />
 
         <OnboardingVisualIdentityAccessibilitySection
           accessibilityRequirements={identity.accessibilityRequirements}
           onAccessibilityChange={(checked) => setIdentity(prev => ({ ...prev, accessibilityRequirements: checked }))}
+          extractedFromGuidelines={extractedFromGuidelines}
+          onVerifyExtraction={(isCorrect) => handleVerifyExtraction('accessibility', isCorrect)}
+          extractionVerified={verificationStatus.accessibility}
         />
       </div>
 
