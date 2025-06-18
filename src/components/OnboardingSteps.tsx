@@ -7,7 +7,7 @@ import { OnboardingVisualIdentity } from './OnboardingVisualIdentity';
 import { OnboardingVerbalIdentity } from './OnboardingVerbalIdentity';
 import { OnboardingAdCreatives } from './OnboardingAdCreatives';
 import { OnboardingLegalRegulatory } from './OnboardingLegalRegulatory';
-import { OnboardingInviteCollaborators } from './OnboardingInviteCollaborators';
+import { OnboardingReviewConfirm } from './OnboardingReviewConfirm';
 import type { 
   BrandGuideline, 
   VisualIdentity, 
@@ -35,6 +35,7 @@ interface OnboardingStepsProps {
   onLegalRegulatoryUpdated: (legal: LegalRegulatory) => void;
   onCollaboratorsUpdated: (collaborators: Collaborator[]) => void;
   onNavigateToGuidelines: () => void;
+  onNavigateToStep?: (step: number) => void;
 }
 
 export const OnboardingSteps = ({
@@ -53,7 +54,8 @@ export const OnboardingSteps = ({
   onAdCreativesUpdated,
   onLegalRegulatoryUpdated,
   onCollaboratorsUpdated,
-  onNavigateToGuidelines
+  onNavigateToGuidelines,
+  onNavigateToStep
 }: OnboardingStepsProps) => {
   switch (currentStep) {
     case 1:
@@ -106,9 +108,15 @@ export const OnboardingSteps = ({
       );
     case 8:
       return (
-        <OnboardingInviteCollaborators
+        <OnboardingReviewConfirm
+          companyInfo={companyInfo}
+          guidelines={guidelines}
+          visualIdentity={visualIdentity}
+          verbalIdentity={verbalIdentity}
+          adCreatives={adCreatives}
+          legalRegulatory={legalRegulatory}
           collaborators={collaborators}
-          onCollaboratorsUpdated={onCollaboratorsUpdated}
+          onEditStep={onNavigateToStep || (() => {})}
         />
       );
     default:

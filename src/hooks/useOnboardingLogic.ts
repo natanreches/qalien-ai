@@ -62,6 +62,12 @@ export const useOnboardingLogic = () => {
     setCurrentStep(3);
   };
 
+  const handleNavigateToStep = (step: number) => {
+    if (step >= 1 && step <= totalSteps) {
+      setCurrentStep(step);
+    }
+  };
+
   const handleComplete = () => {
     localStorage.setItem('onboarding_completed', 'true');
     localStorage.setItem('onboarding_data', JSON.stringify({
@@ -103,7 +109,7 @@ export const useOnboardingLogic = () => {
       case 7:
         return legalRegulatory.industryRules.length > 0;
       case 8:
-        return true;
+        return true; // Review step - always allow completion
       default:
         return false;
     }
@@ -118,7 +124,7 @@ export const useOnboardingLogic = () => {
       case 5: return 'Verbal Identity';
       case 6: return 'Ad Creatives';
       case 7: return 'Legal & Regulatory';
-      case 8: return 'Invite Collaborators';
+      case 8: return 'Review & Confirm';
       default: return '';
     }
   };
@@ -143,6 +149,7 @@ export const useOnboardingLogic = () => {
     handleNext,
     handleBack,
     handleNavigateToGuidelines,
+    handleNavigateToStep,
     handleComplete,
     handleSkipOnboarding,
     canProceed: canProceed(),

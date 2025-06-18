@@ -25,6 +25,7 @@ const Onboarding = () => {
     handleNext,
     handleBack,
     handleNavigateToGuidelines,
+    handleNavigateToStep,
     handleComplete,
     handleSkipOnboarding,
     canProceed,
@@ -59,6 +60,7 @@ const Onboarding = () => {
         onLegalRegulatoryUpdated={setLegalRegulatory}
         onCollaboratorsUpdated={setCollaborators}
         onNavigateToGuidelines={handleNavigateToGuidelines}
+        onNavigateToStep={handleNavigateToStep}
       />
     </OnboardingContainer>
   );
