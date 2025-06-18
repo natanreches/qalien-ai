@@ -205,6 +205,14 @@ export const OnboardingVisualIdentity = ({
     setIdentity(prev => ({ ...prev, typography: [] }));
   };
 
+  const clearLogoFiles = () => {
+    setIdentity(prev => ({ ...prev, logoFiles: [] }));
+  };
+
+  const clearColorPalette = () => {
+    setIdentity(prev => ({ ...prev, colorPalette: [] }));
+  };
+
   const handleVerifyExtraction = (section: keyof VerificationStatus, isCorrect: boolean) => {
     setVerificationStatus(prev => ({ ...prev, [section]: isCorrect }));
   };
@@ -237,6 +245,9 @@ export const OnboardingVisualIdentity = ({
           logoFiles={identity.logoFiles}
           extractedFromGuidelines={extractedFromGuidelines}
           onFileUpload={(files) => handleFileUpload(files, 'logo')}
+          onVerifyExtraction={(isCorrect) => handleVerifyExtraction('logo', isCorrect)}
+          extractionVerified={verificationStatus.logo}
+          onClearExtracted={clearLogoFiles}
         />
 
         <OnboardingVisualIdentityColorSection
@@ -245,6 +256,9 @@ export const OnboardingVisualIdentity = ({
           onAddColor={addColor}
           onUpdateColor={updateColor}
           onRemoveColor={removeColor}
+          onVerifyExtraction={(isCorrect) => handleVerifyExtraction('colorPalette', isCorrect)}
+          extractionVerified={verificationStatus.colorPalette}
+          onClearExtracted={clearColorPalette}
         />
 
         <OnboardingVisualIdentityTypographySection

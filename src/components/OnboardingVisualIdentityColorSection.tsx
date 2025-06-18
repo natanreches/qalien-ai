@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Palette, Plus, X } from 'lucide-react';
+import { Palette, Plus, X, CheckCircle, AlertCircle, Check, AlertTriangle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,9 @@ interface OnboardingVisualIdentityColorSectionProps {
   onAddColor: () => void;
   onUpdateColor: (index: number, color: string) => void;
   onRemoveColor: (index: number) => void;
+  onVerifyExtraction?: (isCorrect: boolean) => void;
+  extractionVerified?: boolean;
+  onClearExtracted?: () => void;
 }
 
 export const OnboardingVisualIdentityColorSection = ({
@@ -19,7 +22,10 @@ export const OnboardingVisualIdentityColorSection = ({
   extractedFromGuidelines,
   onAddColor,
   onUpdateColor,
-  onRemoveColor
+  onRemoveColor,
+  onVerifyExtraction,
+  extractionVerified,
+  onClearExtracted
 }: OnboardingVisualIdentityColorSectionProps) => {
   return (
     <Card className="p-6 bg-gray-800 border-gray-700">
@@ -34,9 +40,84 @@ export const OnboardingVisualIdentityColorSection = ({
           </Badge>
         )}
       </div>
-      <p className="text-gray-400 text-sm mb-4">
-        Extracted colors (HEX/RGB); allow user to edit/approve
-      </p>
+
+      {extractedFromGuidelines && extractionVerified === undefined && (
+        <div className="mb-4 p-3 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <AlertTriangle className="h-4 w-4 text-blue-400" />
+              <span className="text-blue-400 text-sm font-medium">Are these colors correct?</span>
+            </div>
+            <div className="flex space-x-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onVerifyExtraction?.(true)}
+                className="border-green-600 text-green-400 hover:bg-green-600/10"
+              >
+                <Check className="h-3 w-3 mr-1" />
+                Yes
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onVerifyExtraction?.(false)}
+                className="border-red-600 text-red-400 hover:bg-red-600/10"
+              >
+                <X className="h-3 w-3 mr-1" />
+                No
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {extractionVerified === true && (
+        <div className="mb-4 p-2 bg-green-900/20 border border-green-600/30 rounded-lg">
+          <div className="flex items-center space-x-2">
+            <Check className="h-4 w-4 text-green-500" />
+            <span className="text-green-400 text-sm">Extraction verified as correct</span>
+          </div>
+        </div>
+      )}
+
+      {extractionVerified === false && (
+        <div className="mb-4 p-3 bg-red-900/20 border border-red-600/30 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <X className="h-4 w-4 text-red-500" />
+              <span className="text-red-400 text-sm">Please adjust the color palette below to match your requirements</span>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={onClearExtracted}
+              className="border-red-600 text-red-400 hover:bg-red-600/10"
+            >
+              Clear All
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {extractedFromGuidelines ? (
+        <div className="flex items-start space-x-2 mb-4 p-3 bg-green-900/20 border border-green-600/30 rounded-lg">
+          <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-green-400 text-sm font-medium">Based on your brand guidelines</p>
+            <p className="text-gray-300 text-sm">Color palette has been automatically extracted from your uploaded brand documents.</p>
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-start space-x-2 mb-4 p-3 bg-orange-900/20 border border-orange-600/30 rounded-lg">
+          <AlertCircle className="h-5 w-5 text-orange-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-orange-400 text-sm font-medium">Colors not found in brand guidelines</p>
+            <p className="text-gray-300 text-sm">Please add your brand colors manually using HEX or RGB values.</p>
+          </div>
+        </div>
+      )}
+
       <div className="space-y-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {colorPalette.map((color, index) => (
@@ -60,6 +141,11 @@ export const OnboardingVisualIdentityColorSection = ({
                   <X className="h-3 w-3" />
                 </Button>
               </div>
+              {extractedFromGuidelines && (
+                <Badge variant="secondary" className="text-xs bg-green-600 text-white w-full justify-center">
+                  Extracted
+                </Badge>
+              )}
             </div>
           ))}
         </div>
