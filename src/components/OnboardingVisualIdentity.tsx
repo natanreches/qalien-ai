@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { OnboardingVisualIdentityHeader } from './OnboardingVisualIdentityHeader';
@@ -44,6 +45,8 @@ interface ExtractionStatus {
 }
 
 interface VerificationStatus {
+  logo?: boolean;
+  colorPalette?: boolean;
   typography?: boolean;
   accessibility?: boolean;
   photography?: boolean;
