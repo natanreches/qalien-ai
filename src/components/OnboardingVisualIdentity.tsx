@@ -318,8 +318,6 @@ export const OnboardingVisualIdentity = ({
           accessibilityRequirements={identity.accessibilityRequirements}
           onAccessibilityChange={(requirements) => setIdentity(prev => ({ ...prev, accessibilityRequirements: requirements }))}
           extractedFromGuidelines={extractedFromGuidelines}
-          onVerifyExtraction={(isCorrect) => handleVerifyExtraction('accessibility', isCorrect)}
-          extractionVerified={verificationStatus.accessibility}
         />
       </div>
 
