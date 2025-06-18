@@ -87,8 +87,12 @@ export const useOnboardingLogic = () => {
         return true;
       case 2:
         return companyInfo.company.length > 0 && companyInfo.brands.some(brand => brand.length > 0) && companyInfo.jobTitle.length > 0;
-      case 3:
-        return true;
+      case 3: {
+        // For guidelines step, check if we have guidelines for each valid brand
+        const validBrands = companyInfo.brands.filter(brand => brand.trim().length > 0);
+        const requiredGuidelines = validBrands.length;
+        return guidelines.length >= requiredGuidelines;
+      }
       case 4:
         return visualIdentity.colorPalette.length > 0 || visualIdentity.logoFiles.length > 0;
       case 5:

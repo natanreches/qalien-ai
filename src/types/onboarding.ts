@@ -1,10 +1,10 @@
-
 export interface BrandGuideline {
   id: string;
   name: string;
   description: string;
   file: File | null;
   uploadDate: string;
+  brandName?: string;
 }
 
 export interface VisualIdentity {

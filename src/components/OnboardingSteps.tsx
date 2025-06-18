@@ -64,6 +64,7 @@ export const OnboardingSteps = ({
         <OnboardingGuidelinesUpload
           guidelines={guidelines}
           onGuidelinesUploaded={onGuidelinesUploaded}
+          brands={companyInfo.brands}
         />
       );
     case 4:
