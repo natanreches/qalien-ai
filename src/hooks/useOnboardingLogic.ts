@@ -35,6 +35,7 @@ export const useOnboardingLogic = () => {
     localizationRules: '',
     grammarPreferences: ''
   });
+  const [adCreatives, setAdCreatives] = useState<AdCreative[]>([]);
   const [legalRegulatory, setLegalRegulatory] = useState<LegalRegulatory>({
     industryRules: '',
     regulatoryRequirements: [],
@@ -44,7 +45,7 @@ export const useOnboardingLogic = () => {
   });
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
 
-  const totalSteps = 7;
+  const totalSteps = 8;
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
@@ -69,6 +70,7 @@ export const useOnboardingLogic = () => {
       guidelines: guidelines.length,
       visualIdentity,
       verbalIdentity,
+      adCreatives: adCreatives.length,
       legalRegulatory,
       collaborators: collaborators.length
     }));
@@ -98,8 +100,10 @@ export const useOnboardingLogic = () => {
       case 5:
         return verbalIdentity.toneOfVoice.length > 0;
       case 6:
-        return legalRegulatory.industryRules.length > 0;
+        return adCreatives.length >= 10;
       case 7:
+        return legalRegulatory.industryRules.length > 0;
+      case 8:
         return true;
       default:
         return false;
@@ -113,8 +117,9 @@ export const useOnboardingLogic = () => {
       case 3: return 'Brand Guidelines';
       case 4: return 'Visual Identity';
       case 5: return 'Verbal Identity';
-      case 6: return 'Legal & Regulatory';
-      case 7: return 'Invite Collaborators';
+      case 6: return 'Ad Creatives';
+      case 7: return 'Legal & Regulatory';
+      case 8: return 'Invite Collaborators';
       default: return '';
     }
   };
@@ -126,12 +131,14 @@ export const useOnboardingLogic = () => {
     guidelines,
     visualIdentity,
     verbalIdentity,
+    adCreatives,
     legalRegulatory,
     collaborators,
     setCompanyInfo,
     setGuidelines,
     setVisualIdentity,
     setVerbalIdentity,
+    setAdCreatives,
     setLegalRegulatory,
     setCollaborators,
     handleNext,

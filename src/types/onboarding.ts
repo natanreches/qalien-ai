@@ -1,3 +1,4 @@
+
 export interface BrandGuideline {
   id: string;
   name: string;
@@ -32,6 +33,17 @@ export interface VerbalIdentity {
   grammarPreferences: string;
 }
 
+export interface AdCreative {
+  id: string;
+  file: File;
+  name: string;
+  type: 'video' | 'static';
+  category: 'produced' | 'ugc';
+  platform: string;
+  description: string;
+  uploadDate: string;
+}
+
 export interface LegalRegulatory {
   industryRules: string;
   regulatoryRequirements: string[];
@@ -57,6 +69,7 @@ export interface OnboardingData {
   guidelines: BrandGuideline[];
   visualIdentity: VisualIdentity;
   verbalIdentity: VerbalIdentity;
+  adCreatives: AdCreative[];
   legalRegulatory: LegalRegulatory;
   collaborators: Collaborator[];
 }

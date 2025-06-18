@@ -12,12 +12,14 @@ const Onboarding = () => {
     guidelines,
     visualIdentity,
     verbalIdentity,
+    adCreatives,
     legalRegulatory,
     collaborators,
     setCompanyInfo,
     setGuidelines,
     setVisualIdentity,
     setVerbalIdentity,
+    setAdCreatives,
     setLegalRegulatory,
     setCollaborators,
     handleNext,
@@ -46,12 +48,14 @@ const Onboarding = () => {
         guidelines={guidelines}
         visualIdentity={visualIdentity}
         verbalIdentity={verbalIdentity}
+        adCreatives={adCreatives}
         legalRegulatory={legalRegulatory}
         collaborators={collaborators}
         onCompanyInfoUpdated={setCompanyInfo}
         onGuidelinesUploaded={setGuidelines}
         onVisualIdentityUpdated={setVisualIdentity}
         onVerbalIdentityUpdated={setVerbalIdentity}
+        onAdCreativesUpdated={setAdCreatives}
         onLegalRegulatoryUpdated={setLegalRegulatory}
         onCollaboratorsUpdated={setCollaborators}
         onNavigateToGuidelines={handleNavigateToGuidelines}

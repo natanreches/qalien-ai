@@ -5,12 +5,14 @@ import { OnboardingCompanyInfo } from './OnboardingCompanyInfo';
 import { OnboardingGuidelinesUpload } from './OnboardingGuidelinesUpload';
 import { OnboardingVisualIdentity } from './OnboardingVisualIdentity';
 import { OnboardingVerbalIdentity } from './OnboardingVerbalIdentity';
+import { OnboardingAdCreatives } from './OnboardingAdCreatives';
 import { OnboardingLegalRegulatory } from './OnboardingLegalRegulatory';
 import { OnboardingInviteCollaborators } from './OnboardingInviteCollaborators';
 import type { 
   BrandGuideline, 
   VisualIdentity, 
   VerbalIdentity, 
+  AdCreative,
   LegalRegulatory, 
   CompanyInfo, 
   Collaborator 
@@ -22,12 +24,14 @@ interface OnboardingStepsProps {
   guidelines: BrandGuideline[];
   visualIdentity: VisualIdentity;
   verbalIdentity: VerbalIdentity;
+  adCreatives: AdCreative[];
   legalRegulatory: LegalRegulatory;
   collaborators: Collaborator[];
   onCompanyInfoUpdated: (info: CompanyInfo) => void;
   onGuidelinesUploaded: (guidelines: BrandGuideline[]) => void;
   onVisualIdentityUpdated: (identity: VisualIdentity) => void;
   onVerbalIdentityUpdated: (identity: VerbalIdentity) => void;
+  onAdCreativesUpdated: (creatives: AdCreative[]) => void;
   onLegalRegulatoryUpdated: (legal: LegalRegulatory) => void;
   onCollaboratorsUpdated: (collaborators: Collaborator[]) => void;
   onNavigateToGuidelines: () => void;
@@ -39,12 +43,14 @@ export const OnboardingSteps = ({
   guidelines,
   visualIdentity,
   verbalIdentity,
+  adCreatives,
   legalRegulatory,
   collaborators,
   onCompanyInfoUpdated,
   onGuidelinesUploaded,
   onVisualIdentityUpdated,
   onVerbalIdentityUpdated,
+  onAdCreativesUpdated,
   onLegalRegulatoryUpdated,
   onCollaboratorsUpdated,
   onNavigateToGuidelines
@@ -86,12 +92,19 @@ export const OnboardingSteps = ({
       );
     case 6:
       return (
+        <OnboardingAdCreatives
+          adCreatives={adCreatives}
+          onAdCreativesUpdated={onAdCreativesUpdated}
+        />
+      );
+    case 7:
+      return (
         <OnboardingLegalRegulatory
           legalRegulatory={legalRegulatory}
           onLegalRegulatoryUpdated={onLegalRegulatoryUpdated}
         />
       );
-    case 7:
+    case 8:
       return (
         <OnboardingInviteCollaborators
           collaborators={collaborators}
