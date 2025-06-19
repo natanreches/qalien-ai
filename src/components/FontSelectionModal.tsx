@@ -68,7 +68,7 @@ export const FontSelectionModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-gray-800 border-gray-700">
+      <DialogContent className="sm:max-w-lg bg-gray-800 border-gray-700">
         <DialogHeader>
           <DialogTitle className="text-white">Select a Font</DialogTitle>
         </DialogHeader>
