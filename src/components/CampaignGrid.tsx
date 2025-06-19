@@ -1,21 +1,16 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Folder, ChevronRight, FileText, Upload } from 'lucide-react';
+import { Calendar, Folder, ChevronRight, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { CreativeBriefUpload } from '@/components/CreativeBriefUpload';
 
-export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false }) => {
+export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false, onBriefUploaded }) => {
   const navigate = useNavigate();
 
   const handleCampaignClick = (campaignId) => {
     navigate(`/campaign/${campaignId}`);
-  };
-
-  const handleUploadBrief = (e, campaignId) => {
-    e.stopPropagation();
-    // In a real app, this would open a file upload dialog
-    console.log('Upload brief for campaign:', campaignId);
   };
 
   return (
@@ -42,22 +37,18 @@ export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false }) =>
               
               <div className="flex items-center space-x-3">
                 {showBriefs && (
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2" onClick={(e) => e.stopPropagation()}>
                     {campaign.brief ? (
                       <Badge variant="secondary" className="flex items-center space-x-1 bg-green-100 text-green-800">
                         <FileText className="h-3 w-3" />
                         <span>Brief Available</span>
                       </Badge>
                     ) : (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => handleUploadBrief(e, campaign.id)}
-                        className="flex items-center space-x-1 border-gray-600 text-gray-300"
-                      >
-                        <Upload className="h-3 w-3" />
-                        <span>Upload Brief</span>
-                      </Button>
+                      <CreativeBriefUpload 
+                        campaignId={campaign.id}
+                        onBriefUploaded={(brief) => onBriefUploaded?.(brief, campaign.id)}
+                        hasExistingBrief={false}
+                      />
                     )}
                   </div>
                 )}

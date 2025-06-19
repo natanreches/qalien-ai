@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -117,6 +118,16 @@ const Brand = () => {
     setSelectedAsset(null);
   };
 
+  const handleBriefUploaded = (brief, campaignId) => {
+    setCampaigns(prev => 
+      prev.map(c => 
+        c.id === campaignId 
+          ? { ...c, brief }
+          : c
+      )
+    );
+  };
+
   const handleBatchUploadComplete = (files, campaignId, campaignName) => {
     const newAssets = files.map(file => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -203,6 +214,7 @@ const Brand = () => {
               campaigns={campaigns} 
               onAssetClick={handleAssetClick}
               showBriefs={true}
+              onBriefUploaded={handleBriefUploaded}
             />
           </TabsContent>
 
