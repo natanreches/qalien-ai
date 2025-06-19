@@ -5,10 +5,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { MessageSquare, Upload, Type, FileText, AlertTriangle, X } from 'lucide-react';
+import { MessageSquare, Upload, FileText, AlertTriangle } from 'lucide-react';
 
 interface VerbalIdentity {
   toneOfVoice: string;
@@ -29,13 +27,6 @@ export const OnboardingVerbalIdentity = ({
   onVerbalIdentityUpdated
 }: OnboardingVerbalIdentityProps) => {
   const [identity, setIdentity] = useState<VerbalIdentity>(verbalIdentity);
-  const [grammarEnabled, setGrammarEnabled] = useState(false);
-  
-  // Grammar preference states
-  const [spellingPreference, setSpellingPreference] = useState<'american' | 'british'>('american');
-  const [oxfordComma, setOxfordComma] = useState(true);
-  const [dateFormat, setDateFormat] = useState<'us' | 'international'>('us');
-  const [numberFormat, setNumberFormat] = useState<'us' | 'international'>('us');
 
   // Update parent state whenever identity changes
   useEffect(() => {
@@ -47,24 +38,6 @@ export const OnboardingVerbalIdentity = ({
     console.log('Tone of voice changed to:', value);
     setIdentity(prev => ({ ...prev, toneOfVoice: value }));
   };
-
-  const updateGrammarPreferences = () => {
-    const preferences = {
-      spelling: spellingPreference,
-      oxfordComma,
-      dateFormat,
-      numberFormat
-    };
-    
-    setIdentity(prev => ({ 
-      ...prev, 
-      grammarPreferences: JSON.stringify(preferences)
-    }));
-  };
-
-  useEffect(() => {
-    updateGrammarPreferences();
-  }, [spellingPreference, oxfordComma, dateFormat, numberFormat]);
 
   const handleBrandVocabularyChange = (value: string) => {
     setIdentity(prev => ({ ...prev, brandVocabulary: value }));
@@ -191,138 +164,6 @@ export const OnboardingVerbalIdentity = ({
             placeholder="Enter claims that require legal disclaimers or substantiation..."
             rows={4}
           />
-        </Card>
-
-        {/* Grammar Preferences */}
-        <Card className="p-6 bg-gray-800 border-gray-700">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center">
-              <Type className="h-5 w-5 mr-2 text-purple-400" />
-              <h3 className="text-lg font-semibold text-white">Grammar Preferences</h3>
-            </div>
-            <Switch
-              checked={grammarEnabled}
-              onCheckedChange={setGrammarEnabled}
-            />
-          </div>
-          <p className="text-gray-400 text-sm mb-4">
-            Set your preferred grammar and style conventions
-          </p>
-          
-          {grammarEnabled && (
-            <div className="space-y-6">
-              {/* Spelling Preference */}
-              <div className="space-y-3">
-                <Label className="text-gray-200">Spelling Convention</Label>
-                <div className="flex space-x-4">
-                  <div
-                    className={`flex items-center space-x-2 p-3 rounded-lg border cursor-pointer transition-colors ${
-                      spellingPreference === 'american'
-                        ? 'bg-purple-600 border-purple-500'
-                        : 'bg-gray-700 border-gray-600 hover:border-gray-500'
-                    }`}
-                    onClick={() => setSpellingPreference('american')}
-                  >
-                    <div className={`w-4 h-4 rounded-full border-2 ${
-                      spellingPreference === 'american' ? 'bg-white border-white' : 'border-gray-400'
-                    }`} />
-                    <span className="text-white">American English</span>
-                  </div>
-                  <div
-                    className={`flex items-center space-x-2 p-3 rounded-lg border cursor-pointer transition-colors ${
-                      spellingPreference === 'british'
-                        ? 'bg-purple-600 border-purple-500'
-                        : 'bg-gray-700 border-gray-600 hover:border-gray-500'
-                    }`}
-                    onClick={() => setSpellingPreference('british')}
-                  >
-                    <div className={`w-4 h-4 rounded-full border-2 ${
-                      spellingPreference === 'british' ? 'bg-white border-white' : 'border-gray-400'
-                    }`} />
-                    <span className="text-white">British English</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Oxford Comma */}
-              <div className="flex items-center justify-between p-4 bg-gray-700 rounded-lg">
-                <div>
-                  <Label className="text-gray-200">Oxford Comma</Label>
-                  <p className="text-gray-400 text-sm">Use serial comma in lists (A, B, and C)</p>
-                </div>
-                <Switch
-                  checked={oxfordComma}
-                  onCheckedChange={setOxfordComma}
-                />
-              </div>
-
-              {/* Date Format */}
-              <div className="space-y-3">
-                <Label className="text-gray-200">Date Format</Label>
-                <div className="flex space-x-4">
-                  <div
-                    className={`flex items-center space-x-2 p-3 rounded-lg border cursor-pointer transition-colors ${
-                      dateFormat === 'us'
-                        ? 'bg-purple-600 border-purple-500'
-                        : 'bg-gray-700 border-gray-600 hover:border-gray-500'
-                    }`}
-                    onClick={() => setDateFormat('us')}
-                  >
-                    <div className={`w-4 h-4 rounded-full border-2 ${
-                      dateFormat === 'us' ? 'bg-white border-white' : 'border-gray-400'
-                    }`} />
-                    <span className="text-white">US (MM/DD/YYYY)</span>
-                  </div>
-                  <div
-                    className={`flex items-center space-x-2 p-3 rounded-lg border cursor-pointer transition-colors ${
-                      dateFormat === 'international'
-                        ? 'bg-purple-600 border-purple-500'
-                        : 'bg-gray-700 border-gray-600 hover:border-gray-500'
-                    }`}
-                    onClick={() => setDateFormat('international')}
-                  >
-                    <div className={`w-4 h-4 rounded-full border-2 ${
-                      dateFormat === 'international' ? 'bg-white border-white' : 'border-gray-400'
-                    }`} />
-                    <span className="text-white">International (DD/MM/YYYY)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Number Format */}
-              <div className="space-y-3">
-                <Label className="text-gray-200">Number Format</Label>
-                <div className="flex space-x-4">
-                  <div
-                    className={`flex items-center space-x-2 p-3 rounded-lg border cursor-pointer transition-colors ${
-                      numberFormat === 'us'
-                        ? 'bg-purple-600 border-purple-500'
-                        : 'bg-gray-700 border-gray-600 hover:border-gray-500'
-                    }`}
-                    onClick={() => setNumberFormat('us')}
-                  >
-                    <div className={`w-4 h-4 rounded-full border-2 ${
-                      numberFormat === 'us' ? 'bg-white border-white' : 'border-gray-400'
-                    }`} />
-                    <span className="text-white">US (1,000.50)</span>
-                  </div>
-                  <div
-                    className={`flex items-center space-x-2 p-3 rounded-lg border cursor-pointer transition-colors ${
-                      numberFormat === 'international'
-                        ? 'bg-purple-600 border-purple-500'
-                        : 'bg-gray-700 border-gray-600 hover:border-gray-500'
-                    }`}
-                    onClick={() => setNumberFormat('international')}
-                  >
-                    <div className={`w-4 h-4 rounded-full border-2 ${
-                      numberFormat === 'international' ? 'bg-white border-white' : 'border-gray-400'
-                    }`} />
-                    <span className="text-white">International (1.000,50)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </Card>
       </div>
 
