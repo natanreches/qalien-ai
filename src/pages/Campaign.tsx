@@ -8,6 +8,7 @@ import { UploadButton } from '@/components/UploadButton';
 import { BatchUploadModal } from '@/components/BatchUploadModal';
 import { CreativeBriefUpload } from '@/components/CreativeBriefUpload';
 import { BriefAnalysis } from '@/components/BriefAnalysis';
+import { CreateCampaignDialog } from '@/components/CreateCampaignDialog';
 import { ArrowLeft, Calendar, Folder, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -276,6 +277,24 @@ const Campaign = () => {
     }
   };
 
+  const handleCreateCampaign = (campaignData) => {
+    const newCampaign = {
+      id: Date.now().toString(),
+      name: campaignData.name,
+      brandId: campaign.brandId || 'jello',
+      brief: campaignData.brief || '',
+      briefAnalysis: campaignData.briefAnalysis,
+      assets: campaignData.assets || []
+    };
+
+    const updatedCampaigns = [...campaigns, newCampaign];
+    setCampaigns(updatedCampaigns);
+    localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
+    
+    // Navigate to the new campaign
+    navigate(`/campaign/${newCampaign.id}`);
+  };
+
   const handleBatchUploadComplete = (files, campaignId, campaignName) => {
     const newAssets = files.map(file => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -342,10 +361,7 @@ const Campaign = () => {
                   <div className="text-sm text-gray-400">Avg. Compliance</div>
                   <div className="text-2xl font-bold text-white">{avgCompliance}%</div>
                 </div>
-                <BatchUploadModal
-                  campaigns={[{ id: campaign.id, name: campaign.name }]}
-                  onUploadComplete={handleBatchUploadComplete}
-                />
+                <CreateCampaignDialog onCreateCampaign={handleCreateCampaign} />
               </div>
             </div>
 
@@ -377,7 +393,13 @@ const Campaign = () => {
         </div>
 
         <div className="bg-gray-800 rounded-xl shadow-sm border border-gray-700 p-6">
-          <h2 className="text-lg font-semibold text-white mb-6">Campaign Assets</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-semibold text-white">Campaign Assets</h2>
+            <BatchUploadModal
+              campaigns={[{ id: campaign.id, name: campaign.name }]}
+              onUploadComplete={handleBatchUploadComplete}
+            />
+          </div>
           
           {campaign.assets.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
