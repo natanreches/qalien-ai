@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { CampaignGrid } from '@/components/CampaignGrid';
@@ -87,9 +87,47 @@ const brandData = {
 const Brand = () => {
   const { id } = useParams();
   const [selectedAsset, setSelectedAsset] = useState(null);
-  const [campaigns, setCampaigns] = useState(brandData[id]?.campaigns || []);
+  const [campaigns, setCampaigns] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const brand = brandData[id];
+
+  // Load campaigns from localStorage and merge with brand's base campaigns
+  useEffect(() => {
+    if (!brand) return;
+
+    const storedCampaigns = localStorage.getItem('campaigns');
+    let allCampaigns = [...(brand.campaigns || [])];
+    
+    if (storedCampaigns) {
+      try {
+        const parsed = JSON.parse(storedCampaigns);
+        // Add stored campaigns that aren't already in the brand's base campaigns
+        parsed.forEach(storedCampaign => {
+          const existingIndex = allCampaigns.findIndex(c => c.id === storedCampaign.id);
+          if (existingIndex >= 0) {
+            // Update existing campaign with stored version
+            allCampaigns[existingIndex] = storedCampaign;
+          } else {
+            // Add new campaign if it doesn't exist
+            allCampaigns.push(storedCampaign);
+          }
+        });
+      } catch (error) {
+        console.error('Error parsing stored campaigns:', error);
+      }
+    }
+    
+    setCampaigns(allCampaigns);
+    setIsLoading(false);
+  }, [brand]);
+
+  // Save campaigns to localStorage whenever campaigns state changes
+  useEffect(() => {
+    if (!isLoading && campaigns.length > 0) {
+      localStorage.setItem('campaigns', JSON.stringify(campaigns));
+    }
+  }, [campaigns, isLoading]);
 
   if (!brand) {
     return (
@@ -110,6 +148,19 @@ const Brand = () => {
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white">
+        <Header />
+        <main className="container mx-auto px-6 py-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-white mb-4">Loading campaigns...</h1>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   const handleAssetClick = (asset, campaignName) => {
     setSelectedAsset({ ...asset, campaignName });
   };
@@ -119,13 +170,14 @@ const Brand = () => {
   };
 
   const handleBriefUploaded = (brief, campaignId, analysis) => {
-    setCampaigns(prev => 
-      prev.map(c => 
-        c.id === campaignId 
-          ? { ...c, brief, briefAnalysis: analysis }
-          : c
-      )
+    const updatedCampaigns = campaigns.map(c => 
+      c.id === campaignId 
+        ? { ...c, brief, briefAnalysis: analysis }
+        : c
     );
+    setCampaigns(updatedCampaigns);
+    // Immediately save to localStorage
+    localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
   };
 
   const handleCreateCampaign = (campaignData) => {
@@ -137,7 +189,10 @@ const Brand = () => {
       assets: campaignData.assets || []
     };
 
-    setCampaigns(prev => [newCampaign, ...prev]);
+    const updatedCampaigns = [newCampaign, ...campaigns];
+    setCampaigns(updatedCampaigns);
+    // Immediately save to localStorage
+    localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
   };
 
   return (
