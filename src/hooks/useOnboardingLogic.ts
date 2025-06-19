@@ -19,7 +19,7 @@ export const useOnboardingLogic = () => {
     iconography: []
   });
   const [verbalIdentity, setVerbalIdentity] = useState<VerbalIdentity>({
-    toneOfVoice: [],
+    toneOfVoice: '',
     brandVocabulary: '',
     prohibitedWords: '',
     claimsDisclosures: '',

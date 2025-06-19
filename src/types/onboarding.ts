@@ -16,7 +16,7 @@ export interface VisualIdentity {
 }
 
 export interface VerbalIdentity {
-  toneOfVoice: string[];
+  toneOfVoice: string;
   brandVocabulary: string;
   prohibitedWords: string;
   claimsDisclosures: string;

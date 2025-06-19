@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { MessageSquare, Upload, Globe, Type, FileText, AlertTriangle, X } from 'lucide-react';
 
 interface VerbalIdentity {
-  toneOfVoice: string[];
+  toneOfVoice: string;
   brandVocabulary: string;
   prohibitedWords: string;
   claimsDisclosures: string;
@@ -29,7 +28,6 @@ export const OnboardingVerbalIdentity = ({
   onVerbalIdentityUpdated
 }: OnboardingVerbalIdentityProps) => {
   const [identity, setIdentity] = useState<VerbalIdentity>(verbalIdentity);
-  const [selectedTones, setSelectedTones] = useState<string[]>(verbalIdentity.toneOfVoice || []);
   const [localizationEnabled, setLocalizationEnabled] = useState(false);
   const [grammarEnabled, setGrammarEnabled] = useState(false);
   
@@ -43,12 +41,6 @@ export const OnboardingVerbalIdentity = ({
   const [dateFormat, setDateFormat] = useState<'us' | 'international'>('us');
   const [numberFormat, setNumberFormat] = useState<'us' | 'international'>('us');
 
-  const toneOptions = [
-    'Authoritative', 'Friendly', 'Playful', 'Sophisticated', 'Casual', 
-    'Professional', 'Conversational', 'Formal', 'Humorous', 'Inspiring',
-    'Educational', 'Empathetic', 'Bold', 'Trustworthy', 'Innovative'
-  ];
-
   const availableLanguages = [
     'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch',
     'Chinese (Simplified)', 'Chinese (Traditional)', 'Japanese', 'Korean',
@@ -61,14 +53,9 @@ export const OnboardingVerbalIdentity = ({
     onVerbalIdentityUpdated(identity);
   }, [identity, onVerbalIdentityUpdated]);
 
-  const handleToneToggle = (tone: string) => {
-    const newTones = selectedTones.includes(tone)
-      ? selectedTones.filter(t => t !== tone)
-      : [...selectedTones, tone];
-    
-    console.log('New tones selected:', newTones);
-    setSelectedTones(newTones);
-    setIdentity(prev => ({ ...prev, toneOfVoice: newTones }));
+  const handleToneOfVoiceChange = (value: string) => {
+    console.log('Tone of voice changed to:', value);
+    setIdentity(prev => ({ ...prev, toneOfVoice: value }));
   };
 
   const handleLanguageToggle = (language: string) => {
@@ -142,28 +129,19 @@ export const OnboardingVerbalIdentity = ({
             <h3 className="text-lg font-semibold text-white">Tone of Voice</h3>
           </div>
           <p className="text-gray-400 text-sm mb-4">
-            Select tone characteristics (authoritative, friendly, playful, sophisticated, etc.); submit writing samples
+            Describe your brand's tone of voice and communication style
           </p>
           
           <div className="space-y-4">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {toneOptions.map((tone) => (
-                <div
-                  key={tone}
-                  className={`flex items-center space-x-2 p-3 rounded-lg border cursor-pointer transition-colors ${
-                    selectedTones.includes(tone)
-                      ? 'bg-purple-600 border-purple-500'
-                      : 'bg-gray-700 border-gray-600 hover:border-gray-500'
-                  }`}
-                  onClick={() => handleToneToggle(tone)}
-                >
-                  <Checkbox
-                    checked={selectedTones.includes(tone)}
-                    className="pointer-events-none"
-                  />
-                  <span className="text-white text-sm">{tone}</span>
-                </div>
-              ))}
+            <div className="space-y-2">
+              <Label className="text-gray-200">Brand Tone Description</Label>
+              <Textarea
+                value={identity.toneOfVoice}
+                onChange={(e) => handleToneOfVoiceChange(e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white"
+                placeholder="Describe your brand's tone of voice (e.g., friendly and professional, authoritative yet approachable, playful and innovative...)"
+                rows={4}
+              />
             </div>
             
             <div className="space-y-2">
