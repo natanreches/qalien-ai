@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -66,11 +65,6 @@ export const OnboardingInviteCollaborators = ({
   const handleRemoveCollaborator = (id: string) => {
     const updatedCollaborators = collaborators.filter(c => c.id !== id);
     onCollaboratorsUpdated(updatedCollaborators);
-  };
-
-  const handleSkip = () => {
-    // User can skip this step
-    onCollaboratorsUpdated([]);
   };
 
   return (
@@ -155,10 +149,7 @@ export const OnboardingInviteCollaborators = ({
       {collaborators.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           <Users className="h-12 w-12 mx-auto mb-3 text-gray-600" />
-          <p className="mb-4">No collaborators added yet</p>
-          <Button variant="outline" onClick={handleSkip} className="border-gray-600 text-gray-300">
-            Skip for Now
-          </Button>
+          <p>No collaborators added yet</p>
         </div>
       )}
     </div>
