@@ -71,8 +71,11 @@ export const OnboardingSteps = ({
     case 4:
       return (
         <OnboardingVisualIdentity
+          guidelines={guidelines}
           visualIdentity={visualIdentity}
+          onGuidelinesUploaded={onGuidelinesUploaded}
           onVisualIdentityUpdated={onVisualIdentityUpdated}
+          onNavigateToGuidelines={onNavigateToGuidelines}
         />
       );
     case 5:
@@ -114,8 +117,7 @@ export const OnboardingSteps = ({
           adCreatives={adCreatives}
           legalRegulatory={legalRegulatory}
           collaborators={collaborators}
-          onNavigateToGuidelines={onNavigateToGuidelines}
-          onNavigateToStep={onNavigateToStep}
+          onEditStep={onNavigateToStep}
         />
       );
     default:
