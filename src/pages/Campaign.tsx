@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { AssetCard } from '@/components/AssetCard';
@@ -13,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
 // Mock data - in a real app this would come from an API
-const mockCampaigns = [
+const baseMockCampaigns = [
   {
     id: '1',
     name: 'Summer 2024 Collection',
@@ -170,23 +169,59 @@ const Campaign = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [selectedAsset, setSelectedAsset] = useState(null);
-  const [campaigns, setCampaigns] = useState(mockCampaigns);
+  const [campaigns, setCampaigns] = useState(baseMockCampaigns);
+  
+  // Load campaigns from localStorage and merge with base campaigns
+  useEffect(() => {
+    const storedCampaigns = localStorage.getItem('campaigns');
+    if (storedCampaigns) {
+      try {
+        const parsed = JSON.parse(storedCampaigns);
+        // Merge stored campaigns with base campaigns, avoiding duplicates
+        const mergedCampaigns = [...baseMockCampaigns];
+        parsed.forEach(storedCampaign => {
+          const existingIndex = mergedCampaigns.findIndex(c => c.id === storedCampaign.id);
+          if (existingIndex >= 0) {
+            // Update existing campaign
+            mergedCampaigns[existingIndex] = storedCampaign;
+          } else {
+            // Add new campaign
+            mergedCampaigns.push(storedCampaign);
+          }
+        });
+        setCampaigns(mergedCampaigns);
+      } catch (error) {
+        console.error('Error parsing stored campaigns:', error);
+      }
+    }
+  }, []);
+
+  // Save campaigns to localStorage whenever campaigns state changes
+  useEffect(() => {
+    localStorage.setItem('campaigns', JSON.stringify(campaigns));
+  }, [campaigns]);
   
   const campaign = campaigns.find(c => c.id === id);
   
+  // If campaign not found, create a new one with the given ID
   if (!campaign) {
+    const newCampaign = {
+      id: id,
+      name: `Campaign ${id}`,
+      brandId: 'jello', // Default brand
+      brief: '',
+      assets: []
+    };
+    
+    setCampaigns(prev => [...prev, newCampaign]);
+    
+    // Show loading while the campaign is being created
     return (
       <div className="min-h-screen bg-gray-900 text-white">
         <Header />
         <main className="container mx-auto px-6 py-8">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-white mb-4">Campaign not found</h1>
-            <Link to="/business-center">
-              <Button variant="outline" className="border-gray-600 text-gray-300">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Business Center
-              </Button>
-            </Link>
+            <h1 className="text-2xl font-bold text-white mb-4">Loading campaign...</h1>
           </div>
         </main>
       </div>
@@ -248,9 +283,9 @@ const Campaign = () => {
     );
   };
 
-  const avgCompliance = Math.round(
+  const avgCompliance = campaign.assets.length > 0 ? Math.round(
     campaign.assets.reduce((acc, asset) => acc + asset.compliance, 0) / campaign.assets.length
-  );
+  ) : 0;
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
