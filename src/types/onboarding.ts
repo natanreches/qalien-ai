@@ -1,4 +1,3 @@
-
 export interface BrandGuideline {
   id: string;
   name: string;
@@ -12,8 +11,6 @@ export interface VisualIdentity {
   logoFiles: File[];
   colorPalette: string[];
   typography: string[];
-  photographyStyle: string;
-  photographyFiles: File[];
   iconography: File[];
   layoutRules: string;
   layoutFiles: File[];

@@ -4,7 +4,6 @@ import { OnboardingVisualIdentityHeader } from './OnboardingVisualIdentityHeader
 import { OnboardingVisualIdentityLogoSection } from './OnboardingVisualIdentityLogoSection';
 import { OnboardingVisualIdentityColorSection } from './OnboardingVisualIdentityColorSection';
 import { OnboardingVisualIdentityTypographySection } from './OnboardingVisualIdentityTypographySection';
-import { OnboardingVisualIdentityPhotographySection } from './OnboardingVisualIdentityPhotographySection';
 import { OnboardingVisualIdentityIconographySection } from './OnboardingVisualIdentityIconographySection';
 import {OnboardingVisualIdentityLayoutSection } from './OnboardingVisualIdentityLayoutSection';
 import { OnboardingVisualIdentityAccessibilitySection } from './OnboardingVisualIdentityAccessibilitySection';
@@ -22,8 +21,6 @@ interface VisualIdentity {
   colorPalette: string[];
   typography: string[];
   fontFiles?: File[];
-  photographyStyle: string;
-  photographyFiles: File[];
   iconography: File[];
   layoutRules: string;
   layoutFiles: File[];
@@ -43,7 +40,6 @@ interface OnboardingVisualIdentityProps {
 }
 
 interface ExtractionStatus {
-  photography: boolean;
   iconography: boolean;
   layout: boolean;
 }
@@ -53,7 +49,6 @@ interface VerificationStatus {
   colorPalette?: boolean;
   typography?: boolean;
   accessibility?: boolean;
-  photography?: boolean;
   iconography?: boolean;
   layout?: boolean;
 }
@@ -68,7 +63,6 @@ export const OnboardingVisualIdentity = ({
   const [identity, setIdentity] = useState<VisualIdentity>({
     ...visualIdentity,
     fontFiles: visualIdentity.fontFiles || [],
-    photographyFiles: visualIdentity.photographyFiles || [],
     layoutFiles: visualIdentity.layoutFiles || [],
     accessibilityRequirements: visualIdentity.accessibilityRequirements || {
       contrast: false,
@@ -79,7 +73,6 @@ export const OnboardingVisualIdentity = ({
 
   const [extractedFromGuidelines, setExtractedFromGuidelines] = useState(false);
   const [extractionStatus, setExtractionStatus] = useState<ExtractionStatus>({
-    photography: false,
     iconography: false,
     layout: false
   });
@@ -101,12 +94,6 @@ export const OnboardingVisualIdentity = ({
       };
 
       // Simulate intelligent extraction based on guideline content analysis
-      const hasPhotographyGuidelines = guidelines.some(g => 
-        g.name.toLowerCase().includes('photography') || 
-        g.description.toLowerCase().includes('photo') ||
-        g.description.toLowerCase().includes('image')
-      );
-
       const hasIconographyGuidelines = guidelines.some(g => 
         g.name.toLowerCase().includes('icon') || 
         g.description.toLowerCase().includes('graphic') ||
@@ -134,9 +121,6 @@ export const OnboardingVisualIdentity = ({
         ],
         colorPalette: ['#FF6B35', '#004E89', '#FFFFFF', '#F4F4F4', '#2C3E50'],
         typography: ['Helvetica Neue', 'Arial', 'Georgia', 'Open Sans'],
-        photographyStyle: hasPhotographyGuidelines 
-          ? 'Clean, modern photography with consistent lighting and minimal backgrounds. Focus on lifestyle imagery that reflects brand values.'
-          : '',
         iconography: extractedIconography,
         layoutRules: hasLayoutGuidelines 
           ? 'Maintain generous white space, use grid-based layouts, ensure minimum 8px margins, and follow 4:3 aspect ratios for hero images.'
@@ -145,7 +129,6 @@ export const OnboardingVisualIdentity = ({
 
       setIdentity(extractedIdentity);
       setExtractionStatus({
-        photography: hasPhotographyGuidelines,
         iconography: hasIconographyGuidelines,
         layout: hasLayoutGuidelines
       });
@@ -153,7 +136,7 @@ export const OnboardingVisualIdentity = ({
     }
   }, [guidelines, extractedFromGuidelines, identity]);
 
-  const handleFileUpload = (files: FileList | null, type: 'logo' | 'iconography' | 'photography' | 'layout') => {
+  const handleFileUpload = (files: FileList | null, type: 'logo' | 'iconography' | 'layout') => {
     if (!files) return;
     
     const fileArray = Array.from(files);
@@ -164,25 +147,19 @@ export const OnboardingVisualIdentity = ({
       case 'iconography':
         setIdentity(prev => ({ ...prev, iconography: [...prev.iconography, ...fileArray] }));
         break;
-      case 'photography':
-        setIdentity(prev => ({ ...prev, photographyFiles: [...prev.photographyFiles, ...fileArray] }));
-        break;
       case 'layout':
         setIdentity(prev => ({ ...prev, layoutFiles: [...prev.layoutFiles, ...fileArray] }));
         break;
     }
   };
 
-  const removeFile = (index: number, type: 'logo' | 'iconography' | 'photography' | 'layout') => {
+  const removeFile = (index: number, type: 'logo' | 'iconography' | 'layout') => {
     switch (type) {
       case 'logo':
         setIdentity(prev => ({ ...prev, logoFiles: prev.logoFiles.filter((_, i) => i !== index) }));
         break;
       case 'iconography':
         setIdentity(prev => ({ ...prev, iconography: prev.iconography.filter((_, i) => i !== index) }));
-        break;
-      case 'photography':
-        setIdentity(prev => ({ ...prev, photographyFiles: prev.photographyFiles.filter((_, i) => i !== index) }));
         break;
       case 'layout':
         setIdentity(prev => ({ ...prev, layoutFiles: prev.layoutFiles.filter((_, i) => i !== index) }));
@@ -310,17 +287,6 @@ export const OnboardingVisualIdentity = ({
           extractionVerified={verificationStatus.typography}
           onClearExtracted={clearTypography}
           onFontFileUpload={handleFontFileUpload}
-        />
-
-        <OnboardingVisualIdentityPhotographySection
-          photographyStyle={identity.photographyStyle}
-          photographyFiles={identity.photographyFiles}
-          extractionStatus={extractionStatus.photography}
-          onPhotographyStyleChange={(style) => setIdentity(prev => ({ ...prev, photographyStyle: style }))}
-          onFileUpload={(files) => handleFileUpload(files, 'photography')}
-          onVerifyExtraction={(isCorrect) => handleVerifyExtraction('photography', isCorrect)}
-          extractionVerified={verificationStatus.photography}
-          onClearExtracted={() => setIdentity(prev => ({ ...prev, photographyStyle: '', photographyFiles: [] }))}
         />
 
         <OnboardingVisualIdentityIconographySection
