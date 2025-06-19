@@ -5,6 +5,8 @@ import { Calendar, Folder, ChevronRight, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CreativeBriefUpload } from '@/components/CreativeBriefUpload';
+import { BriefAnalysis } from '@/components/BriefAnalysis';
+import { BriefAnalysis as BriefAnalysisType } from '@/services/briefAnalysis';
 
 export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false, onBriefUploaded }) => {
   const navigate = useNavigate();
@@ -46,7 +48,7 @@ export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false, onBr
                     ) : (
                       <CreativeBriefUpload 
                         campaignId={campaign.id}
-                        onBriefUploaded={(brief) => onBriefUploaded?.(brief, campaign.id)}
+                        onBriefUploaded={(brief, analysis) => onBriefUploaded?.(brief, campaign.id, analysis)}
                         hasExistingBrief={false}
                       />
                     )}
@@ -57,10 +59,13 @@ export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false, onBr
             </div>
             
             {showBriefs && campaign.brief && (
-              <div className="mt-3 p-3 bg-gray-700 rounded-lg">
-                <p className="text-sm text-gray-300">
+              <div className="mt-3 p-3 bg-gray-700 rounded-lg" onClick={(e) => e.stopPropagation()}>
+                <p className="text-sm text-gray-300 mb-2">
                   <strong>Campaign Brief:</strong> {campaign.brief}
                 </p>
+                {campaign.briefAnalysis && (
+                  <BriefAnalysis analysis={campaign.briefAnalysis} />
+                )}
               </div>
             )}
           </div>

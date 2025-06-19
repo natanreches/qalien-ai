@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -118,11 +117,11 @@ const Brand = () => {
     setSelectedAsset(null);
   };
 
-  const handleBriefUploaded = (brief, campaignId) => {
+  const handleBriefUploaded = (brief, campaignId, analysis) => {
     setCampaigns(prev => 
       prev.map(c => 
         c.id === campaignId 
-          ? { ...c, brief }
+          ? { ...c, brief, briefAnalysis: analysis }
           : c
       )
     );

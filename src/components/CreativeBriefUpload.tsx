@@ -7,10 +7,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Upload, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { analyzeBrief, BriefAnalysis } from '@/services/briefAnalysis';
 
 interface CreativeBriefUploadProps {
   campaignId: string;
-  onBriefUploaded: (brief: string) => void;
+  onBriefUploaded: (brief: string, analysis: BriefAnalysis) => void;
   hasExistingBrief?: boolean;
 }
 
@@ -41,11 +42,15 @@ export const CreativeBriefUpload = ({ campaignId, onBriefUploaded, hasExistingBr
 
     // In a real app, this would upload the file and save the brief
     const briefContent = briefText.trim() || `File uploaded: ${briefFile?.name}`;
-    onBriefUploaded(briefContent);
+    
+    // Analyze the brief content
+    const analysis = analyzeBrief(briefContent);
+    
+    onBriefUploaded(briefContent, analysis);
     
     toast({
       title: "Success",
-      description: "Creative brief uploaded successfully",
+      description: "Creative brief uploaded and analyzed successfully",
     });
     
     setIsOpen(false);

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -6,6 +7,7 @@ import { AssetModal } from '@/components/AssetModal';
 import { UploadButton } from '@/components/UploadButton';
 import { BatchUploadModal } from '@/components/BatchUploadModal';
 import { CreativeBriefUpload } from '@/components/CreativeBriefUpload';
+import { BriefAnalysis } from '@/components/BriefAnalysis';
 import { ArrowLeft, Calendar, Folder, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

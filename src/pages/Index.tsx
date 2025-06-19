@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { CampaignGrid } from '@/components/CampaignGrid';
 import { AssetModal } from '@/components/AssetModal';
@@ -165,11 +164,11 @@ const Index = () => {
     setSelectedAsset(null);
   };
 
-  const handleBriefUploaded = (brief, campaignId) => {
+  const handleBriefUploaded = (brief, campaignId, analysis) => {
     setCampaigns(prev => 
       prev.map(c => 
         c.id === campaignId 
-          ? { ...c, brief }
+          ? { ...c, brief, briefAnalysis: analysis }
           : c
       )
     );
