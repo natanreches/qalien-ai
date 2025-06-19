@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Upload, X, Video, Image } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { AdCreative } from '@/types/onboarding';
@@ -45,6 +45,7 @@ export const OnboardingAdCreatives = ({
 
   const handleUpload = (fileIndex: number, metadata: {
     name: string;
+    type: 'video' | 'static';
     category: 'produced' | 'ugc';
     platform: string;
     description: string;
@@ -52,13 +53,12 @@ export const OnboardingAdCreatives = ({
     if (!selectedFiles[fileIndex]) return;
 
     const file = selectedFiles[fileIndex];
-    const fileType = file.type.startsWith('video/') ? 'video' : 'static';
 
     const newCreative: AdCreative = {
       id: Math.random().toString(36).substr(2, 9),
       file,
       name: metadata.name || file.name.split('.')[0],
-      type: fileType,
+      type: metadata.type,
       category: metadata.category,
       platform: metadata.platform,
       description: metadata.description,
@@ -229,6 +229,10 @@ const FileUploadForm = ({
   onRemove: (index: number) => void;
 }) => {
   const [name, setName] = useState(file.name.split('.')[0]);
+  const [type, setType] = useState<'video' | 'static'>(() => {
+    // Auto-detect based on file type
+    return file.type.startsWith('video/') ? 'video' : 'static';
+  });
   const [category, setCategory] = useState<'produced' | 'ugc'>('produced');
   const [platform, setPlatform] = useState('');
   const [description, setDescription] = useState('');
@@ -238,19 +242,18 @@ const FileUploadForm = ({
     
     onUpload(fileIndex, {
       name,
+      type,
       category,
       platform,
       description
     });
   };
 
-  const fileType = file.type.startsWith('video/') ? 'video' : 'static';
-
   return (
     <div className="border border-gray-600 rounded-lg p-4 space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          {fileType === 'video' ? (
+          {type === 'video' ? (
             <Video className="h-6 w-6 text-blue-400" />
           ) : (
             <Image className="h-6 w-6 text-green-400" />
@@ -282,6 +285,28 @@ const FileUploadForm = ({
         </div>
 
         <div className="space-y-2">
+          <Label className="text-gray-300">Content Type</Label>
+          <RadioGroup value={type} onValueChange={(value: 'video' | 'static') => setType(value)}>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="static" id={`static-${fileIndex}`} className="border-gray-400" />
+                <Label htmlFor={`static-${fileIndex}`} className="text-gray-300 flex items-center space-x-1 cursor-pointer">
+                  <Image className="h-4 w-4 text-green-400" />
+                  <span>Static</span>
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="video" id={`video-${fileIndex}`} className="border-gray-400" />
+                <Label htmlFor={`video-${fileIndex}`} className="text-gray-300 flex items-center space-x-1 cursor-pointer">
+                  <Video className="h-4 w-4 text-blue-400" />
+                  <span>Video</span>
+                </Label>
+              </div>
+            </div>
+          </RadioGroup>
+        </div>
+
+        <div className="space-y-2">
           <Label className="text-gray-300">Category</Label>
           <Select value={category} onValueChange={(value: 'produced' | 'ugc') => setCategory(value)}>
             <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
@@ -310,7 +335,7 @@ const FileUploadForm = ({
           </Select>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 md:col-span-2">
           <Label className="text-gray-300">Description (Optional)</Label>
           <Textarea
             value={description}
