@@ -6,6 +6,7 @@ import { CampaignGrid } from '@/components/CampaignGrid';
 import { OnboardingGuidelinesView } from '@/components/OnboardingGuidelinesView';
 import { AssetModal } from '@/components/AssetModal';
 import { BrandComplianceSettings } from '@/components/BrandComplianceSettings';
+import { CreateCampaignDialog } from '@/components/CreateCampaignDialog';
 import { ArrowLeft, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -127,6 +128,18 @@ const Brand = () => {
     );
   };
 
+  const handleCreateCampaign = (campaignData) => {
+    const newCampaign = {
+      id: Date.now().toString(),
+      name: campaignData.name,
+      brief: campaignData.brief || '',
+      briefAnalysis: campaignData.briefAnalysis,
+      assets: campaignData.assets || []
+    };
+
+    setCampaigns(prev => [newCampaign, ...prev]);
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <Header />
@@ -163,9 +176,12 @@ const Brand = () => {
           </TabsList>
 
           <TabsContent value="assets" className="space-y-6">
-            <div>
-              <h2 className="text-xl font-semibold text-white">Campaign Assets</h2>
-              <p className="text-gray-400">Manage your brand's creative assets organized by campaign</p>
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-xl font-semibold text-white">Campaign Assets</h2>
+                <p className="text-gray-400">Manage your brand's creative assets organized by campaign</p>
+              </div>
+              <CreateCampaignDialog onCreateCampaign={handleCreateCampaign} />
             </div>
 
             <CampaignGrid 
