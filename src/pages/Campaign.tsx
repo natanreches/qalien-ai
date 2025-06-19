@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -170,6 +171,7 @@ const Campaign = () => {
   const navigate = useNavigate();
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [campaigns, setCampaigns] = useState(baseMockCampaigns);
+  const [isLoading, setIsLoading] = useState(true);
   
   // Load campaigns from localStorage and merge with base campaigns
   useEffect(() => {
@@ -194,17 +196,20 @@ const Campaign = () => {
         console.error('Error parsing stored campaigns:', error);
       }
     }
+    setIsLoading(false);
   }, []);
 
   // Save campaigns to localStorage whenever campaigns state changes
   useEffect(() => {
-    localStorage.setItem('campaigns', JSON.stringify(campaigns));
-  }, [campaigns]);
+    if (!isLoading) {
+      localStorage.setItem('campaigns', JSON.stringify(campaigns));
+    }
+  }, [campaigns, isLoading]);
   
   const campaign = campaigns.find(c => c.id === id);
   
-  // If campaign not found, create a new one with the given ID
-  if (!campaign) {
+  // If campaign not found and not loading, create a new one with the given ID
+  if (!campaign && !isLoading) {
     const newCampaign = {
       id: id,
       name: `Campaign ${id}`,
@@ -213,9 +218,26 @@ const Campaign = () => {
       assets: []
     };
     
-    setCampaigns(prev => [...prev, newCampaign]);
+    // Immediately update both state and localStorage
+    const updatedCampaigns = [...campaigns, newCampaign];
+    setCampaigns(updatedCampaigns);
+    localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
     
     // Show loading while the campaign is being created
+    return (
+      <div className="min-h-screen bg-gray-900 text-white">
+        <Header />
+        <main className="container mx-auto px-6 py-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-white mb-4">Creating campaign...</h1>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // Show loading if still loading initial data
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-900 text-white">
         <Header />
@@ -237,13 +259,13 @@ const Campaign = () => {
   };
 
   const handleBriefUploaded = (briefContent: string) => {
-    setCampaigns(prev => 
-      prev.map(c => 
-        c.id === campaign.id 
-          ? { ...c, brief: briefContent }
-          : c
-      )
+    const updatedCampaigns = campaigns.map(c => 
+      c.id === campaign.id 
+        ? { ...c, brief: briefContent }
+        : c
     );
+    setCampaigns(updatedCampaigns);
+    localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
   };
 
   const handleBackToDashboard = () => {
@@ -274,13 +296,13 @@ const Campaign = () => {
       }
     }));
 
-    setCampaigns(prev => 
-      prev.map(c => 
-        c.id === campaign.id 
-          ? { ...c, assets: [...c.assets, ...newAssets] }
-          : c
-      )
+    const updatedCampaigns = campaigns.map(c => 
+      c.id === campaign.id 
+        ? { ...c, assets: [...c.assets, ...newAssets] }
+        : c
     );
+    setCampaigns(updatedCampaigns);
+    localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
   };
 
   const avgCompliance = campaign.assets.length > 0 ? Math.round(
