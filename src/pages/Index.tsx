@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { CampaignGrid } from '@/components/CampaignGrid';
 import { AssetModal } from '@/components/AssetModal';
@@ -164,6 +165,16 @@ const Index = () => {
     setSelectedAsset(null);
   };
 
+  const handleBriefUploaded = (brief, campaignId) => {
+    setCampaigns(prev => 
+      prev.map(c => 
+        c.id === campaignId 
+          ? { ...c, brief }
+          : c
+      )
+    );
+  };
+
   const handleBatchUploadComplete = (files, campaignId, campaignName) => {
     const newAssets = files.map(file => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -226,6 +237,7 @@ const Index = () => {
         <CampaignGrid 
           campaigns={campaigns} 
           onAssetClick={handleAssetClick}
+          onBriefUploaded={handleBriefUploaded}
         />
       </main>
 
