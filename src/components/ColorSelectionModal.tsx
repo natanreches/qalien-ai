@@ -37,6 +37,20 @@ export const ColorSelectionModal = ({
     setCustomColor('#000000');
   };
 
+  const getTextColor = (backgroundColor: string) => {
+    // Convert hex to RGB
+    const hex = backgroundColor.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Calculate luminance
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    // Return black for light colors, white for dark colors
+    return luminance > 0.5 ? '#000000' : '#FFFFFF';
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md bg-gray-800 border-gray-700">
@@ -53,10 +67,17 @@ export const ColorSelectionModal = ({
                 <button
                   key={color}
                   onClick={() => handlePresetColorSelect(color)}
-                  className="w-12 h-12 rounded border-2 border-gray-600 hover:border-gray-400 transition-colors"
+                  className="w-12 h-12 rounded border-2 border-gray-600 hover:border-gray-400 transition-colors relative flex items-center justify-center"
                   style={{ backgroundColor: color }}
                   title={color}
-                />
+                >
+                  <span 
+                    className="text-xs font-mono font-semibold px-1 py-0.5 rounded bg-black/20 backdrop-blur-sm"
+                    style={{ color: getTextColor(color) }}
+                  >
+                    {color}
+                  </span>
+                </button>
               ))}
             </div>
           </div>
