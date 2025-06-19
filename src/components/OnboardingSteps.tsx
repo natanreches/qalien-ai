@@ -9,15 +9,7 @@ import { OnboardingAdCreatives } from './OnboardingAdCreatives';
 import { OnboardingLegalRegulatory } from './OnboardingLegalRegulatory';
 import { OnboardingInviteCollaborators } from './OnboardingInviteCollaborators';
 import { OnboardingReviewConfirm } from './OnboardingReviewConfirm';
-import type { 
-  BrandGuideline, 
-  VisualIdentity, 
-  VerbalIdentity, 
-  AdCreative,
-  LegalRegulatory, 
-  CompanyInfo, 
-  Collaborator 
-} from '@/types/onboarding';
+import type { CompanyInfo, BrandGuideline, VisualIdentity, VerbalIdentity, AdCreative, LegalRegulatory, Collaborator } from '@/types/onboarding';
 
 interface OnboardingStepsProps {
   currentStep: number;
@@ -33,10 +25,10 @@ interface OnboardingStepsProps {
   onVisualIdentityUpdated: (identity: VisualIdentity) => void;
   onVerbalIdentityUpdated: (identity: VerbalIdentity) => void;
   onAdCreativesUpdated: (creatives: AdCreative[]) => void;
-  onLegalRegulatoryUpdated: (legal: LegalRegulatory) => void;
+  onLegalRegulatoryUpdated: (regulatory: LegalRegulatory) => void;
   onCollaboratorsUpdated: (collaborators: Collaborator[]) => void;
   onNavigateToGuidelines: () => void;
-  onNavigateToStep?: (step: number) => void;
+  onNavigateToStep: (step: number) => void;
 }
 
 export const OnboardingSteps = ({
@@ -79,11 +71,8 @@ export const OnboardingSteps = ({
     case 4:
       return (
         <OnboardingVisualIdentity
-          guidelines={guidelines}
           visualIdentity={visualIdentity}
-          onGuidelinesUploaded={onGuidelinesUploaded}
           onVisualIdentityUpdated={onVisualIdentityUpdated}
-          onNavigateToGuidelines={onNavigateToGuidelines}
         />
       );
     case 5:
@@ -91,6 +80,7 @@ export const OnboardingSteps = ({
         <OnboardingVerbalIdentity
           verbalIdentity={verbalIdentity}
           onVerbalIdentityUpdated={onVerbalIdentityUpdated}
+          guidelines={guidelines}
         />
       );
     case 6:
@@ -124,7 +114,8 @@ export const OnboardingSteps = ({
           adCreatives={adCreatives}
           legalRegulatory={legalRegulatory}
           collaborators={collaborators}
-          onEditStep={onNavigateToStep || (() => {})}
+          onNavigateToGuidelines={onNavigateToGuidelines}
+          onNavigateToStep={onNavigateToStep}
         />
       );
     default:

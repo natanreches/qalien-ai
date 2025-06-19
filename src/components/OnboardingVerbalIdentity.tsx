@@ -6,7 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MessageSquare, Upload, FileText, AlertTriangle } from 'lucide-react';
+import { MessageSquare, Upload, FileText, AlertTriangle, Wand2, Loader2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface VerbalIdentity {
   toneOfVoice: string;
@@ -17,22 +18,134 @@ interface VerbalIdentity {
   grammarPreferences: string;
 }
 
+interface BrandGuideline {
+  id: string;
+  name: string;
+  description: string;
+  file: File | null;
+  uploadDate: string;
+  brandName?: string;
+}
+
 interface OnboardingVerbalIdentityProps {
   verbalIdentity: VerbalIdentity;
   onVerbalIdentityUpdated: (identity: VerbalIdentity) => void;
+  guidelines?: BrandGuideline[];
 }
 
 export const OnboardingVerbalIdentity = ({
   verbalIdentity,
-  onVerbalIdentityUpdated
+  onVerbalIdentityUpdated,
+  guidelines = []
 }: OnboardingVerbalIdentityProps) => {
   const [identity, setIdentity] = useState<VerbalIdentity>(verbalIdentity);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const { toast } = useToast();
 
   // Update parent state whenever identity changes
   useEffect(() => {
     console.log('Updating parent with identity:', identity);
     onVerbalIdentityUpdated(identity);
   }, [identity, onVerbalIdentityUpdated]);
+
+  const extractVocabularyFromText = (text: string): string[] => {
+    // Simple extraction logic - look for common vocabulary patterns
+    const patterns = [
+      // Brand names and product names (capitalized words)
+      /\b[A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)*\b/g,
+      // Quoted phrases
+      /"([^"]+)"/g,
+      // Taglines and slogans (often end with trademark symbols)
+      /([^.!?]+[™®℠])/g,
+      // Emphasized terms (often in bold or italics markers)
+      /\*\*([^*]+)\*\*/g,
+      /\*([^*]+)\*/g,
+    ];
+
+    const extractedTerms = new Set<string>();
+    
+    patterns.forEach(pattern => {
+      const matches = text.match(pattern);
+      if (matches) {
+        matches.forEach(match => {
+          // Clean up the match
+          const cleaned = match.replace(/[™®℠"*]/g, '').trim();
+          if (cleaned.length > 2 && cleaned.length < 50) {
+            extractedTerms.add(cleaned);
+          }
+        });
+      }
+    });
+
+    // Filter out common words
+    const commonWords = ['the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'];
+    return Array.from(extractedTerms).filter(term => 
+      !commonWords.includes(term.toLowerCase()) && 
+      term.split(' ').length <= 3 // Max 3 words
+    );
+  };
+
+  const handleAutoExtractVocabulary = async () => {
+    if (guidelines.length === 0) {
+      toast({
+        title: "No guidelines found",
+        description: "Please upload brand guidelines first to auto-extract vocabulary.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsExtracting(true);
+    
+    try {
+      const extractedTerms = new Set<string>();
+      
+      // Process each guideline file
+      for (const guideline of guidelines) {
+        if (guideline.file) {
+          try {
+            const text = await guideline.file.text();
+            const terms = extractVocabularyFromText(text);
+            terms.forEach(term => extractedTerms.add(term));
+          } catch (error) {
+            console.log(`Could not extract text from ${guideline.name}:`, error);
+            // For non-text files, we'll skip extraction
+          }
+        }
+      }
+
+      if (extractedTerms.size > 0) {
+        const vocabularyText = Array.from(extractedTerms).slice(0, 50).join(', ');
+        const updatedIdentity = {
+          ...identity,
+          brandVocabulary: identity.brandVocabulary 
+            ? `${identity.brandVocabulary}\n\n--- Auto-extracted terms ---\n${vocabularyText}`
+            : vocabularyText
+        };
+        setIdentity(updatedIdentity);
+        
+        toast({
+          title: "Vocabulary extracted",
+          description: `Found ${extractedTerms.size} potential brand terms from your guidelines.`,
+        });
+      } else {
+        toast({
+          title: "No vocabulary found",
+          description: "Could not extract vocabulary from the uploaded guidelines. Please enter terms manually.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Error extracting vocabulary:', error);
+      toast({
+        title: "Extraction failed",
+        description: "There was an error extracting vocabulary. Please enter terms manually.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsExtracting(false);
+    }
+  };
 
   const handleToneOfVoiceChange = (value: string) => {
     console.log('Tone of voice changed to:', value);
@@ -110,6 +223,37 @@ export const OnboardingVerbalIdentity = ({
           </p>
           
           <div className="space-y-4">
+            {/* Auto-extract button */}
+            {guidelines.length > 0 && (
+              <div className="flex items-center justify-between p-3 bg-blue-900/20 border border-blue-700 rounded-lg">
+                <div className="flex items-center space-x-2">
+                  <Wand2 className="h-4 w-4 text-blue-400" />
+                  <span className="text-blue-300 text-sm">
+                    Auto-extract vocabulary from your uploaded brand guidelines
+                  </span>
+                </div>
+                <Button 
+                  onClick={handleAutoExtractVocabulary}
+                  disabled={isExtracting}
+                  variant="outline"
+                  size="sm"
+                  className="border-blue-600 text-blue-300"
+                >
+                  {isExtracting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Extracting...
+                    </>
+                  ) : (
+                    <>
+                      <Wand2 className="h-4 w-4 mr-2" />
+                      Auto Extract
+                    </>
+                  )}
+                </Button>
+              </div>
+            )}
+
             <div className="border-2 border-dashed border-gray-600 rounded-lg p-4 text-center">
               <Upload className="h-6 w-6 mx-auto text-gray-400 mb-2" />
               <p className="text-gray-400 text-sm mb-2">Upload vocabulary documents</p>
@@ -123,7 +267,7 @@ export const OnboardingVerbalIdentity = ({
               onChange={(e) => handleBrandVocabularyChange(e.target.value)}
               className="bg-gray-700 border-gray-600 text-white"
               placeholder="Or manually enter approved keywords, phrases, and terminology..."
-              rows={4}
+              rows={6}
             />
           </div>
         </Card>
