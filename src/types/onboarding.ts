@@ -12,8 +12,6 @@ export interface VisualIdentity {
   colorPalette: string[];
   typography: string[];
   iconography: File[];
-  layoutRules: string;
-  layoutFiles: File[];
   accessibilityRequirements: {
     contrast: boolean;
     fontSizes: boolean;

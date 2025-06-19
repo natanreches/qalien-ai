@@ -16,8 +16,6 @@ export const useOnboardingLogic = () => {
     colorPalette: [],
     typography: [],
     iconography: [],
-    layoutRules: '',
-    layoutFiles: [],
     accessibilityRequirements: {
       contrast: false,
       fontSizes: false,

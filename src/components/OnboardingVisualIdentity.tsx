@@ -5,7 +5,6 @@ import { OnboardingVisualIdentityLogoSection } from './OnboardingVisualIdentityL
 import { OnboardingVisualIdentityColorSection } from './OnboardingVisualIdentityColorSection';
 import { OnboardingVisualIdentityTypographySection } from './OnboardingVisualIdentityTypographySection';
 import { OnboardingVisualIdentityIconographySection } from './OnboardingVisualIdentityIconographySection';
-import {OnboardingVisualIdentityLayoutSection } from './OnboardingVisualIdentityLayoutSection';
 import { OnboardingVisualIdentityAccessibilitySection } from './OnboardingVisualIdentityAccessibilitySection';
 
 interface BrandGuideline {
@@ -22,8 +21,6 @@ interface VisualIdentity {
   typography: string[];
   fontFiles?: File[];
   iconography: File[];
-  layoutRules: string;
-  layoutFiles: File[];
   accessibilityRequirements: {
     contrast: boolean;
     fontSizes: boolean;
@@ -41,7 +38,6 @@ interface OnboardingVisualIdentityProps {
 
 interface ExtractionStatus {
   iconography: boolean;
-  layout: boolean;
 }
 
 interface VerificationStatus {
@@ -50,7 +46,6 @@ interface VerificationStatus {
   typography?: boolean;
   accessibility?: boolean;
   iconography?: boolean;
-  layout?: boolean;
 }
 
 export const OnboardingVisualIdentity = ({
@@ -63,7 +58,6 @@ export const OnboardingVisualIdentity = ({
   const [identity, setIdentity] = useState<VisualIdentity>({
     ...visualIdentity,
     fontFiles: visualIdentity.fontFiles || [],
-    layoutFiles: visualIdentity.layoutFiles || [],
     accessibilityRequirements: visualIdentity.accessibilityRequirements || {
       contrast: false,
       fontSizes: false,
@@ -73,8 +67,7 @@ export const OnboardingVisualIdentity = ({
 
   const [extractedFromGuidelines, setExtractedFromGuidelines] = useState(false);
   const [extractionStatus, setExtractionStatus] = useState<ExtractionStatus>({
-    iconography: false,
-    layout: false
+    iconography: false
   });
   const [verificationStatus, setVerificationStatus] = useState<VerificationStatus>({});
 
@@ -100,12 +93,6 @@ export const OnboardingVisualIdentity = ({
         g.name.toLowerCase().includes('visual elements')
       );
 
-      const hasLayoutGuidelines = guidelines.some(g => 
-        g.name.toLowerCase().includes('layout') || 
-        g.description.toLowerCase().includes('grid') ||
-        g.description.toLowerCase().includes('spacing')
-      );
-
       // Extract iconography files if guidelines contain iconography information
       const extractedIconography = hasIconographyGuidelines ? [
         createMockIconFile('brand-icons-primary.svg'),
@@ -121,22 +108,18 @@ export const OnboardingVisualIdentity = ({
         ],
         colorPalette: ['#FF6B35', '#004E89', '#FFFFFF', '#F4F4F4', '#2C3E50'],
         typography: ['Helvetica Neue', 'Arial', 'Georgia', 'Open Sans'],
-        iconography: extractedIconography,
-        layoutRules: hasLayoutGuidelines 
-          ? 'Maintain generous white space, use grid-based layouts, ensure minimum 8px margins, and follow 4:3 aspect ratios for hero images.'
-          : ''
+        iconography: extractedIconography
       };
 
       setIdentity(extractedIdentity);
       setExtractionStatus({
-        iconography: hasIconographyGuidelines,
-        layout: hasLayoutGuidelines
+        iconography: hasIconographyGuidelines
       });
       setExtractedFromGuidelines(true);
     }
   }, [guidelines, extractedFromGuidelines, identity]);
 
-  const handleFileUpload = (files: FileList | null, type: 'logo' | 'iconography' | 'layout') => {
+  const handleFileUpload = (files: FileList | null, type: 'logo' | 'iconography') => {
     if (!files) return;
     
     const fileArray = Array.from(files);
@@ -147,22 +130,16 @@ export const OnboardingVisualIdentity = ({
       case 'iconography':
         setIdentity(prev => ({ ...prev, iconography: [...prev.iconography, ...fileArray] }));
         break;
-      case 'layout':
-        setIdentity(prev => ({ ...prev, layoutFiles: [...prev.layoutFiles, ...fileArray] }));
-        break;
     }
   };
 
-  const removeFile = (index: number, type: 'logo' | 'iconography' | 'layout') => {
+  const removeFile = (index: number, type: 'logo' | 'iconography') => {
     switch (type) {
       case 'logo':
         setIdentity(prev => ({ ...prev, logoFiles: prev.logoFiles.filter((_, i) => i !== index) }));
         break;
       case 'iconography':
         setIdentity(prev => ({ ...prev, iconography: prev.iconography.filter((_, i) => i !== index) }));
-        break;
-      case 'layout':
-        setIdentity(prev => ({ ...prev, layoutFiles: prev.layoutFiles.filter((_, i) => i !== index) }));
         break;
     }
   };
@@ -296,17 +273,6 @@ export const OnboardingVisualIdentity = ({
           onVerifyExtraction={(isCorrect) => handleVerifyExtraction('iconography', isCorrect)}
           extractionVerified={verificationStatus.iconography}
           onClearExtracted={() => setIdentity(prev => ({ ...prev, iconography: [] }))}
-        />
-
-        <OnboardingVisualIdentityLayoutSection
-          layoutRules={identity.layoutRules}
-          layoutFiles={identity.layoutFiles}
-          extractionStatus={extractionStatus.layout}
-          onLayoutRulesChange={(rules) => setIdentity(prev => ({ ...prev, layoutRules: rules }))}
-          onFileUpload={(files) => handleFileUpload(files, 'layout')}
-          onVerifyExtraction={(isCorrect) => handleVerifyExtraction('layout', isCorrect)}
-          extractionVerified={verificationStatus.layout}
-          onClearExtracted={() => setIdentity(prev => ({ ...prev, layoutRules: '', layoutFiles: [] }))}
         />
 
         <OnboardingVisualIdentityAccessibilitySection
