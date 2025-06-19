@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -160,10 +159,6 @@ export const OnboardingVerbalIdentity = ({
     setIdentity(prev => ({ ...prev, prohibitedWords: value }));
   };
 
-  const handleClaimsDisclosuresChange = (value: string) => {
-    setIdentity(prev => ({ ...prev, claimsDisclosures: value }));
-  };
-
   const handleSave = () => {
     console.log('Saving identity:', identity);
     onVerbalIdentityUpdated(identity);
@@ -287,25 +282,6 @@ export const OnboardingVerbalIdentity = ({
             onChange={(e) => handleProhibitedWordsChange(e.target.value)}
             className="bg-gray-700 border-gray-600 text-white"
             placeholder="Enter words or phrases that should never be used in your brand communications..."
-            rows={4}
-          />
-        </Card>
-
-        {/* Claims & Disclosures */}
-        <Card className="p-6 bg-gray-800 border-gray-700">
-          <div className="flex items-center mb-4">
-            <FileText className="h-5 w-5 mr-2 text-purple-400" />
-            <h3 className="text-lg font-semibold text-white">Claims & Disclosures</h3>
-          </div>
-          <p className="text-gray-400 text-sm mb-4">
-            List claims requiring substantiation; submit sample disclaimers
-          </p>
-          
-          <Textarea
-            value={identity.claimsDisclosures}
-            onChange={(e) => handleClaimsDisclosuresChange(e.target.value)}
-            className="bg-gray-700 border-gray-600 text-white"
-            placeholder="Enter claims that require legal disclaimers or substantiation..."
             rows={4}
           />
         </Card>
