@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +8,7 @@ import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { MessageSquare, Upload, Globe, Type, FileText, AlertTriangle, X } from 'lucide-react';
+import { MessageSquare, Upload, Type, FileText, AlertTriangle, X } from 'lucide-react';
 
 interface VerbalIdentity {
   toneOfVoice: string;
@@ -28,24 +29,13 @@ export const OnboardingVerbalIdentity = ({
   onVerbalIdentityUpdated
 }: OnboardingVerbalIdentityProps) => {
   const [identity, setIdentity] = useState<VerbalIdentity>(verbalIdentity);
-  const [localizationEnabled, setLocalizationEnabled] = useState(false);
   const [grammarEnabled, setGrammarEnabled] = useState(false);
-  
-  // Localization states
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
-  const [uploadedTaglines, setUploadedTaglines] = useState<File[]>([]);
   
   // Grammar preference states
   const [spellingPreference, setSpellingPreference] = useState<'american' | 'british'>('american');
   const [oxfordComma, setOxfordComma] = useState(true);
   const [dateFormat, setDateFormat] = useState<'us' | 'international'>('us');
   const [numberFormat, setNumberFormat] = useState<'us' | 'international'>('us');
-
-  const availableLanguages = [
-    'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch',
-    'Chinese (Simplified)', 'Chinese (Traditional)', 'Japanese', 'Korean',
-    'Arabic', 'Russian', 'Hindi', 'Swedish', 'Norwegian', 'Danish'
-  ];
 
   // Update parent state whenever identity changes
   useEffect(() => {
@@ -58,42 +48,23 @@ export const OnboardingVerbalIdentity = ({
     setIdentity(prev => ({ ...prev, toneOfVoice: value }));
   };
 
-  const handleLanguageToggle = (language: string) => {
-    const newLanguages = selectedLanguages.includes(language)
-      ? selectedLanguages.filter(l => l !== language)
-      : [...selectedLanguages, language];
-    
-    setSelectedLanguages(newLanguages);
-  };
-
-  const handleTaglineUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-    setUploadedTaglines(prev => [...prev, ...files]);
-  };
-
-  const removeTaglineFile = (index: number) => {
-    setUploadedTaglines(prev => prev.filter((_, i) => i !== index));
-  };
-
   const updateGrammarPreferences = () => {
     const preferences = {
       spelling: spellingPreference,
       oxfordComma,
       dateFormat,
-      numberFormat,
-      selectedLanguages: selectedLanguages.join(', ')
+      numberFormat
     };
     
     setIdentity(prev => ({ 
       ...prev, 
-      grammarPreferences: JSON.stringify(preferences),
-      localizationRules: selectedLanguages.length > 0 ? `Approved languages: ${selectedLanguages.join(', ')}` : ''
+      grammarPreferences: JSON.stringify(preferences)
     }));
   };
 
   useEffect(() => {
     updateGrammarPreferences();
-  }, [spellingPreference, oxfordComma, dateFormat, numberFormat, selectedLanguages]);
+  }, [spellingPreference, oxfordComma, dateFormat, numberFormat]);
 
   const handleBrandVocabularyChange = (value: string) => {
     setIdentity(prev => ({ ...prev, brandVocabulary: value }));
@@ -220,111 +191,6 @@ export const OnboardingVerbalIdentity = ({
             placeholder="Enter claims that require legal disclaimers or substantiation..."
             rows={4}
           />
-        </Card>
-
-        {/* Localization Rules */}
-        <Card className="p-6 bg-gray-800 border-gray-700">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center">
-              <Globe className="h-5 w-5 mr-2 text-purple-400" />
-              <h3 className="text-lg font-semibold text-white">Localization Preferences</h3>
-            </div>
-            <Switch
-              checked={localizationEnabled}
-              onCheckedChange={setLocalizationEnabled}
-            />
-          </div>
-          <p className="text-gray-400 text-sm mb-4">
-            Select approved languages and upload translated taglines
-          </p>
-          
-          {localizationEnabled && (
-            <div className="space-y-6">
-              {/* Language Selection */}
-              <div className="space-y-3">
-                <Label className="text-gray-200">Select Approved Languages</Label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                  {availableLanguages.map((language) => (
-                    <div
-                      key={language}
-                      className={`flex items-center space-x-2 p-2 rounded-lg border cursor-pointer transition-colors ${
-                        selectedLanguages.includes(language)
-                          ? 'bg-purple-600 border-purple-500'
-                          : 'bg-gray-700 border-gray-600 hover:border-gray-500'
-                      }`}
-                      onClick={() => handleLanguageToggle(language)}
-                    >
-                      <Checkbox
-                        checked={selectedLanguages.includes(language)}
-                        className="pointer-events-none"
-                      />
-                      <span className="text-white text-xs">{language}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Selected Languages Display */}
-              {selectedLanguages.length > 0 && (
-                <div className="space-y-2">
-                  <Label className="text-gray-200">Selected Languages</Label>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedLanguages.map((language, index) => (
-                      <Badge key={index} variant="secondary" className="bg-purple-100 text-purple-800">
-                        {language}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Translated Taglines Upload */}
-              <div className="space-y-3">
-                <Label className="text-gray-200">Upload Translated Taglines</Label>
-                <div className="border-2 border-dashed border-gray-600 rounded-lg p-4 text-center">
-                  <Upload className="h-6 w-6 mx-auto text-gray-400 mb-2" />
-                  <p className="text-gray-400 text-sm mb-2">Upload translated tagline files</p>
-                  <input
-                    type="file"
-                    multiple
-                    accept=".txt,.doc,.docx,.pdf"
-                    onChange={handleTaglineUpload}
-                    className="hidden"
-                    id="tagline-upload"
-                  />
-                  <Button 
-                    variant="outline" 
-                    className="border-gray-600 text-gray-300"
-                    onClick={() => document.getElementById('tagline-upload')?.click()}
-                  >
-                    Choose Files
-                  </Button>
-                </div>
-
-                {/* Uploaded Files Display */}
-                {uploadedTaglines.length > 0 && (
-                  <div className="space-y-2">
-                    <Label className="text-gray-200">Uploaded Files</Label>
-                    <div className="space-y-2">
-                      {uploadedTaglines.map((file, index) => (
-                        <div key={index} className="flex items-center justify-between p-2 bg-gray-700 rounded-lg">
-                          <span className="text-white text-sm">{file.name}</span>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeTaglineFile(index)}
-                            className="text-red-400 hover:text-red-300"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
         </Card>
 
         {/* Grammar Preferences */}
