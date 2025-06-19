@@ -270,10 +270,22 @@ const Campaign = () => {
   };
 
   const handleBackToDashboard = () => {
-    if (campaign.brandId) {
-      navigate(`/brand/${campaign.brandId}`);
+    // Get the brand ID from the campaign, or try to determine it from the referrer
+    const brandId = campaign?.brandId;
+    
+    if (brandId) {
+      navigate(`/brand/${brandId}`);
     } else {
-      navigate('/business-center');
+      // If no brand ID is found, check if we came from a brand page
+      const referrer = document.referrer;
+      const brandMatch = referrer.match(/\/brand\/([^\/]+)/);
+      
+      if (brandMatch) {
+        navigate(`/brand/${brandMatch[1]}`);
+      } else {
+        // Default to jello brand if we can't determine the brand
+        navigate('/brand/jello');
+      }
     }
   };
 
