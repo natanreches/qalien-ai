@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Image, Upload, CheckCircle, AlertCircle, Check, X, AlertTriangle } from 'lucide-react';
+import { Image, Upload, CheckCircle, AlertCircle, Check, X, AlertTriangle, Trash2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,7 @@ interface OnboardingVisualIdentityLogoSectionProps {
   onVerifyExtraction?: (isCorrect: boolean) => void;
   extractionVerified?: boolean;
   onClearExtracted?: () => void;
+  onRemoveFile?: (index: number) => void;
 }
 
 export const OnboardingVisualIdentityLogoSection = ({
@@ -20,8 +21,11 @@ export const OnboardingVisualIdentityLogoSection = ({
   onFileUpload,
   onVerifyExtraction,
   extractionVerified,
-  onClearExtracted
+  onClearExtracted,
+  onRemoveFile
 }: OnboardingVisualIdentityLogoSectionProps) => {
+  const canDeleteIndividual = extractedFromGuidelines && extractionVerified === false;
+
   return (
     <Card className="p-6 bg-gray-800 border-gray-700">
       <div className="flex items-center justify-between mb-4">
@@ -81,7 +85,7 @@ export const OnboardingVisualIdentityLogoSection = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <X className="h-4 w-4 text-red-500" />
-              <span className="text-red-400 text-sm">Please adjust the logo files below to match your requirements</span>
+              <span className="text-red-400 text-sm">Please adjust the logo files below. You can remove incorrect files individually or clear all.</span>
             </div>
             <Button
               size="sm"
@@ -116,7 +120,7 @@ export const OnboardingVisualIdentityLogoSection = ({
       {extractedFromGuidelines && logoFiles.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {logoFiles.map((file, index) => (
-            <div key={index} className="text-center">
+            <div key={index} className="text-center relative">
               <div className="w-full h-20 bg-gray-700 rounded border flex items-center justify-center mb-2">
                 <Image className="h-8 w-8 text-gray-400" />
               </div>
@@ -124,6 +128,16 @@ export const OnboardingVisualIdentityLogoSection = ({
               <Badge variant="secondary" className="mt-1 text-xs bg-green-600 text-white">
                 Extracted
               </Badge>
+              {canDeleteIndividual && onRemoveFile && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onRemoveFile(index)}
+                  className="absolute -top-2 -right-2 w-6 h-6 p-0 rounded-full bg-red-600 border-red-600 text-white hover:bg-red-700"
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              )}
             </div>
           ))}
         </div>
@@ -157,11 +171,21 @@ export const OnboardingVisualIdentityLogoSection = ({
       {!extractedFromGuidelines && logoFiles.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
           {logoFiles.map((file, index) => (
-            <div key={index} className="text-center">
+            <div key={index} className="text-center relative">
               <div className="w-full h-20 bg-gray-700 rounded border flex items-center justify-center mb-2">
                 <Image className="h-8 w-8 text-gray-400" />
               </div>
               <p className="text-xs text-gray-400 truncate">{file.name}</p>
+              {onRemoveFile && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onRemoveFile(index)}
+                  className="absolute -top-2 -right-2 w-6 h-6 p-0 rounded-full bg-red-600 border-red-600 text-white hover:bg-red-700"
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              )}
             </div>
           ))}
         </div>

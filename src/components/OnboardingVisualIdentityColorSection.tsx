@@ -27,6 +27,8 @@ export const OnboardingVisualIdentityColorSection = ({
   extractionVerified,
   onClearExtracted
 }: OnboardingVisualIdentityColorSectionProps) => {
+  const canDeleteIndividual = extractedFromGuidelines && extractionVerified === false;
+
   return (
     <Card className="p-6 bg-gray-800 border-gray-700">
       <div className="flex items-center justify-between mb-4">
@@ -86,7 +88,7 @@ export const OnboardingVisualIdentityColorSection = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <X className="h-4 w-4 text-red-500" />
-              <span className="text-red-400 text-sm">Please adjust the color palette below to match your requirements</span>
+              <span className="text-red-400 text-sm">Please adjust the color palette below. You can remove incorrect colors individually or clear all.</span>
             </div>
             <Button
               size="sm"
@@ -131,12 +133,17 @@ export const OnboardingVisualIdentityColorSection = ({
                   value={color}
                   onChange={(e) => onUpdateColor(index, e.target.value)}
                   className="bg-gray-700 border-gray-600 text-white text-xs"
+                  disabled={extractedFromGuidelines && extractionVerified === true}
                 />
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => onRemoveColor(index)}
-                  className="text-red-400 border-gray-600 p-1"
+                  className={`p-1 ${
+                    canDeleteIndividual 
+                      ? "text-red-400 border-red-600 hover:bg-red-600/10" 
+                      : "text-red-400 border-gray-600"
+                  }`}
                 >
                   <X className="h-3 w-3" />
                 </Button>

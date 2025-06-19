@@ -27,6 +27,8 @@ export const OnboardingVisualIdentityTypographySection = ({
   extractionVerified,
   onClearExtracted
 }: OnboardingVisualIdentityTypographySectionProps) => {
+  const canDeleteIndividual = extractedFromGuidelines && extractionVerified === false;
+
   return (
     <Card className="p-6 bg-gray-800 border-gray-700">
       <div className="flex items-center justify-between mb-4">
@@ -86,7 +88,7 @@ export const OnboardingVisualIdentityTypographySection = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <X className="h-4 w-4 text-red-500" />
-              <span className="text-red-400 text-sm">Please correct the typography below</span>
+              <span className="text-red-400 text-sm">Please correct the typography below. You can remove incorrect fonts individually or clear all.</span>
             </div>
             <Button
               size="sm"
@@ -112,12 +114,17 @@ export const OnboardingVisualIdentityTypographySection = ({
               onChange={(e) => onUpdateTypography(index, e.target.value)}
               className="flex-1 bg-gray-700 border-gray-600 text-white"
               placeholder="Font name"
+              disabled={extractedFromGuidelines && extractionVerified === true}
             />
             <Button
               variant="outline"
               size="sm"
               onClick={() => onRemoveTypography(index)}
-              className="text-red-400 border-gray-600"
+              className={
+                canDeleteIndividual 
+                  ? "text-red-400 border-red-600 hover:bg-red-600/10" 
+                  : "text-red-400 border-gray-600"
+              }
             >
               <X className="h-4 w-4" />
             </Button>

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { OnboardingVisualIdentityHeader } from './OnboardingVisualIdentityHeader';
@@ -170,6 +171,23 @@ export const OnboardingVisualIdentity = ({
     }
   };
 
+  const removeFile = (index: number, type: 'logo' | 'iconography' | 'photography' | 'layout') => {
+    switch (type) {
+      case 'logo':
+        setIdentity(prev => ({ ...prev, logoFiles: prev.logoFiles.filter((_, i) => i !== index) }));
+        break;
+      case 'iconography':
+        setIdentity(prev => ({ ...prev, iconography: prev.iconography.filter((_, i) => i !== index) }));
+        break;
+      case 'photography':
+        setIdentity(prev => ({ ...prev, photographyFiles: prev.photographyFiles.filter((_, i) => i !== index) }));
+        break;
+      case 'layout':
+        setIdentity(prev => ({ ...prev, layoutFiles: prev.layoutFiles.filter((_, i) => i !== index) }));
+        break;
+    }
+  };
+
   const addColor = () => {
     setIdentity(prev => ({
       ...prev,
@@ -259,6 +277,7 @@ export const OnboardingVisualIdentity = ({
           onVerifyExtraction={(isCorrect) => handleVerifyExtraction('logo', isCorrect)}
           extractionVerified={verificationStatus.logo}
           onClearExtracted={clearLogoFiles}
+          onRemoveFile={(index) => removeFile(index, 'logo')}
         />
 
         <OnboardingVisualIdentityColorSection
