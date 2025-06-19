@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -284,13 +283,10 @@ const Campaign = () => {
                   <div className="text-sm text-gray-400">Avg. Compliance</div>
                   <div className="text-2xl font-bold text-white">{avgCompliance}%</div>
                 </div>
-                <div className="flex space-x-2">
-                  <UploadButton />
-                  <BatchUploadModal
-                    campaigns={[{ id: campaign.id, name: campaign.name }]}
-                    onUploadComplete={handleBatchUploadComplete}
-                  />
-                </div>
+                <BatchUploadModal
+                  campaigns={[{ id: campaign.id, name: campaign.name }]}
+                  onUploadComplete={handleBatchUploadComplete}
+                />
               </div>
             </div>
 
@@ -341,13 +337,10 @@ const Campaign = () => {
               </div>
               <h3 className="text-lg font-medium text-white mb-2">No assets yet</h3>
               <p className="text-gray-400 mb-4">Start by uploading your first assets to this campaign</p>
-              <div className="flex justify-center space-x-2">
-                <UploadButton />
-                <BatchUploadModal
-                  campaigns={[{ id: campaign.id, name: campaign.name }]}
-                  onUploadComplete={handleBatchUploadComplete}
-                />
-              </div>
+              <BatchUploadModal
+                campaigns={[{ id: campaign.id, name: campaign.name }]}
+                onUploadComplete={handleBatchUploadComplete}
+              />
             </div>
           )}
         </div>
