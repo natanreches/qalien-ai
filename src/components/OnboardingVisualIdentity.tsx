@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { OnboardingVisualIdentityHeader } from './OnboardingVisualIdentityHeader';
@@ -22,6 +21,7 @@ interface VisualIdentity {
   logoFiles: File[];
   colorPalette: string[];
   typography: string[];
+  fontFiles?: File[];
   photographyStyle: string;
   photographyFiles: File[];
   iconography: File[];
@@ -67,6 +67,7 @@ export const OnboardingVisualIdentity = ({
 }: OnboardingVisualIdentityProps) => {
   const [identity, setIdentity] = useState<VisualIdentity>({
     ...visualIdentity,
+    fontFiles: visualIdentity.fontFiles || [],
     photographyFiles: visualIdentity.photographyFiles || [],
     layoutFiles: visualIdentity.layoutFiles || [],
     accessibilityRequirements: visualIdentity.accessibilityRequirements || {
@@ -75,6 +76,7 @@ export const OnboardingVisualIdentity = ({
       altText: false
     }
   });
+
   const [extractedFromGuidelines, setExtractedFromGuidelines] = useState(false);
   const [extractionStatus, setExtractionStatus] = useState<ExtractionStatus>({
     photography: false,
@@ -230,6 +232,13 @@ export const OnboardingVisualIdentity = ({
     }));
   };
 
+  const handleFontFileUpload = (file: File) => {
+    setIdentity(prev => ({
+      ...prev,
+      fontFiles: [...(prev.fontFiles || []), file]
+    }));
+  };
+
   const clearTypography = () => {
     setIdentity(prev => ({ ...prev, typography: [] }));
   };
@@ -300,6 +309,7 @@ export const OnboardingVisualIdentity = ({
           onVerifyExtraction={(isCorrect) => handleVerifyExtraction('typography', isCorrect)}
           extractionVerified={verificationStatus.typography}
           onClearExtracted={clearTypography}
+          onFontFileUpload={handleFontFileUpload}
         />
 
         <OnboardingVisualIdentityPhotographySection
