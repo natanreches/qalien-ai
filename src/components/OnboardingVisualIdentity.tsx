@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { OnboardingVisualIdentityHeader } from './OnboardingVisualIdentityHeader';
@@ -5,7 +6,6 @@ import { OnboardingVisualIdentityLogoSection } from './OnboardingVisualIdentityL
 import { OnboardingVisualIdentityColorSection } from './OnboardingVisualIdentityColorSection';
 import { OnboardingVisualIdentityTypographySection } from './OnboardingVisualIdentityTypographySection';
 import { OnboardingVisualIdentityIconographySection } from './OnboardingVisualIdentityIconographySection';
-import { OnboardingVisualIdentityAccessibilitySection } from './OnboardingVisualIdentityAccessibilitySection';
 
 interface BrandGuideline {
   id: string;
@@ -21,11 +21,6 @@ interface VisualIdentity {
   typography: string[];
   fontFiles?: File[];
   iconography: File[];
-  accessibilityRequirements: {
-    contrast: boolean;
-    fontSizes: boolean;
-    altText: boolean;
-  };
 }
 
 interface OnboardingVisualIdentityProps {
@@ -44,7 +39,6 @@ interface VerificationStatus {
   logo?: boolean;
   colorPalette?: boolean;
   typography?: boolean;
-  accessibility?: boolean;
   iconography?: boolean;
 }
 
@@ -57,12 +51,7 @@ export const OnboardingVisualIdentity = ({
 }: OnboardingVisualIdentityProps) => {
   const [identity, setIdentity] = useState<VisualIdentity>({
     ...visualIdentity,
-    fontFiles: visualIdentity.fontFiles || [],
-    accessibilityRequirements: visualIdentity.accessibilityRequirements || {
-      contrast: false,
-      fontSizes: false,
-      altText: false
-    }
+    fontFiles: visualIdentity.fontFiles || []
   });
 
   const [extractedFromGuidelines, setExtractedFromGuidelines] = useState(false);
@@ -273,12 +262,6 @@ export const OnboardingVisualIdentity = ({
           onVerifyExtraction={(isCorrect) => handleVerifyExtraction('iconography', isCorrect)}
           extractionVerified={verificationStatus.iconography}
           onClearExtracted={() => setIdentity(prev => ({ ...prev, iconography: [] }))}
-        />
-
-        <OnboardingVisualIdentityAccessibilitySection
-          accessibilityRequirements={identity.accessibilityRequirements}
-          onAccessibilityChange={(requirements) => setIdentity(prev => ({ ...prev, accessibilityRequirements: requirements }))}
-          extractedFromGuidelines={extractedFromGuidelines}
         />
       </div>
 

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { OnboardingData, CompanyInfo, BrandGuideline, VisualIdentity, VerbalIdentity, AdCreative, LegalRegulatory, Collaborator } from '@/types/onboarding';
@@ -15,12 +16,7 @@ export const useOnboardingLogic = () => {
     logoFiles: [],
     colorPalette: [],
     typography: [],
-    iconography: [],
-    accessibilityRequirements: {
-      contrast: false,
-      fontSizes: false,
-      altText: false
-    }
+    iconography: []
   });
   const [verbalIdentity, setVerbalIdentity] = useState<VerbalIdentity>({
     toneOfVoice: [],

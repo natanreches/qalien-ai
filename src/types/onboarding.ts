@@ -1,3 +1,4 @@
+
 export interface BrandGuideline {
   id: string;
   name: string;
@@ -12,11 +13,6 @@ export interface VisualIdentity {
   colorPalette: string[];
   typography: string[];
   iconography: File[];
-  accessibilityRequirements: {
-    contrast: boolean;
-    fontSizes: boolean;
-    altText: boolean;
-  };
 }
 
 export interface VerbalIdentity {
