@@ -83,7 +83,10 @@ export const FontSelectionModal = ({
                   key={font}
                   onClick={() => handlePresetFontSelect(font)}
                   className="p-3 text-left rounded border border-gray-600 hover:border-gray-400 hover:bg-gray-700 transition-colors text-white"
-                  style={{ fontFamily: font }}
+                  style={{ 
+                    fontFamily: `"${font}", ${font.includes('serif') || font === 'Georgia' || font === 'Times New Roman' || font === 'Merriweather' || font === 'Playfair Display' || font === 'Crimson Text' ? 'serif' : 'sans-serif'}`,
+                    fontSize: '16px'
+                  }}
                 >
                   {font}
                 </button>
