@@ -53,7 +53,7 @@ export const ColorSelectionModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg bg-gray-800 border-gray-700">
+      <DialogContent className="sm:max-w-4xl bg-gray-800 border-gray-700">
         <DialogHeader>
           <DialogTitle className="text-white">Select a Color</DialogTitle>
         </DialogHeader>
@@ -62,17 +62,17 @@ export const ColorSelectionModal = ({
           {/* Preset Colors */}
           <div>
             <Label className="text-gray-200 mb-3 block">Preset Colors</Label>
-            <div className="grid grid-cols-5 gap-2">
+            <div className="grid grid-cols-5 gap-4">
               {PRESET_COLORS.map((color) => (
                 <button
                   key={color}
                   onClick={() => handlePresetColorSelect(color)}
-                  className="w-12 h-12 rounded border-2 border-gray-600 hover:border-gray-400 transition-colors relative flex items-center justify-center"
+                  className="w-20 h-20 rounded border-2 border-gray-600 hover:border-gray-400 transition-colors relative flex items-center justify-center group"
                   style={{ backgroundColor: color }}
                   title={color}
                 >
                   <span 
-                    className="text-xs font-mono font-semibold px-1 py-0.5 rounded bg-black/20 backdrop-blur-sm"
+                    className="text-xs font-mono font-semibold px-2 py-1 rounded bg-black/30 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
                     style={{ color: getTextColor(color) }}
                   >
                     {color}
