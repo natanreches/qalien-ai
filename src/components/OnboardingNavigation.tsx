@@ -20,11 +20,23 @@ export const OnboardingNavigation = ({
   onNext,
   onComplete
 }: OnboardingNavigationProps) => {
+  const handleNext = () => {
+    onNext();
+    // Scroll to top after navigation
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBack = () => {
+    onBack();
+    // Scroll to top after navigation
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="flex justify-between mt-8">
       <Button
         variant="outline"
-        onClick={onBack}
+        onClick={handleBack}
         disabled={currentStep === 1}
         className="border-gray-600 text-gray-300"
       >
@@ -43,7 +55,7 @@ export const OnboardingNavigation = ({
         </Button>
       ) : (
         <Button
-          onClick={onNext}
+          onClick={handleNext}
           disabled={!canProceed}
         >
           Next Step
