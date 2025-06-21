@@ -105,7 +105,7 @@ export const ProfileSettings = () => {
       <Card className="p-6">
         <div className="space-y-6">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Visual Compliance Weights</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Visual Identity</h3>
             <div className="space-y-6">
               {/* Logo Usage */}
               <div className="space-y-3">
@@ -220,7 +220,7 @@ export const ProfileSettings = () => {
           <Separator />
 
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Brand Voice & Personality</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Verbal Identity</h3>
             <div className="space-y-6">
               {/* Messaging Tone */}
               <div className="space-y-3">
