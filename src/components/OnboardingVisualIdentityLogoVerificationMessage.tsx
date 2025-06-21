@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Check, X, AlertTriangle, Trash2, Edit } from 'lucide-react';
+import { Check, X, AlertTriangle, Trash2, Edit, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ClearAllConfirmationDialog } from './ClearAllConfirmationDialog';
 
@@ -10,6 +10,7 @@ interface OnboardingVisualIdentityLogoVerificationMessageProps {
   onClearExtracted?: () => void;
   showAdjustMessage: boolean;
   onDismissAdjustMessage: () => void;
+  logoFiles: File[];
 }
 
 export const OnboardingVisualIdentityLogoVerificationMessage = ({
@@ -17,7 +18,8 @@ export const OnboardingVisualIdentityLogoVerificationMessage = ({
   onVerifyExtraction,
   onClearExtracted,
   showAdjustMessage,
-  onDismissAdjustMessage
+  onDismissAdjustMessage,
+  logoFiles
 }: OnboardingVisualIdentityLogoVerificationMessageProps) => {
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
 
@@ -42,6 +44,12 @@ export const OnboardingVisualIdentityLogoVerificationMessage = ({
   const handleConfirmClear = () => {
     if (onClearExtracted) {
       onClearExtracted();
+    }
+  };
+
+  const handleFinish = () => {
+    if (onVerifyExtraction) {
+      onVerifyExtraction(undefined as any);
     }
   };
 
@@ -142,6 +150,29 @@ export const OnboardingVisualIdentityLogoVerificationMessage = ({
           description="Are you sure you want to clear all logo files? This action cannot be undone."
         />
       </>
+    );
+  }
+
+  // Show finish button when user has dismissed the adjust message but still has files
+  if (extractionVerified === false && !showAdjustMessage && logoFiles.length > 0) {
+    return (
+      <div className="mb-4 p-3 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <CheckCircle className="h-4 w-4 text-blue-400" />
+            <span className="text-blue-400 text-sm">Ready to confirm your logo files?</span>
+          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleFinish}
+            className="border-blue-600 text-blue-400 hover:bg-blue-600/10"
+          >
+            <CheckCircle className="h-3 w-3 mr-1" />
+            Finish
+          </Button>
+        </div>
+      </div>
     );
   }
 

@@ -58,6 +58,7 @@ export const OnboardingVisualIdentityLogoSection = ({
           onClearExtracted={onClearExtracted}
           showAdjustMessage={showAdjustMessage}
           onDismissAdjustMessage={() => setShowAdjustMessage(false)}
+          logoFiles={logoFiles}
         />
       )}
 

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Type, Plus, X, Check, AlertTriangle, Trash2, Edit } from 'lucide-react';
+import { Type, Plus, X, Check, AlertTriangle, Trash2, Edit, CheckCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -77,6 +77,12 @@ export const OnboardingVisualIdentityTypographySection = ({
   const handleConfirmClear = () => {
     if (onClearExtracted) {
       onClearExtracted();
+    }
+  };
+
+  const handleFinish = () => {
+    if (onVerifyExtraction) {
+      onVerifyExtraction(undefined as any);
     }
   };
 
@@ -179,6 +185,26 @@ export const OnboardingVisualIdentityTypographySection = ({
                   <X className="h-3 w-3" />
                 </Button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {extractedFromGuidelines && extractionVerified === false && !showAdjustMessage && typography.length > 0 && (
+          <div className="mb-4 p-3 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="h-4 w-4 text-blue-400" />
+                <span className="text-blue-400 text-sm">Ready to confirm your typography selections?</span>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleFinish}
+                className="border-blue-600 text-blue-400 hover:bg-blue-600/10"
+              >
+                <CheckCircle className="h-3 w-3 mr-1" />
+                Finish
+              </Button>
             </div>
           </div>
         )}
