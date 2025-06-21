@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Save, RotateCcw } from 'lucide-react';
 import { BrandGuidelinesUpload } from './BrandGuidelinesUpload';
+import { useToast } from '@/hooks/use-toast';
 
 interface ComplianceWeights {
   logoUsage: number;
@@ -17,6 +18,8 @@ interface ComplianceWeights {
 }
 
 export const ProfileSettings = () => {
+  const { toast } = useToast();
+
   const [weights, setWeights] = useState<ComplianceWeights>({
     logoUsage: 80,
     colorPalette: 75,
@@ -45,12 +48,23 @@ export const ProfileSettings = () => {
     });
     setStrictMode(false);
     setAutoApproval(false);
+    
+    // Show reset toast
+    toast({
+      title: "Settings Reset",
+      description: "All compliance settings have been reset to default values.",
+    });
   };
 
   const saveSettings = () => {
     // In a real app, this would save to a backend or localStorage
     console.log('Saving compliance settings:', { weights, strictMode, autoApproval });
-    // Show a toast notification
+    
+    // Show success toast
+    toast({
+      title: "Settings Saved",
+      description: "Your compliance settings have been successfully saved.",
+    });
   };
 
   const getWeightDescription = (weight: number) => {

@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Palette, Type, Target, MessageSquare, CheckCircle, Edit3, Heart, Users, Lightbulb, BookOpen, Pen, Volume2, Image } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface BrandGuideline {
   id: string;
@@ -54,6 +55,7 @@ export const OnboardingBrandConfirmation = ({
   });
   const [isEditingVisual, setIsEditingVisual] = useState(!brandElements.brandName);
   const [logoConfirmed, setLogoConfirmed] = useState(false);
+  const { toast } = useToast();
 
   // Auto-extract brand elements from guidelines (mock implementation)
   useEffect(() => {
@@ -80,6 +82,12 @@ export const OnboardingBrandConfirmation = ({
   const handleSave = () => {
     onBrandElementsConfirmed(elements);
     setIsEditingVisual(false);
+    
+    // Show success toast
+    toast({
+      title: "Brand Profile Saved",
+      description: "Your brand profile has been successfully saved.",
+    });
   };
 
   const addColor = () => {
