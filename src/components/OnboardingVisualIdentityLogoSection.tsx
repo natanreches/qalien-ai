@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, Upload, CheckCircle, AlertCircle, Check, X, AlertTriangle, Trash2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -24,6 +24,7 @@ export const OnboardingVisualIdentityLogoSection = ({
   onClearExtracted,
   onRemoveFile
 }: OnboardingVisualIdentityLogoSectionProps) => {
+  const [showAdjustMessage, setShowAdjustMessage] = useState(true);
   const canDeleteIndividual = extractedFromGuidelines && extractionVerified === false;
 
   return (
@@ -80,21 +81,31 @@ export const OnboardingVisualIdentityLogoSection = ({
         </div>
       )}
 
-      {extractionVerified === false && (
+      {extractionVerified === false && showAdjustMessage && (
         <div className="mb-4 p-3 bg-red-900/20 border border-red-600/30 rounded-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <X className="h-4 w-4 text-red-500" />
               <span className="text-red-400 text-sm">Please adjust the logo files below. You can remove incorrect files individually or clear all.</span>
             </div>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={onClearExtracted}
-              className="border-red-600 text-red-400 hover:bg-red-600/10"
-            >
-              Clear All
-            </Button>
+            <div className="flex space-x-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={onClearExtracted}
+                className="border-red-600 text-red-400 hover:bg-red-600/10"
+              >
+                Clear All
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setShowAdjustMessage(false)}
+                className="border-gray-600 text-gray-400 hover:bg-gray-600/10"
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
           </div>
         </div>
       )}
