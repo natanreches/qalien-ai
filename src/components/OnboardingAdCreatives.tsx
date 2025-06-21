@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Upload, X, Video, Image } from 'lucide-react';
+import { Upload, X, Video, Image, FileVideo, FileImage } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import type { AdCreative } from '@/types/onboarding';
 
@@ -242,6 +243,18 @@ const FileUploadForm = ({
   const [category, setCategory] = useState<'produced' | 'ugc'>('produced');
   const [platform, setPlatform] = useState('');
   const [description, setDescription] = useState('');
+  const [previewUrl, setPreviewUrl] = useState<string>('');
+
+  React.useEffect(() => {
+    // Create preview URL for the file
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+
+    // Cleanup function to revoke the URL when component unmounts
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [file]);
 
   const handleSubmit = () => {
     if (!platform) return;
@@ -262,18 +275,54 @@ const FileUploadForm = ({
     setDescription('');
   };
 
+  const isVideo = file.type.startsWith('video/');
+  const isImage = file.type.startsWith('image/');
+
   return (
     <div className="border border-gray-600 rounded-lg p-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          {type === 'video' ? (
-            <Video className="h-6 w-6 text-blue-400" />
-          ) : (
-            <Image className="h-6 w-6 text-green-400" />
-          )}
-          <div>
-            <p className="text-white font-medium">{file.name}</p>
-            <p className="text-gray-400 text-sm">{(file.size / 1024 / 1024).toFixed(1)} MB</p>
+      <div className="flex items-start justify-between">
+        <div className="flex items-start space-x-4">
+          {/* Media Preview */}
+          <div className="flex-shrink-0">
+            <div className="w-24 h-24 bg-gray-700 rounded-lg overflow-hidden border border-gray-600">
+              {isImage && (
+                <img 
+                  src={previewUrl} 
+                  alt={file.name}
+                  className="w-full h-full object-cover"
+                />
+              )}
+              {isVideo && (
+                <video 
+                  src={previewUrl} 
+                  className="w-full h-full object-cover"
+                  muted
+                  playsInline
+                />
+              )}
+              {!isImage && !isVideo && (
+                <div className="w-full h-full flex items-center justify-center">
+                  {type === 'video' ? (
+                    <FileVideo className="h-8 w-8 text-blue-400" />
+                  ) : (
+                    <FileImage className="h-8 w-8 text-green-400" />
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* File Info */}
+          <div className="flex items-start space-x-3">
+            {type === 'video' ? (
+              <Video className="h-6 w-6 text-blue-400 mt-1 flex-shrink-0" />
+            ) : (
+              <Image className="h-6 w-6 text-green-400 mt-1 flex-shrink-0" />
+            )}
+            <div>
+              <p className="text-white font-medium">{file.name}</p>
+              <p className="text-gray-400 text-sm">{(file.size / 1024 / 1024).toFixed(1)} MB</p>
+            </div>
           </div>
         </div>
         <Button
