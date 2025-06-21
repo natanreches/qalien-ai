@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Image, Upload, CheckCircle, AlertCircle, Check, X, AlertTriangle, Trash2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -25,7 +24,7 @@ export const OnboardingVisualIdentityLogoSection = ({
   onRemoveFile
 }: OnboardingVisualIdentityLogoSectionProps) => {
   const [showAdjustMessage, setShowAdjustMessage] = useState(true);
-  const canDeleteIndividual = extractedFromGuidelines && extractionVerified === false;
+  const canDeleteIndividual = extractedFromGuidelines && extractionVerified === false && showAdjustMessage;
 
   return (
     <Card className="p-6 bg-gray-800 border-gray-700">
