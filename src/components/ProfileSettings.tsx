@@ -16,6 +16,7 @@ interface ComplianceWeights {
   typography: number;
   messagingTone: number;
   layoutComposition: number;
+  brandPronunciation: number;
 }
 
 export const ProfileSettings = () => {
@@ -26,7 +27,8 @@ export const ProfileSettings = () => {
     colorPalette: 75,
     typography: 70,
     messagingTone: 85,
-    layoutComposition: 65
+    layoutComposition: 65,
+    brandPronunciation: 70
   });
 
   const [strictMode, setStrictMode] = useState(false);
@@ -45,7 +47,8 @@ export const ProfileSettings = () => {
       colorPalette: 75,
       typography: 70,
       messagingTone: 85,
-      layoutComposition: 65
+      layoutComposition: 65,
+      brandPronunciation: 70
     });
     setStrictMode(false);
     setAutoApproval(false);
@@ -217,7 +220,7 @@ export const ProfileSettings = () => {
           <Separator />
 
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Verbal Compliance Weights</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Brand Voice & Personality</h3>
             <div className="space-y-6">
               {/* Messaging Tone */}
               <div className="space-y-3">
@@ -243,6 +246,33 @@ export const ProfileSettings = () => {
                 />
                 <p className="text-xs text-gray-500">
                   Controls how strictly messaging aligns with brand voice and communication guidelines.
+                </p>
+              </div>
+
+              {/* Brand Name Pronunciation */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="pronunciation-weight" className="text-sm font-medium">
+                    Brand Name Pronunciation
+                  </Label>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-500">{weights.brandPronunciation}%</span>
+                    <span className={`text-xs font-medium ${getWeightColor(weights.brandPronunciation)}`}>
+                      {getWeightDescription(weights.brandPronunciation)}
+                    </span>
+                  </div>
+                </div>
+                <Slider
+                  id="pronunciation-weight"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={[weights.brandPronunciation]}
+                  onValueChange={(value) => handleWeightChange('brandPronunciation', value)}
+                  className="w-full"
+                />
+                <p className="text-xs text-gray-500">
+                  Controls evaluation of correct brand name pronunciation in audio/video content.
                 </p>
               </div>
             </div>
