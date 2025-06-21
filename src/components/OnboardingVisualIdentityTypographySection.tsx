@@ -56,9 +56,18 @@ export const OnboardingVisualIdentityTypographySection = ({
 
   const handleDismissAdjustMessage = () => {
     setShowAdjustMessage(false);
-    // Reset verification status to show the feedback prompt again
-    onVerifyExtraction?.(undefined as any);
+    // Reset verification status to undefined to show the feedback prompt again
+    if (onVerifyExtraction) {
+      onVerifyExtraction(undefined as any);
+    }
   };
+
+  // Reset showAdjustMessage when extractionVerified changes to false
+  React.useEffect(() => {
+    if (extractionVerified === false) {
+      setShowAdjustMessage(true);
+    }
+  }, [extractionVerified]);
 
   return (
     <>
