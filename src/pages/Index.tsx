@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { CampaignGrid } from '@/components/CampaignGrid';
 import { AssetModal } from '@/components/AssetModal';
@@ -164,6 +165,17 @@ const Index = () => {
     setSelectedAsset(null);
   };
 
+  const handleAssetApproval = (assetId) => {
+    setCampaigns(prev => prev.map(campaign => ({
+      ...campaign,
+      assets: campaign.assets.map(asset => 
+        asset.id === assetId 
+          ? { ...asset, status: 'approved' }
+          : asset
+      )
+    })));
+  };
+
   const handleBriefUploaded = (brief, campaignId, analysis) => {
     setCampaigns(prev => 
       prev.map(c => 
@@ -244,6 +256,7 @@ const Index = () => {
         <AssetModal 
           asset={selectedAsset} 
           onClose={closeModal}
+          onApprove={handleAssetApproval}
         />
       )}
     </div>

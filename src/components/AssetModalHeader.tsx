@@ -9,9 +9,10 @@ interface AssetModalHeaderProps {
     campaignName: string;
   };
   onClose: () => void;
+  children?: React.ReactNode;
 }
 
-export const AssetModalHeader = ({ asset, onClose }: AssetModalHeaderProps) => {
+export const AssetModalHeader = ({ asset, onClose, children }: AssetModalHeaderProps) => {
   return (
     <div className="flex items-center justify-between p-6 border-b border-gray-200">
       <div>
@@ -26,6 +27,7 @@ export const AssetModalHeader = ({ asset, onClose }: AssetModalHeaderProps) => {
         <p className="text-sm text-gray-500">Campaign: {asset.campaignName}</p>
       </div>
       <div className="flex items-center space-x-3">
+        {children}
         <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
           <Download className="h-5 w-5" />
         </button>

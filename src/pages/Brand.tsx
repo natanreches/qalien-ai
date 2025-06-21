@@ -169,6 +169,19 @@ const Brand = () => {
     setSelectedAsset(null);
   };
 
+  const handleAssetApproval = (assetId) => {
+    const updatedCampaigns = campaigns.map(c => ({
+      ...c,
+      assets: c.assets.map(asset => 
+        asset.id === assetId 
+          ? { ...asset, status: 'approved' }
+          : asset
+      )
+    }));
+    setCampaigns(updatedCampaigns);
+    localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
+  };
+
   const handleBriefUploaded = (brief, campaignId, analysis) => {
     const updatedCampaigns = campaigns.map(c => 
       c.id === campaignId 
@@ -261,6 +274,7 @@ const Brand = () => {
         <AssetModal 
           asset={selectedAsset} 
           onClose={closeModal}
+          onApprove={handleAssetApproval}
         />
       )}
     </div>
