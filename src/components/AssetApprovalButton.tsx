@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { CheckCircle, AlertTriangle } from 'lucide-react';
+import { CheckCircle, Info } from 'lucide-react';
 
 interface AssetApprovalButtonProps {
   asset: {
@@ -30,7 +30,7 @@ export const AssetApprovalButton = ({ asset, onApprove, variant = 'default' }: A
   
   const isHighCompliance = asset.compliance >= 90;
   const buttonText = isApproved ? 'Approved' : (isHighCompliance ? 'Approve' : 'Approve Anyway');
-  const icon = isHighCompliance ? CheckCircle : AlertTriangle;
+  const icon = isHighCompliance ? CheckCircle : Info;
   const Icon = icon;
 
   const handleApprove = () => {
@@ -89,7 +89,7 @@ export const AssetApprovalButton = ({ asset, onApprove, variant = 'default' }: A
         <Button 
           variant="outline"
           size={variant === 'small' ? 'sm' : 'default'}
-          className="border-orange-300 text-orange-700 hover:bg-orange-50"
+          className="border-blue-300 text-blue-700 hover:bg-blue-50"
         >
           <Icon className="h-4 w-4 mr-1" />
           {buttonText}
@@ -97,16 +97,16 @@ export const AssetApprovalButton = ({ asset, onApprove, variant = 'default' }: A
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Approve Asset Anyway</AlertDialogTitle>
+          <AlertDialogTitle>Review and Approve</AlertDialogTitle>
           <AlertDialogDescription>
-            This asset "{asset.name}" has a compliance score of {asset.compliance}%, which is below the recommended 90% threshold. 
-            Are you sure you want to approve it anyway?
+            This asset "{asset.name}" has a compliance score of {asset.compliance}%. 
+            Would you like to proceed with approval? You can always review compliance details before deciding.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleApprove} className="bg-orange-600 hover:bg-orange-700">
-            Approve Anyway
+          <AlertDialogCancel>Review More</AlertDialogCancel>
+          <AlertDialogAction onClick={handleApprove} className="bg-blue-600 hover:bg-blue-700">
+            Approve
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
