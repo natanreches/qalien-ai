@@ -257,6 +257,7 @@ const Brand = () => {
               onAssetClick={handleAssetClick}
               showBriefs={true}
               onBriefUploaded={handleBriefUploaded}
+              brandId={id}
             />
           </TabsContent>
 

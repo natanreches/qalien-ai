@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, Folder, ChevronRight, FileText } from 'lucide-react';
@@ -12,10 +11,12 @@ export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false, onBr
   const navigate = useNavigate();
 
   const handleCampaignClick = (campaignId) => {
-    // Pass the brand ID as state when navigating to campaign
-    navigate(`/campaign/${campaignId}`, {
-      state: { brandId: brandId }
-    });
+    // Pass the brand ID as state when navigating to campaign (if available)
+    const navigationOptions = brandId 
+      ? { state: { brandId: brandId } }
+      : {};
+    
+    navigate(`/campaign/${campaignId}`, navigationOptions);
   };
 
   return (
