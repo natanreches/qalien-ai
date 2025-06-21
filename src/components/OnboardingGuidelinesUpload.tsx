@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Upload, FileText, X, CheckCircle, AlertCircle } from 'lucide-react';
+import { Upload, FileText, X, CheckCircle, AlertCircle, FolderOpen } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface BrandGuideline {
@@ -59,6 +59,13 @@ export const OnboardingGuidelinesUpload = ({
         return;
       }
       setNewGuideline(prev => ({ ...prev, file }));
+    }
+  };
+
+  const handleChooseFileClick = () => {
+    const fileInput = document.getElementById('onboarding-guideline-file') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
     }
   };
 
@@ -136,6 +143,7 @@ export const OnboardingGuidelinesUpload = ({
 
   const isComplete = guidelines.length === requiredGuidelines;
   const remainingBrands = getRemainingBrands();
+  const canUpload = newGuideline.name.trim() && newGuideline.file && (validBrands.length === 1 || newGuideline.brandName.trim());
 
   return (
     <div className="space-y-6">
@@ -216,20 +224,34 @@ export const OnboardingGuidelinesUpload = ({
           <div className="space-y-2">
             <Label htmlFor="onboarding-guideline-file" className="text-gray-200">Upload File</Label>
             <div className="flex items-center space-x-2">
-              <Input
+              <input
                 id="onboarding-guideline-file"
                 type="file"
                 accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                 onChange={handleFileSelect}
-                className="flex-1 bg-gray-800 border-gray-600 text-white"
+                className="hidden"
               />
-              <Button onClick={handleUpload} className="shrink-0">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleChooseFileClick}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 border-blue-600 text-white"
+              >
+                <FolderOpen className="h-4 w-4 mr-2" />
+                {newGuideline.file ? newGuideline.file.name : 'Choose File'}
+              </Button>
+              <Button 
+                onClick={handleUpload} 
+                className="shrink-0"
+                disabled={!canUpload}
+                variant={canUpload ? "default" : "secondary"}
+              >
                 <Upload className="h-4 w-4 mr-2" />
                 Upload
               </Button>
             </div>
             {newGuideline.file && (
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-green-400">
                 Selected: {newGuideline.file.name} ({formatFileSize(newGuideline.file.size)})
               </p>
             )}
