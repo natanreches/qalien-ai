@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Eye, Clock, CheckCircle, AlertCircle, XCircle, Video } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export const AssetCard = ({ asset, onClick }) => {
   const getComplianceColor = (score) => {
@@ -35,6 +36,28 @@ export const AssetCard = ({ asset, onClick }) => {
     }
   };
 
+  const getComplianceDetails = (score) => {
+    if (score >= 80) {
+      return {
+        status: 'High Compliance',
+        details: 'Asset meets all brand guidelines and regulatory requirements',
+        color: 'text-green-600'
+      };
+    }
+    if (score >= 60) {
+      return {
+        status: 'Moderate Compliance',
+        details: 'Asset has minor issues that may need attention',
+        color: 'text-yellow-600'
+      };
+    }
+    return {
+      status: 'Low Compliance',
+      details: 'Asset requires significant updates to meet requirements',
+      color: 'text-red-600'
+    };
+  };
+
   const renderAssetPreview = () => {
     if (asset.type === 'video') {
       return (
@@ -67,49 +90,78 @@ export const AssetCard = ({ asset, onClick }) => {
     );
   };
 
+  const complianceDetails = getComplianceDetails(asset.compliance);
+
   return (
-    <div 
-      className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer hover:border-blue-300"
-      onClick={onClick}
-    >
-      <div className="relative aspect-video bg-gray-100 overflow-hidden">
-        {renderAssetPreview()}
-        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-200" />
-        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <div className="p-2 bg-white bg-opacity-90 rounded-full">
-            <Eye className="h-4 w-4 text-gray-700" />
-          </div>
-        </div>
-        <div className="absolute top-2 left-2">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-            asset.type === 'video' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
-          }`}>
-            {asset.type === 'video' ? 'Video' : 'Image'}
-          </span>
-        </div>
-      </div>
-      
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="font-medium text-gray-900 truncate">{asset.name}</h3>
-          <div className="flex items-center space-x-1">
-            {getStatusIcon(asset.status)}
-          </div>
-        </div>
-        
-        <div className="flex items-center justify-between">
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
           <div 
-            className={`px-2 py-1 rounded-full text-sm font-medium ${getComplianceColor(asset.compliance)}`}
+            className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer hover:border-blue-300"
+            onClick={onClick}
           >
-            {asset.compliance}%
+            <div className="relative aspect-video bg-gray-100 overflow-hidden">
+              {renderAssetPreview()}
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-200" />
+              <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <div className="p-2 bg-white bg-opacity-90 rounded-full">
+                  <Eye className="h-4 w-4 text-gray-700" />
+                </div>
+              </div>
+              <div className="absolute top-2 left-2">
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  asset.type === 'video' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                }`}>
+                  {asset.type === 'video' ? 'Video' : 'Image'}
+                </span>
+              </div>
+            </div>
+            
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-medium text-gray-900 truncate">{asset.name}</h3>
+                <div className="flex items-center space-x-1">
+                  {getStatusIcon(asset.status)}
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div 
+                  className={`px-2 py-1 rounded-full text-sm font-medium ${getComplianceColor(asset.compliance)}`}
+                >
+                  {asset.compliance}%
+                </div>
+                <span className="text-xs text-gray-500">{getStatusText(asset.status)}</span>
+              </div>
+              
+              <div className="mt-2 text-xs text-gray-400">
+                Uploaded {new Date(asset.uploadDate).toLocaleDateString()}
+              </div>
+            </div>
           </div>
-          <span className="text-xs text-gray-500">{getStatusText(asset.status)}</span>
-        </div>
-        
-        <div className="mt-2 text-xs text-gray-400">
-          Uploaded {new Date(asset.uploadDate).toLocaleDateString()}
-        </div>
-      </div>
-    </div>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="max-w-xs">
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="font-semibold">Compliance Check</span>
+              <span className={`font-bold ${complianceDetails.color}`}>
+                {asset.compliance}%
+              </span>
+            </div>
+            <div className="space-y-1">
+              <div className={`font-medium ${complianceDetails.color}`}>
+                {complianceDetails.status}
+              </div>
+              <p className="text-sm text-gray-600">
+                {complianceDetails.details}
+              </p>
+            </div>
+            <div className="text-xs text-gray-500 pt-1 border-t">
+              Status: {getStatusText(asset.status)}
+            </div>
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 };
