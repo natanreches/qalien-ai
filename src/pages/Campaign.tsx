@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Header } from '@/components/Header';
 import { AssetCard } from '@/components/AssetCard';
 import { AssetModal } from '@/components/AssetModal';
@@ -169,10 +169,35 @@ const baseMockCampaigns = [
 const Campaign = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [campaigns, setCampaigns] = useState(baseMockCampaigns);
   const [isLoading, setIsLoading] = useState(true);
   
+  // Store the referring brand ID when component mounts
+  const [referringBrandId, setReferringBrandId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    // Try to get the brand ID from location state first
+    if (location.state?.brandId) {
+      setReferringBrandId(location.state.brandId);
+    } else {
+      // Try to extract from the current URL or referrer
+      const urlParams = new URLSearchParams(window.location.search);
+      const brandFromUrl = urlParams.get('brand');
+      if (brandFromUrl) {
+        setReferringBrandId(brandFromUrl);
+      } else {
+        // Check if we came from a brand page via document.referrer
+        const referrer = document.referrer;
+        const brandMatch = referrer.match(/\/brand\/([^\/\?]+)/);
+        if (brandMatch) {
+          setReferringBrandId(brandMatch[1]);
+        }
+      }
+    }
+  }, [location.state]);
+
   // Load campaigns from localStorage and merge with base campaigns
   useEffect(() => {
     const storedCampaigns = localStorage.getItem('campaigns');
@@ -213,7 +238,7 @@ const Campaign = () => {
     const newCampaign = {
       id: id,
       name: `Campaign ${id}`,
-      brandId: 'jello', // Default brand
+      brandId: referringBrandId || 'jello', // Use referring brand ID if available
       brief: '',
       assets: []
     };
@@ -286,22 +311,23 @@ const Campaign = () => {
   };
 
   const handleBackToDashboard = () => {
-    // Get the brand ID from the campaign, or try to determine it from the referrer
-    const brandId = campaign?.brandId;
+    // Priority order for determining which brand dashboard to navigate to:
+    // 1. The referring brand ID we stored when component mounted
+    // 2. The campaign's brand ID
+    // 3. Extract from current campaign if it exists
+    const brandId = referringBrandId || campaign?.brandId;
+    
+    console.log('Navigating back to brand dashboard:', { 
+      referringBrandId, 
+      campaignBrandId: campaign?.brandId, 
+      finalBrandId: brandId 
+    });
     
     if (brandId) {
       navigate(`/brand/${brandId}`);
     } else {
-      // If no brand ID is found, check if we came from a brand page
-      const referrer = document.referrer;
-      const brandMatch = referrer.match(/\/brand\/([^\/]+)/);
-      
-      if (brandMatch) {
-        navigate(`/brand/${brandMatch[1]}`);
-      } else {
-        // Default to jello brand if we can't determine the brand
-        navigate('/brand/jello');
-      }
+      // If we still can't determine the brand, go to business center
+      navigate('/business-center');
     }
   };
 

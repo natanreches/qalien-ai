@@ -8,11 +8,14 @@ import { CreativeBriefUpload } from '@/components/CreativeBriefUpload';
 import { BriefAnalysis } from '@/components/BriefAnalysis';
 import { BriefAnalysis as BriefAnalysisType } from '@/services/briefAnalysis';
 
-export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false, onBriefUploaded }) => {
+export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false, onBriefUploaded, brandId }) => {
   const navigate = useNavigate();
 
   const handleCampaignClick = (campaignId) => {
-    navigate(`/campaign/${campaignId}`);
+    // Pass the brand ID as state when navigating to campaign
+    navigate(`/campaign/${campaignId}`, {
+      state: { brandId: brandId }
+    });
   };
 
   return (
