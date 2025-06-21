@@ -1,11 +1,12 @@
 
 import React, { useState } from 'react';
-import { Palette, Plus, X, CheckCircle, AlertCircle, Check, AlertTriangle, Edit } from 'lucide-react';
+import { Palette, Plus, X, CheckCircle, AlertCircle, Check, AlertTriangle, Edit, Trash2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ColorSelectionModal } from './ColorSelectionModal';
+import { ClearAllConfirmationDialog } from './ClearAllConfirmationDialog';
 
 interface OnboardingVisualIdentityColorSectionProps {
   colorPalette: string[];
@@ -30,6 +31,7 @@ export const OnboardingVisualIdentityColorSection = ({
 }: OnboardingVisualIdentityColorSectionProps) => {
   const [isColorModalOpen, setIsColorModalOpen] = useState(false);
   const [showAdjustMessage, setShowAdjustMessage] = useState(true);
+  const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const canDeleteIndividual = extractedFromGuidelines && extractionVerified === false && showAdjustMessage;
 
   const handleColorSelect = (color: string) => {
@@ -52,6 +54,16 @@ export const OnboardingVisualIdentityColorSection = ({
   const handleEdit = () => {
     if (onVerifyExtraction) {
       onVerifyExtraction(undefined as any);
+    }
+  };
+
+  const handleClearAllClick = () => {
+    setShowClearConfirmation(true);
+  };
+
+  const handleConfirmClear = () => {
+    if (onClearExtracted) {
+      onClearExtracted();
     }
   };
 
@@ -139,9 +151,10 @@ export const OnboardingVisualIdentityColorSection = ({
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={onClearExtracted}
+                  onClick={handleClearAllClick}
                   className="border-red-600 text-red-400 hover:bg-red-600/10"
                 >
+                  <Trash2 className="h-3 w-3 mr-1" />
                   Clear All
                 </Button>
                 <Button
@@ -222,6 +235,14 @@ export const OnboardingVisualIdentityColorSection = ({
         open={isColorModalOpen}
         onOpenChange={setIsColorModalOpen}
         onColorSelect={handleColorSelect}
+      />
+
+      <ClearAllConfirmationDialog
+        open={showClearConfirmation}
+        onOpenChange={setShowClearConfirmation}
+        onConfirm={handleConfirmClear}
+        title="Clear All Colors"
+        description="Are you sure you want to clear all colors from the palette? This action cannot be undone."
       />
     </>
   );

@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { FontSelectionModal } from './FontSelectionModal';
+import { ClearAllConfirmationDialog } from './ClearAllConfirmationDialog';
 
 interface OnboardingVisualIdentityTypographySectionProps {
   typography: string[];
@@ -32,6 +33,7 @@ export const OnboardingVisualIdentityTypographySection = ({
 }: OnboardingVisualIdentityTypographySectionProps) => {
   const [isFontModalOpen, setIsFontModalOpen] = useState(false);
   const [showAdjustMessage, setShowAdjustMessage] = useState(true);
+  const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const canDeleteIndividual = extractedFromGuidelines && extractionVerified === false && showAdjustMessage;
 
   const handleFontSelect = (font: string) => {
@@ -65,6 +67,16 @@ export const OnboardingVisualIdentityTypographySection = ({
   const handleEdit = () => {
     if (onVerifyExtraction) {
       onVerifyExtraction(undefined as any);
+    }
+  };
+
+  const handleClearAllClick = () => {
+    setShowClearConfirmation(true);
+  };
+
+  const handleConfirmClear = () => {
+    if (onClearExtracted) {
+      onClearExtracted();
     }
   };
 
@@ -152,7 +164,7 @@ export const OnboardingVisualIdentityTypographySection = ({
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={onClearExtracted}
+                  onClick={handleClearAllClick}
                   className="border-red-600 text-red-400 hover:bg-red-600/10"
                 >
                   <Trash2 className="h-3 w-3 mr-1" />
@@ -210,6 +222,14 @@ export const OnboardingVisualIdentityTypographySection = ({
         onOpenChange={setIsFontModalOpen}
         onFontSelect={handleFontSelect}
         onFontFileUpload={handleFontFileUpload}
+      />
+
+      <ClearAllConfirmationDialog
+        open={showClearConfirmation}
+        onOpenChange={setShowClearConfirmation}
+        onConfirm={handleConfirmClear}
+        title="Clear All Typography"
+        description="Are you sure you want to clear all typography selections? This action cannot be undone."
       />
     </>
   );

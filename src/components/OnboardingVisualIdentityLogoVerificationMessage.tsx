@@ -1,7 +1,8 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Check, X, AlertTriangle, Trash2, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ClearAllConfirmationDialog } from './ClearAllConfirmationDialog';
 
 interface OnboardingVisualIdentityLogoVerificationMessageProps {
   extractionVerified?: boolean;
@@ -18,6 +19,8 @@ export const OnboardingVisualIdentityLogoVerificationMessage = ({
   showAdjustMessage,
   onDismissAdjustMessage
 }: OnboardingVisualIdentityLogoVerificationMessageProps) => {
+  const [showClearConfirmation, setShowClearConfirmation] = useState(false);
+
   const handleDismissAdjustMessage = () => {
     onDismissAdjustMessage();
     // Reset verification status to undefined to show the feedback prompt again
@@ -29,6 +32,16 @@ export const OnboardingVisualIdentityLogoVerificationMessage = ({
   const handleEdit = () => {
     if (onVerifyExtraction) {
       onVerifyExtraction(undefined as any);
+    }
+  };
+
+  const handleClearAllClick = () => {
+    setShowClearConfirmation(true);
+  };
+
+  const handleConfirmClear = () => {
+    if (onClearExtracted) {
+      onClearExtracted();
     }
   };
 
@@ -92,33 +105,43 @@ export const OnboardingVisualIdentityLogoVerificationMessage = ({
   // Show adjustment message when extraction is verified as incorrect
   if (extractionVerified === false && showAdjustMessage) {
     return (
-      <div className="mb-4 p-3 bg-red-900/20 border border-red-600/30 rounded-lg">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <X className="h-4 w-4 text-red-500" />
-            <span className="text-red-400 text-sm">Please adjust the logo files below. You can remove incorrect files individually or clear all.</span>
-          </div>
-          <div className="flex space-x-2">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={onClearExtracted}
-              className="border-red-600 text-red-400 hover:bg-red-600/10"
-            >
-              <Trash2 className="h-3 w-3 mr-1" />
-              Clear All
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleDismissAdjustMessage}
-              className="border-gray-600 text-gray-400 hover:bg-gray-600/10"
-            >
-              <X className="h-3 w-3" />
-            </Button>
+      <>
+        <div className="mb-4 p-3 bg-red-900/20 border border-red-600/30 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <X className="h-4 w-4 text-red-500" />
+              <span className="text-red-400 text-sm">Please adjust the logo files below. You can remove incorrect files individually or clear all.</span>
+            </div>
+            <div className="flex space-x-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleClearAllClick}
+                className="border-red-600 text-red-400 hover:bg-red-600/10"
+              >
+                <Trash2 className="h-3 w-3 mr-1" />
+                Clear All
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleDismissAdjustMessage}
+                className="border-gray-600 text-gray-400 hover:bg-gray-600/10"
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+
+        <ClearAllConfirmationDialog
+          open={showClearConfirmation}
+          onOpenChange={setShowClearConfirmation}
+          onConfirm={handleConfirmClear}
+          title="Clear All Logo Files"
+          description="Are you sure you want to clear all logo files? This action cannot be undone."
+        />
+      </>
     );
   }
 
