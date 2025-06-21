@@ -67,12 +67,12 @@ export const ColorSelectionModal = ({
                 <button
                   key={color}
                   onClick={() => handlePresetColorSelect(color)}
-                  className="w-20 h-20 rounded border-2 border-gray-600 hover:border-gray-400 transition-colors relative flex items-center justify-center group"
+                  className="w-20 h-20 rounded border-2 border-gray-600 hover:border-gray-400 transition-colors relative flex items-center justify-center"
                   style={{ backgroundColor: color }}
                   title={color}
                 >
                   <span 
-                    className="text-xs font-mono font-semibold px-2 py-1 rounded bg-black/30 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="text-xs font-mono font-semibold px-2 py-1 rounded bg-black/40 backdrop-blur-sm"
                     style={{ color: getTextColor(color) }}
                   >
                     {color}
