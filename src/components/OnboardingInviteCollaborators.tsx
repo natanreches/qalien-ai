@@ -56,9 +56,11 @@ export const OnboardingInviteCollaborators = ({
     onCollaboratorsUpdated(updatedCollaborators);
     setEmail('');
 
+    // Position toast at top to avoid blocking navigation buttons
     toast({
       title: "Collaborator added",
       description: `${email} will be invited as ${role}`,
+      className: "top-4 right-4 fixed"
     });
   };
 
