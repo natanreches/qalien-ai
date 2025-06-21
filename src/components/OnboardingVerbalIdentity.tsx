@@ -287,15 +287,6 @@ export const OnboardingVerbalIdentity = ({
         </Card>
       </div>
 
-      <div className="bg-purple-900/20 border border-purple-700 rounded-lg p-4">
-        <div className="flex items-center space-x-2 text-purple-300">
-          <MessageSquare className="h-4 w-4" />
-          <span className="text-sm font-medium">
-            This section creates your NLP rule set and model fine-tuning guardrails.
-          </span>
-        </div>
-      </div>
-
       <Button onClick={handleSave} className="w-full">
         Save Verbal Identity
       </Button>
