@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Palette, Plus, X, CheckCircle, AlertCircle, Check, AlertTriangle } from 'lucide-react';
+import { Palette, Plus, X, CheckCircle, AlertCircle, Check, AlertTriangle, Edit } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -43,6 +44,12 @@ export const OnboardingVisualIdentityColorSection = ({
   const handleDismissAdjustMessage = () => {
     setShowAdjustMessage(false);
     // Reset verification status to undefined to show the feedback prompt again
+    if (onVerifyExtraction) {
+      onVerifyExtraction(undefined as any);
+    }
+  };
+
+  const handleEdit = () => {
     if (onVerifyExtraction) {
       onVerifyExtraction(undefined as any);
     }
@@ -102,10 +109,21 @@ export const OnboardingVisualIdentityColorSection = ({
         )}
 
         {extractionVerified === true && (
-          <div className="mb-4 p-2 bg-green-900/20 border border-green-600/30 rounded-lg">
-            <div className="flex items-center space-x-2">
-              <Check className="h-4 w-4 text-green-500" />
-              <span className="text-green-400 text-sm">Extraction verified as correct</span>
+          <div className="mb-4 p-3 bg-green-900/20 border border-green-600/30 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Check className="h-4 w-4 text-green-500" />
+                <span className="text-green-400 text-sm">Extraction verified as correct</span>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleEdit}
+                className="border-gray-600 text-gray-400 hover:bg-gray-600/10"
+              >
+                <Edit className="h-3 w-3 mr-1" />
+                Edit
+              </Button>
             </div>
           </div>
         )}

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Type, Plus, X, Check, AlertTriangle, Trash2 } from 'lucide-react';
+import { Type, Plus, X, Check, AlertTriangle, Trash2, Edit } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -62,6 +62,12 @@ export const OnboardingVisualIdentityTypographySection = ({
     }
   };
 
+  const handleEdit = () => {
+    if (onVerifyExtraction) {
+      onVerifyExtraction(undefined as any);
+    }
+  };
+
   // Reset showAdjustMessage when extractionVerified changes to false
   React.useEffect(() => {
     if (extractionVerified === false) {
@@ -116,10 +122,21 @@ export const OnboardingVisualIdentityTypographySection = ({
         )}
         
         {extractionVerified === true && (
-          <div className="mb-4 p-2 bg-green-900/20 border border-green-600/30 rounded-lg">
-            <div className="flex items-center space-x-2">
-              <Check className="h-4 w-4 text-green-500" />
-              <span className="text-green-400 text-sm">Typography extraction verified as correct</span>
+          <div className="mb-4 p-3 bg-green-900/20 border border-green-600/30 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Check className="h-4 w-4 text-green-500" />
+                <span className="text-green-400 text-sm">Typography extraction verified as correct</span>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleEdit}
+                className="border-gray-600 text-gray-400 hover:bg-gray-600/10"
+              >
+                <Edit className="h-3 w-3 mr-1" />
+                Edit
+              </Button>
             </div>
           </div>
         )}
