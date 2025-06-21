@@ -149,7 +149,7 @@ export const OnboardingAdCreatives = ({
           <CardContent className="space-y-6">
             {selectedFiles.map((file, index) => (
               <FileUploadForm
-                key={index}
+                key={`${file.name}-${index}`}
                 file={file}
                 fileIndex={index}
                 platformOptions={platformOptions}
@@ -240,7 +240,7 @@ const FileUploadForm = ({
     return file.type.startsWith('video/') ? 'video' : 'static';
   });
   const [category, setCategory] = useState<'produced' | 'ugc'>('produced');
-  const [platform, setPlatform] = useState(''); // Reset to empty instead of auto-populating
+  const [platform, setPlatform] = useState('');
   const [description, setDescription] = useState('');
 
   const handleSubmit = () => {
@@ -253,6 +253,13 @@ const FileUploadForm = ({
       platform,
       description
     });
+
+    // Reset form fields after successful upload
+    setName('');
+    setType('static');
+    setCategory('produced');
+    setPlatform('');
+    setDescription('');
   };
 
   return (
