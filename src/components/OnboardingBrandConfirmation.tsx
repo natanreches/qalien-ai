@@ -80,14 +80,16 @@ export const OnboardingBrandConfirmation = ({
   }, [guidelines, brandElements]);
 
   const handleSave = () => {
+    console.log('Save button clicked in brand confirmation, calling toast...');
     onBrandElementsConfirmed(elements);
     setIsEditingVisual(false);
     
     // Show success toast
-    toast({
+    const toastResult = toast({
       title: "Brand Profile Saved",
       description: "Your brand profile has been successfully saved.",
     });
+    console.log('Toast called with result:', toastResult);
   };
 
   const addColor = () => {

@@ -160,14 +160,16 @@ export const OnboardingVerbalIdentity = ({
   };
 
   const handleSave = () => {
+    console.log('Save button clicked, calling toast...');
     console.log('Saving identity:', identity);
     onVerbalIdentityUpdated(identity);
     
     // Show success toast
-    toast({
+    const toastResult = toast({
       title: "Verbal Identity Saved",
       description: "Your brand's verbal identity settings have been successfully saved.",
     });
+    console.log('Toast called with result:', toastResult);
   };
 
   return (

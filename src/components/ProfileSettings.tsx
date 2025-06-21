@@ -50,21 +50,24 @@ export const ProfileSettings = () => {
     setAutoApproval(false);
     
     // Show reset toast
-    toast({
+    const toastResult = toast({
       title: "Settings Reset",
       description: "All compliance settings have been reset to default values.",
     });
+    console.log('Reset toast called with result:', toastResult);
   };
 
   const saveSettings = () => {
     // In a real app, this would save to a backend or localStorage
+    console.log('Save settings button clicked, calling toast...');
     console.log('Saving compliance settings:', { weights, strictMode, autoApproval });
     
     // Show success toast
-    toast({
+    const toastResult = toast({
       title: "Settings Saved",
       description: "Your compliance settings have been successfully saved.",
     });
+    console.log('Save toast called with result:', toastResult);
   };
 
   const getWeightDescription = (weight: number) => {

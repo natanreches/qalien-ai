@@ -3,6 +3,7 @@ import React from 'react';
 import { OnboardingContainer } from '@/components/OnboardingContainer';
 import { OnboardingSteps } from '@/components/OnboardingSteps';
 import { useOnboardingLogic } from '@/hooks/useOnboardingLogic';
+import { Toaster } from '@/components/ui/toaster';
 
 const Onboarding = () => {
   const {
@@ -33,36 +34,39 @@ const Onboarding = () => {
   } = useOnboardingLogic();
 
   return (
-    <OnboardingContainer
-      currentStep={currentStep}
-      totalSteps={totalSteps}
-      stepTitle={stepTitle}
-      canProceed={canProceed}
-      onSkip={handleSkipOnboarding}
-      onBack={handleBack}
-      onNext={handleNext}
-      onComplete={handleComplete}
-    >
-      <OnboardingSteps
+    <>
+      <OnboardingContainer
         currentStep={currentStep}
-        companyInfo={companyInfo}
-        guidelines={guidelines}
-        visualIdentity={visualIdentity}
-        verbalIdentity={verbalIdentity}
-        adCreatives={adCreatives}
-        legalRegulatory={legalRegulatory}
-        collaborators={collaborators}
-        onCompanyInfoUpdated={setCompanyInfo}
-        onGuidelinesUploaded={setGuidelines}
-        onVisualIdentityUpdated={setVisualIdentity}
-        onVerbalIdentityUpdated={setVerbalIdentity}
-        onAdCreativesUpdated={setAdCreatives}
-        onLegalRegulatoryUpdated={setLegalRegulatory}
-        onCollaboratorsUpdated={setCollaborators}
-        onNavigateToGuidelines={handleNavigateToGuidelines}
-        onNavigateToStep={handleNavigateToStep}
-      />
-    </OnboardingContainer>
+        totalSteps={totalSteps}
+        stepTitle={stepTitle}
+        canProceed={canProceed}
+        onSkip={handleSkipOnboarding}
+        onBack={handleBack}
+        onNext={handleNext}
+        onComplete={handleComplete}
+      >
+        <OnboardingSteps
+          currentStep={currentStep}
+          companyInfo={companyInfo}
+          guidelines={guidelines}
+          visualIdentity={visualIdentity}
+          verbalIdentity={verbalIdentity}
+          adCreatives={adCreatives}
+          legalRegulatory={legalRegulatory}
+          collaborators={collaborators}
+          onCompanyInfoUpdated={setCompanyInfo}
+          onGuidelinesUploaded={setGuidelines}
+          onVisualIdentityUpdated={setVisualIdentity}
+          onVerbalIdentityUpdated={setVerbalIdentity}
+          onAdCreativesUpdated={setAdCreatives}
+          onLegalRegulatoryUpdated={setLegalRegulatory}
+          onCollaboratorsUpdated={setCollaborators}
+          onNavigateToGuidelines={handleNavigateToGuidelines}
+          onNavigateToStep={handleNavigateToStep}
+        />
+      </OnboardingContainer>
+      <Toaster />
+    </>
   );
 };
 
