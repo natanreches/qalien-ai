@@ -240,15 +240,6 @@ export const OnboardingLegalRegulatory = ({
         </Card>
       </div>
 
-      <div className="bg-orange-900/20 border border-orange-700 rounded-lg p-4">
-        <div className="flex items-center space-x-2 text-orange-300">
-          <Shield className="h-4 w-4" />
-          <span className="text-sm font-medium">
-            These inputs build your legal compliance matrix, triggering specific compliance flags based on content type.
-          </span>
-        </div>
-      </div>
-
       <Button onClick={handleSave} className="w-full">
         Save Legal & Regulatory Settings
       </Button>
