@@ -103,7 +103,7 @@ export const BrandComplianceSettings = () => {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <Label htmlFor="logo-weight" className="text-sm font-medium text-gray-200">
-                    Logo Usage & Placement
+                    Logo Usage
                   </Label>
                   <div className="flex items-center space-x-2">
                     <span className="text-sm text-gray-400">{weights.logoUsage}%</span>
