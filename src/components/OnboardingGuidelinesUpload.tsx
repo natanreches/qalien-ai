@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,10 +27,10 @@ export const OnboardingGuidelinesUpload = ({
   onGuidelinesUploaded,
   brands
 }: OnboardingGuidelinesUploadProps) => {
-  const [newGuideline, setNewGuideline] = useState({
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileMetadata, setFileMetadata] = useState({
     name: '',
     description: '',
-    file: null as File | null,
     brandName: ''
   });
   const { toast } = useToast();
@@ -39,16 +40,30 @@ export const OnboardingGuidelinesUpload = ({
   const requiredGuidelines = validBrands.length;
 
   useEffect(() => {
-    // Set default brand name if only one brand exists and brandName is empty
-    if (validBrands.length === 1 && newGuideline.brandName === '') {
-      console.log('Setting default brand name:', validBrands[0]);
-      setNewGuideline(prev => ({ ...prev, brandName: validBrands[0] }));
+    // Set default brand name if only one brand exists
+    if (validBrands.length === 1 && fileMetadata.brandName === '') {
+      setFileMetadata(prev => ({ ...prev, brandName: validBrands[0] }));
     }
   }, [validBrands]);
 
+  // Auto-upload when file is selected and metadata is complete
+  useEffect(() => {
+    if (selectedFile && shouldAutoUpload()) {
+      handleAutoUpload();
+    }
+  }, [selectedFile, fileMetadata]);
+
+  const shouldAutoUpload = () => {
+    if (!selectedFile) return false;
+    
+    const hasName = fileMetadata.name.trim().length > 0;
+    const hasBrandName = validBrands.length === 1 || fileMetadata.brandName.trim().length > 0;
+    
+    return hasName && hasBrandName;
+  };
+
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    console.log('File selected:', file?.name);
     if (file) {
       const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'];
       if (!allowedTypes.includes(file.type)) {
@@ -59,38 +74,21 @@ export const OnboardingGuidelinesUpload = ({
         });
         return;
       }
-      setNewGuideline(prev => ({ ...prev, file }));
+
+      // Auto-populate name from filename
+      const fileName = file.name.split('.')[0];
+      setFileMetadata(prev => ({ 
+        ...prev, 
+        name: prev.name || fileName 
+      }));
+      setSelectedFile(file);
     }
   };
 
-  const handleChooseFileClick = () => {
-    const fileInput = document.getElementById('onboarding-guideline-file') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.click();
-    }
-  };
+  const handleAutoUpload = () => {
+    if (!selectedFile) return;
 
-  const handleUpload = () => {
-    if (!newGuideline.name.trim() || !newGuideline.file) {
-      toast({
-        title: "Missing information",
-        description: "Please provide a name and select a file.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    if (validBrands.length > 1 && !newGuideline.brandName.trim()) {
-      toast({
-        title: "Brand selection required",
-        description: "Please select which brand this guideline is for.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Check if a guideline already exists for this brand
-    const selectedBrand = validBrands.length === 1 ? validBrands[0] : newGuideline.brandName;
+    const selectedBrand = validBrands.length === 1 ? validBrands[0] : fileMetadata.brandName;
     const existingGuideline = guidelines.find(g => g.brandName === selectedBrand);
     
     if (existingGuideline) {
@@ -99,27 +97,47 @@ export const OnboardingGuidelinesUpload = ({
         description: `A guideline for ${selectedBrand} has already been uploaded.`,
         variant: "destructive"
       });
+      handleCancelUpload();
       return;
     }
 
     const guideline: BrandGuideline = {
       id: Date.now().toString(),
-      name: newGuideline.name,
-      description: newGuideline.description,
-      file: newGuideline.file,
+      name: fileMetadata.name,
+      description: fileMetadata.description,
+      file: selectedFile,
       uploadDate: new Date().toLocaleDateString(),
       brandName: selectedBrand
     };
 
     const updatedGuidelines = [...guidelines, guideline];
     onGuidelinesUploaded(updatedGuidelines);
-    setNewGuideline({ name: '', description: '', file: null, brandName: validBrands.length === 1 ? validBrands[0] : '' });
+    
+    // Reset form
+    setSelectedFile(null);
+    setFileMetadata({ 
+      name: '', 
+      description: '', 
+      brandName: validBrands.length === 1 ? validBrands[0] : '' 
+    });
 
     toast({
       title: "Brand guideline uploaded",
       description: `Brand guideline for ${selectedBrand} has been successfully uploaded.`,
     });
 
+    const fileInput = document.getElementById('onboarding-guideline-file') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+  };
+
+  const handleCancelUpload = () => {
+    setSelectedFile(null);
+    setFileMetadata({ 
+      name: '', 
+      description: '', 
+      brandName: validBrands.length === 1 ? validBrands[0] : '' 
+    });
+    
     const fileInput = document.getElementById('onboarding-guideline-file') as HTMLInputElement;
     if (fileInput) fileInput.value = '';
   };
@@ -144,30 +162,6 @@ export const OnboardingGuidelinesUpload = ({
 
   const isComplete = guidelines.length === requiredGuidelines;
   const remainingBrands = getRemainingBrands();
-  
-  // Enhanced canUpload logic with debugging
-  const hasName = newGuideline.name.trim().length > 0;
-  const hasFile = newGuideline.file !== null;
-  const hasBrandName = validBrands.length === 1 || newGuideline.brandName.trim().length > 0;
-  const canUpload = hasName && hasFile && hasBrandName;
-  
-  console.log('Upload button state:', {
-    hasName,
-    hasFile,
-    hasBrandName,
-    canUpload,
-    validBrandsLength: validBrands.length,
-    brandName: newGuideline.brandName
-  });
-
-  // Helper function to get missing requirements
-  const getMissingRequirements = () => {
-    const missing = [];
-    if (!hasName) missing.push('guideline name');
-    if (!hasFile) missing.push('file');
-    if (!hasBrandName) missing.push('brand selection');
-    return missing;
-  };
 
   return (
     <div className="space-y-6">
@@ -210,9 +204,10 @@ export const OnboardingGuidelinesUpload = ({
               <Label htmlFor="onboarding-brand-select" className="text-gray-200">Select Brand</Label>
               <select
                 id="onboarding-brand-select"
-                value={newGuideline.brandName}
-                onChange={(e) => setNewGuideline(prev => ({ ...prev, brandName: e.target.value }))}
+                value={fileMetadata.brandName}
+                onChange={(e) => setFileMetadata(prev => ({ ...prev, brandName: e.target.value }))}
                 className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={!!selectedFile}
               >
                 <option value="">Select a brand...</option>
                 {remainingBrands.map((brand) => (
@@ -229,13 +224,11 @@ export const OnboardingGuidelinesUpload = ({
             <Input
               id="onboarding-guideline-name"
               placeholder="e.g., Brand Identity Guidelines 2024"
-              value={newGuideline.name}
-              onChange={(e) => setNewGuideline(prev => ({ ...prev, name: e.target.value }))}
-              className={`bg-gray-800 border-gray-600 text-white ${!hasName && newGuideline.name.length > 0 ? 'border-red-500' : ''}`}
+              value={fileMetadata.name}
+              onChange={(e) => setFileMetadata(prev => ({ ...prev, name: e.target.value }))}
+              className="bg-gray-800 border-gray-600 text-white"
+              disabled={!!selectedFile}
             />
-            {!hasName && (
-              <p className="text-xs text-red-400">Please enter a name for the guideline</p>
-            )}
           </div>
 
           <div className="space-y-2">
@@ -243,62 +236,69 @@ export const OnboardingGuidelinesUpload = ({
             <Textarea
               id="onboarding-guideline-description"
               placeholder="Brief description of what this guideline covers..."
-              value={newGuideline.description}
-              onChange={(e) => setNewGuideline(prev => ({ ...prev, description: e.target.value }))}
+              value={fileMetadata.description}
+              onChange={(e) => setFileMetadata(prev => ({ ...prev, description: e.target.value }))}
               rows={3}
               className="bg-gray-800 border-gray-600 text-white"
+              disabled={!!selectedFile}
             />
           </div>
 
+          {/* File Upload Area */}
           <div className="space-y-2">
-            <Label htmlFor="onboarding-guideline-file" className="text-gray-200">
+            <Label className="text-gray-200">
               Upload File <span className="text-red-400">*</span>
             </Label>
-            <div className="flex items-center space-x-2">
-              <input
-                id="onboarding-guideline-file"
-                type="file"
-                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                onChange={handleFileSelect}
-                className="hidden"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleChooseFileClick}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 border-blue-600 text-white"
-              >
-                <FolderOpen className="h-4 w-4 mr-2" />
-                {newGuideline.file ? newGuideline.file.name : 'Choose File'}
-              </Button>
-              <Button 
-                onClick={handleUpload} 
-                className="shrink-0"
-                disabled={!canUpload}
-                variant={canUpload ? "default" : "secondary"}
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                Upload
-              </Button>
-            </div>
-            {newGuideline.file && (
-              <p className="text-xs text-green-400">
-                Selected: {newGuideline.file.name} ({formatFileSize(newGuideline.file.size)})
-              </p>
-            )}
-            {!hasFile && (
-              <p className="text-xs text-red-400">Please select a file to upload</p>
-            )}
             
-            {/* Upload requirements indicator */}
-            {!canUpload && (getMissingRequirements().length > 0) && (
-              <div className="mt-2 p-2 bg-yellow-900/20 border border-yellow-600/30 rounded text-xs text-yellow-300">
-                <p className="font-medium">To enable upload, please provide:</p>
-                <ul className="list-disc list-inside mt-1">
-                  {getMissingRequirements().map((req, index) => (
-                    <li key={index}>{req}</li>
-                  ))}
-                </ul>
+            {!selectedFile ? (
+              <div className="border-2 border-dashed border-gray-600 rounded-lg p-6 text-center">
+                <input
+                  id="onboarding-guideline-file"
+                  type="file"
+                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+                <FolderOpen className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+                <p className="text-gray-400 mb-2">Choose a file to upload</p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => document.getElementById('onboarding-guideline-file')?.click()}
+                  className="bg-blue-600 hover:bg-blue-700 border-blue-600 text-white"
+                >
+                  <FolderOpen className="h-4 w-4 mr-2" />
+                  Choose File
+                </Button>
+              </div>
+            ) : (
+              <div className="relative border border-gray-600 rounded-lg p-4 bg-gray-800">
+                {/* Cancel button */}
+                <button
+                  onClick={handleCancelUpload}
+                  className="absolute top-2 right-2 p-1 bg-gray-600 hover:bg-gray-500 rounded-full transition-colors"
+                  title="Cancel upload"
+                >
+                  <X className="h-4 w-4 text-white" />
+                </button>
+                
+                <div className="flex items-center space-x-3 pr-8">
+                  <FileText className="h-8 w-8 text-blue-400" />
+                  <div>
+                    <p className="text-white font-medium">{selectedFile.name}</p>
+                    <p className="text-gray-400 text-sm">{formatFileSize(selectedFile.size)}</p>
+                    {shouldAutoUpload() ? (
+                      <p className="text-green-400 text-sm flex items-center mt-1">
+                        <CheckCircle className="h-4 w-4 mr-1" />
+                        Ready to upload automatically
+                      </p>
+                    ) : (
+                      <p className="text-yellow-400 text-sm">
+                        Complete the form above to upload
+                      </p>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
           </div>
