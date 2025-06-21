@@ -71,6 +71,37 @@ export const OnboardingVisualIdentityLogoSection = ({
         </div>
       )}
 
+      {extractionVerified === false && (
+        <div className="mb-4 p-3 bg-blue-900/20 border border-blue-600/30 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <AlertTriangle className="h-4 w-4 text-blue-400" />
+              <span className="text-blue-400 text-sm font-medium">Are these logo files correct?</span>
+            </div>
+            <div className="flex space-x-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onVerifyExtraction?.(true)}
+                className="border-green-600 text-green-400 hover:bg-green-600/10"
+              >
+                <Check className="h-3 w-3 mr-1" />
+                Yes
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => onVerifyExtraction?.(false)}
+                className="border-red-600 text-red-400 hover:bg-red-600/10"
+              >
+                <X className="h-3 w-3 mr-1" />
+                No
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {extractionVerified === true && (
         <div className="mb-4 p-2 bg-green-900/20 border border-green-600/30 rounded-lg">
           <div className="flex items-center space-x-2">
