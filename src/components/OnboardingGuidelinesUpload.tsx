@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -40,14 +39,16 @@ export const OnboardingGuidelinesUpload = ({
   const requiredGuidelines = validBrands.length;
 
   useEffect(() => {
-    // Set default brand name if only one brand exists
-    if (validBrands.length === 1 && !newGuideline.brandName) {
+    // Set default brand name if only one brand exists and brandName is empty
+    if (validBrands.length === 1 && newGuideline.brandName === '') {
+      console.log('Setting default brand name:', validBrands[0]);
       setNewGuideline(prev => ({ ...prev, brandName: validBrands[0] }));
     }
-  }, [validBrands, newGuideline.brandName]);
+  }, [validBrands]);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+    console.log('File selected:', file?.name);
     if (file) {
       const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/png'];
       if (!allowedTypes.includes(file.type)) {
@@ -143,7 +144,21 @@ export const OnboardingGuidelinesUpload = ({
 
   const isComplete = guidelines.length === requiredGuidelines;
   const remainingBrands = getRemainingBrands();
-  const canUpload = newGuideline.name.trim() && newGuideline.file && (validBrands.length === 1 || newGuideline.brandName.trim());
+  
+  // Enhanced canUpload logic with debugging
+  const hasName = newGuideline.name.trim().length > 0;
+  const hasFile = newGuideline.file !== null;
+  const hasBrandName = validBrands.length === 1 || newGuideline.brandName.trim().length > 0;
+  const canUpload = hasName && hasFile && hasBrandName;
+  
+  console.log('Upload button state:', {
+    hasName,
+    hasFile,
+    hasBrandName,
+    canUpload,
+    validBrandsLength: validBrands.length,
+    brandName: newGuideline.brandName
+  });
 
   return (
     <div className="space-y-6">
