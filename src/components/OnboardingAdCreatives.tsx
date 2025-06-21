@@ -41,6 +41,12 @@ export const OnboardingAdCreatives = ({
       return;
     }
     setSelectedFiles(files);
+    
+    // Show notification about selected files
+    toast({
+      title: "Files Selected",
+      description: `${files.length} file${files.length !== 1 ? 's' : ''} selected for upload`,
+    });
   };
 
   const handleUpload = (fileIndex: number, metadata: {
@@ -234,7 +240,7 @@ const FileUploadForm = ({
     return file.type.startsWith('video/') ? 'video' : 'static';
   });
   const [category, setCategory] = useState<'produced' | 'ugc'>('produced');
-  const [platform, setPlatform] = useState('');
+  const [platform, setPlatform] = useState(''); // Reset to empty instead of auto-populating
   const [description, setDescription] = useState('');
 
   const handleSubmit = () => {
