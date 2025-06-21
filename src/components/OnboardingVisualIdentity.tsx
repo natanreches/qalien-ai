@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 import { OnboardingVisualIdentityHeader } from './OnboardingVisualIdentityHeader';
 import { OnboardingVisualIdentityLogoSection } from './OnboardingVisualIdentityLogoSection';
 import { OnboardingVisualIdentityColorSection } from './OnboardingVisualIdentityColorSection';
@@ -59,6 +59,7 @@ export const OnboardingVisualIdentity = ({
     iconography: false
   });
   const [verificationStatus, setVerificationStatus] = useState<VerificationStatus>({});
+  const { toast } = useToast();
 
   // Enhanced extraction from brand guidelines including auto-detection of specific elements
   useEffect(() => {
@@ -199,7 +200,16 @@ export const OnboardingVisualIdentity = ({
   };
 
   const handleSave = () => {
+    console.log('Save visual identity button clicked, calling toast...');
+    console.log('Saving visual identity:', identity);
     onVisualIdentityUpdated(identity);
+    
+    // Show success toast
+    const toastResult = toast({
+      title: "Visual Identity Saved",
+      description: "Your brand's visual identity has been successfully saved.",
+    });
+    console.log('Visual identity toast called with result:', toastResult);
   };
 
   // Show message if no guidelines are uploaded
