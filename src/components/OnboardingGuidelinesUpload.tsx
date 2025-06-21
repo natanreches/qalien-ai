@@ -160,6 +160,15 @@ export const OnboardingGuidelinesUpload = ({
     brandName: newGuideline.brandName
   });
 
+  // Helper function to get missing requirements
+  const getMissingRequirements = () => {
+    const missing = [];
+    if (!hasName) missing.push('guideline name');
+    if (!hasFile) missing.push('file');
+    if (!hasBrandName) missing.push('brand selection');
+    return missing;
+  };
+
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
@@ -214,14 +223,19 @@ export const OnboardingGuidelinesUpload = ({
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="onboarding-guideline-name" className="text-gray-200">Guideline Name</Label>
+            <Label htmlFor="onboarding-guideline-name" className="text-gray-200">
+              Guideline Name <span className="text-red-400">*</span>
+            </Label>
             <Input
               id="onboarding-guideline-name"
               placeholder="e.g., Brand Identity Guidelines 2024"
               value={newGuideline.name}
               onChange={(e) => setNewGuideline(prev => ({ ...prev, name: e.target.value }))}
-              className="bg-gray-800 border-gray-600 text-white"
+              className={`bg-gray-800 border-gray-600 text-white ${!hasName && newGuideline.name.length > 0 ? 'border-red-500' : ''}`}
             />
+            {!hasName && (
+              <p className="text-xs text-red-400">Please enter a name for the guideline</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -237,7 +251,9 @@ export const OnboardingGuidelinesUpload = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="onboarding-guideline-file" className="text-gray-200">Upload File</Label>
+            <Label htmlFor="onboarding-guideline-file" className="text-gray-200">
+              Upload File <span className="text-red-400">*</span>
+            </Label>
             <div className="flex items-center space-x-2">
               <input
                 id="onboarding-guideline-file"
@@ -269,6 +285,21 @@ export const OnboardingGuidelinesUpload = ({
               <p className="text-xs text-green-400">
                 Selected: {newGuideline.file.name} ({formatFileSize(newGuideline.file.size)})
               </p>
+            )}
+            {!hasFile && (
+              <p className="text-xs text-red-400">Please select a file to upload</p>
+            )}
+            
+            {/* Upload requirements indicator */}
+            {!canUpload && (getMissingRequirements().length > 0) && (
+              <div className="mt-2 p-2 bg-yellow-900/20 border border-yellow-600/30 rounded text-xs text-yellow-300">
+                <p className="font-medium">To enable upload, please provide:</p>
+                <ul className="list-disc list-inside mt-1">
+                  {getMissingRequirements().map((req, index) => (
+                    <li key={index}>{req}</li>
+                  ))}
+                </ul>
+              </div>
             )}
           </div>
         </div>
