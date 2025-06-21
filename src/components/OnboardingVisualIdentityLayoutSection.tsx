@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout, Upload, CheckCircle, AlertCircle, Check, X, AlertTriangle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -29,6 +29,14 @@ export const OnboardingVisualIdentityLayoutSection = ({
   extractionVerified,
   onClearExtracted
 }: OnboardingVisualIdentityLayoutSectionProps) => {
+  const [showAdjustMessage, setShowAdjustMessage] = useState(true);
+
+  const handleDismissAdjustMessage = () => {
+    setShowAdjustMessage(false);
+    // Reset verification status to show the feedback prompt again
+    onVerifyExtraction?.(undefined as any);
+  };
+
   return (
     <Card className="p-6 bg-gray-800 border-gray-700">
       <div className="flex items-center justify-between mb-4">
@@ -83,21 +91,31 @@ export const OnboardingVisualIdentityLayoutSection = ({
         </div>
       )}
 
-      {extractionVerified === false && (
+      {extractionVerified === false && showAdjustMessage && (
         <div className="mb-4 p-3 bg-red-900/20 border border-red-600/30 rounded-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <X className="h-4 w-4 text-red-500" />
               <span className="text-red-400 text-sm">Please adjust the layout rules below to match your requirements</span>
             </div>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={onClearExtracted}
-              className="border-red-600 text-red-400 hover:bg-red-600/10"
-            >
-              Clear All
-            </Button>
+            <div className="flex space-x-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={onClearExtracted}
+                className="border-red-600 text-red-400 hover:bg-red-600/10"
+              >
+                Clear All
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleDismissAdjustMessage}
+                className="border-gray-600 text-gray-400 hover:bg-gray-600/10"
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
           </div>
         </div>
       )}
