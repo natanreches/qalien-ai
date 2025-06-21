@@ -2,8 +2,9 @@
 import React from 'react';
 import { Eye, Clock, CheckCircle, AlertCircle, XCircle, Video } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { AssetApprovalButton } from './AssetApprovalButton';
 
-export const AssetCard = ({ asset, onClick }) => {
+export const AssetCard = ({ asset, onClick, onApprove }) => {
   const getComplianceColor = (score) => {
     if (score >= 80) return 'text-green-600 bg-green-100';
     if (score >= 60) return 'text-yellow-600 bg-yellow-100';
@@ -92,15 +93,21 @@ export const AssetCard = ({ asset, onClick }) => {
 
   const complianceDetails = getComplianceDetails(asset.compliance);
 
+  const handleApprove = (assetId) => {
+    if (onApprove) {
+      onApprove(assetId);
+    }
+  };
+
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div 
-            className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer hover:border-blue-300"
-            onClick={onClick}
-          >
-            <div className="relative aspect-video bg-gray-100 overflow-hidden">
+          <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-200">
+            <div 
+              className="relative aspect-video bg-gray-100 overflow-hidden cursor-pointer"
+              onClick={onClick}
+            >
               {renderAssetPreview()}
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-200" />
               <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -125,7 +132,7 @@ export const AssetCard = ({ asset, onClick }) => {
                 </div>
               </div>
               
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-3">
                 <div 
                   className={`px-2 py-1 rounded-full text-sm font-medium ${getComplianceColor(asset.compliance)}`}
                 >
@@ -133,8 +140,16 @@ export const AssetCard = ({ asset, onClick }) => {
                 </div>
                 <span className="text-xs text-gray-500">{getStatusText(asset.status)}</span>
               </div>
+
+              <div className="mb-3">
+                <AssetApprovalButton 
+                  asset={asset}
+                  onApprove={handleApprove}
+                  variant="small"
+                />
+              </div>
               
-              <div className="mt-2 text-xs text-gray-400">
+              <div className="text-xs text-gray-400">
                 Uploaded {new Date(asset.uploadDate).toLocaleDateString()}
               </div>
             </div>

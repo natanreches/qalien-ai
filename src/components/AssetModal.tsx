@@ -7,17 +7,29 @@ import { ExecutiveSummary } from './ExecutiveSummary';
 import { ComplianceDetails } from './ComplianceDetails';
 import { FeedbackWidget } from './FeedbackWidget';
 import { CampaignMetadata } from './CampaignMetadata';
+import { AssetApprovalButton } from './AssetApprovalButton';
 
-export const AssetModal = ({ asset, onClose }) => {
+export const AssetModal = ({ asset, onClose, onApprove }) => {
   const handleFeedbackSubmitted = (feedback) => {
     console.log('Feedback submitted:', feedback);
     // In a real app, this would send the feedback to an API
   };
 
+  const handleApprove = (assetId) => {
+    if (onApprove) {
+      onApprove(assetId);
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-xl max-w-5xl w-full max-h-[90vh] overflow-hidden">
-        <AssetModalHeader asset={asset} onClose={onClose} />
+        <AssetModalHeader asset={asset} onClose={onClose}>
+          <AssetApprovalButton 
+            asset={asset}
+            onApprove={handleApprove}
+          />
+        </AssetModalHeader>
 
         <div className="flex h-[calc(90vh-80px)]">
           <AssetContent asset={asset} />

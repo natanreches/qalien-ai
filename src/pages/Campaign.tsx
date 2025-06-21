@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Header } from '@/components/Header';
@@ -259,6 +258,23 @@ const Campaign = () => {
     setSelectedAsset(null);
   };
 
+  const handleAssetApproval = (assetId) => {
+    const updatedCampaigns = campaigns.map(c => 
+      c.id === campaign.id 
+        ? {
+            ...c,
+            assets: c.assets.map(asset => 
+              asset.id === assetId 
+                ? { ...asset, status: 'approved' }
+                : asset
+            )
+          }
+        : c
+    );
+    setCampaigns(updatedCampaigns);
+    localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
+  };
+
   const handleBriefUploaded = (briefContent: string) => {
     const updatedCampaigns = campaigns.map(c => 
       c.id === campaign.id 
@@ -420,6 +436,7 @@ const Campaign = () => {
                   key={asset.id}
                   asset={asset}
                   onClick={() => handleAssetClick(asset)}
+                  onApprove={handleAssetApproval}
                 />
               ))}
             </div>
@@ -443,6 +460,7 @@ const Campaign = () => {
         <AssetModal 
           asset={selectedAsset} 
           onClose={closeModal}
+          onApprove={handleAssetApproval}
         />
       )}
     </div>
