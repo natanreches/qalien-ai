@@ -28,7 +28,8 @@ export const OnboardingVisualIdentityColorSection = ({
   onClearExtracted
 }: OnboardingVisualIdentityColorSectionProps) => {
   const [isColorModalOpen, setIsColorModalOpen] = useState(false);
-  const canDeleteIndividual = extractedFromGuidelines && extractionVerified === false;
+  const [showAdjustMessage, setShowAdjustMessage] = useState(true);
+  const canDeleteIndividual = extractedFromGuidelines && extractionVerified === false && showAdjustMessage;
 
   const handleColorSelect = (color: string) => {
     onUpdateColor(colorPalette.length, color);
@@ -38,6 +39,21 @@ export const OnboardingVisualIdentityColorSection = ({
   const handleAddColorClick = () => {
     setIsColorModalOpen(true);
   };
+
+  const handleDismissAdjustMessage = () => {
+    setShowAdjustMessage(false);
+    // Reset verification status to undefined to show the feedback prompt again
+    if (onVerifyExtraction) {
+      onVerifyExtraction(undefined as any);
+    }
+  };
+
+  // Reset showAdjustMessage when extractionVerified changes to false
+  React.useEffect(() => {
+    if (extractionVerified === false) {
+      setShowAdjustMessage(true);
+    }
+  }, [extractionVerified]);
 
   return (
     <>
@@ -94,21 +110,31 @@ export const OnboardingVisualIdentityColorSection = ({
           </div>
         )}
 
-        {extractionVerified === false && (
+        {extractionVerified === false && showAdjustMessage && (
           <div className="mb-4 p-3 bg-red-900/20 border border-red-600/30 rounded-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <X className="h-4 w-4 text-red-500" />
                 <span className="text-red-400 text-sm">Please adjust the color palette below. You can remove incorrect colors individually or clear all.</span>
               </div>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={onClearExtracted}
-                className="border-red-600 text-red-400 hover:bg-red-600/10"
-              >
-                Clear All
-              </Button>
+              <div className="flex space-x-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={onClearExtracted}
+                  className="border-red-600 text-red-400 hover:bg-red-600/10"
+                >
+                  Clear All
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleDismissAdjustMessage}
+                  className="border-gray-600 text-gray-400 hover:bg-gray-600/10"
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
             </div>
           </div>
         )}

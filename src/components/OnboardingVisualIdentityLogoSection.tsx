@@ -30,6 +30,13 @@ export const OnboardingVisualIdentityLogoSection = ({
   const [showAdjustMessage, setShowAdjustMessage] = useState(true);
   const canDeleteIndividual = extractedFromGuidelines && extractionVerified === false && showAdjustMessage;
 
+  // Reset showAdjustMessage when extractionVerified changes to false
+  React.useEffect(() => {
+    if (extractionVerified === false) {
+      setShowAdjustMessage(true);
+    }
+  }, [extractionVerified]);
+
   return (
     <Card className="p-6 bg-gray-800 border-gray-700">
       <div className="flex items-center justify-between mb-4">

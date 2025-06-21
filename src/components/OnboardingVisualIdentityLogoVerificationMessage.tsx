@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Check, X, AlertTriangle } from 'lucide-react';
+import { Check, X, AlertTriangle, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface OnboardingVisualIdentityLogoVerificationMessageProps {
@@ -18,6 +18,14 @@ export const OnboardingVisualIdentityLogoVerificationMessage = ({
   showAdjustMessage,
   onDismissAdjustMessage
 }: OnboardingVisualIdentityLogoVerificationMessageProps) => {
+  const handleDismissAdjustMessage = () => {
+    onDismissAdjustMessage();
+    // Reset verification status to undefined to show the feedback prompt again
+    if (onVerifyExtraction) {
+      onVerifyExtraction(undefined as any);
+    }
+  };
+
   // Show verification prompt when extraction hasn't been verified yet
   if (extractionVerified === undefined) {
     return (
@@ -80,12 +88,13 @@ export const OnboardingVisualIdentityLogoVerificationMessage = ({
               onClick={onClearExtracted}
               className="border-red-600 text-red-400 hover:bg-red-600/10"
             >
+              <Trash2 className="h-3 w-3 mr-1" />
               Clear All
             </Button>
             <Button
               size="sm"
               variant="outline"
-              onClick={onDismissAdjustMessage}
+              onClick={handleDismissAdjustMessage}
               className="border-gray-600 text-gray-400 hover:bg-gray-600/10"
             >
               <X className="h-3 w-3" />
