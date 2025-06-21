@@ -249,7 +249,7 @@ export const ProfileSettings = () => {
                 </p>
               </div>
 
-              {/* Brand Name Pronunciation */}
+              {/* Brand Name Pronunciation - Moved here from separate section */}
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <Label htmlFor="pronunciation-weight" className="text-sm font-medium">

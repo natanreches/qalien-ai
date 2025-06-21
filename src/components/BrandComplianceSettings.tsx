@@ -302,6 +302,34 @@ export const BrandComplianceSettings = () => {
                   Controls adherence to preferred terminology, phrases, and language guidelines.
                 </p>
               </div>
+
+              {/* Brand Pronunciation - Moved here from Target Audience section */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="pronunciation-weight" className="text-sm font-medium text-gray-200 flex items-center">
+                    <Volume2 className="h-4 w-4 mr-2" />
+                    Brand Name Pronunciation
+                  </Label>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-400">{weights.brandPronunciation}%</span>
+                    <span className={`text-xs font-medium ${getWeightColor(weights.brandPronunciation)}`}>
+                      {getWeightDescription(weights.brandPronunciation)}
+                    </span>
+                  </div>
+                </div>
+                <Slider
+                  id="pronunciation-weight"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={[weights.brandPronunciation]}
+                  onValueChange={(value) => handleWeightChange('brandPronunciation', value)}
+                  className="w-full"
+                />
+                <p className="text-xs text-gray-500">
+                  Controls evaluation of correct brand name pronunciation in audio/video content.
+                </p>
+              </div>
             </div>
           </div>
 
@@ -338,34 +366,6 @@ export const BrandComplianceSettings = () => {
                 />
                 <p className="text-xs text-gray-500">
                   Evaluates how well content resonates with your defined target audience.
-                </p>
-              </div>
-
-              {/* Brand Pronunciation */}
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <Label htmlFor="pronunciation-weight" className="text-sm font-medium text-gray-200 flex items-center">
-                    <Volume2 className="h-4 w-4 mr-2" />
-                    Brand Name Pronunciation
-                  </Label>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-400">{weights.brandPronunciation}%</span>
-                    <span className={`text-xs font-medium ${getWeightColor(weights.brandPronunciation)}`}>
-                      {getWeightDescription(weights.brandPronunciation)}
-                    </span>
-                  </div>
-                </div>
-                <Slider
-                  id="pronunciation-weight"
-                  min={0}
-                  max={100}
-                  step={5}
-                  value={[weights.brandPronunciation]}
-                  onValueChange={(value) => handleWeightChange('brandPronunciation', value)}
-                  className="w-full"
-                />
-                <p className="text-xs text-gray-500">
-                  Controls evaluation of correct brand name pronunciation in audio/video content.
                 </p>
               </div>
             </div>
