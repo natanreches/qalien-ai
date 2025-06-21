@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Shield, Building, FileText, Upload, Scale, Globe } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface LegalRegulatory {
   industryRules: string;
@@ -30,6 +31,7 @@ export const OnboardingLegalRegulatory = ({
   const [legal, setLegal] = useState<LegalRegulatory>(legalRegulatory);
   const [selectedRegulations, setSelectedRegulations] = useState<string[]>(legalRegulatory.regulatoryRequirements || []);
   const [selectedJurisdictions, setSelectedJurisdictions] = useState<string[]>(legalRegulatory.jurisdictionNotes || []);
+  const { toast } = useToast();
 
   const industryOptions = [
     'Pharmaceutical', 'Financial Services', 'Alcohol', 'Cryptocurrency', 
@@ -74,6 +76,10 @@ export const OnboardingLegalRegulatory = ({
 
   const handleSave = () => {
     onLegalRegulatoryUpdated(legal);
+    toast({
+      title: "Legal & Regulatory Settings Saved",
+      description: "Your compliance requirements have been successfully updated.",
+    });
   };
 
   return (
