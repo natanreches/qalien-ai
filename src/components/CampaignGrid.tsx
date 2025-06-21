@@ -7,7 +7,13 @@ import { CreativeBriefUpload } from '@/components/CreativeBriefUpload';
 import { BriefAnalysis } from '@/components/BriefAnalysis';
 import { BriefAnalysis as BriefAnalysisType } from '@/services/briefAnalysis';
 
-export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false, onBriefUploaded, brandId }) => {
+export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false, onBriefUploaded, brandId }: {
+  campaigns: any;
+  onAssetClick: any;
+  showBriefs?: boolean;
+  onBriefUploaded: any;
+  brandId?: string;
+}) => {
   const navigate = useNavigate();
 
   const handleCampaignClick = (campaignId) => {
