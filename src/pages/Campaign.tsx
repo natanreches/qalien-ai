@@ -371,6 +371,9 @@ const Campaign = () => {
     campaign.assets.reduce((acc, asset) => acc + asset.compliance, 0) / campaign.assets.length
   ) : 0;
 
+  // Extract brief summary (first 200 characters)
+  const briefSummary = campaign.brief ? campaign.brief.substring(0, 200) + (campaign.brief.length > 200 ? '...' : '') : '';
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <Header />
@@ -447,24 +450,20 @@ const Campaign = () => {
                   Brief Available
                 </Badge>
                 
+                {/* Always show brief summary */}
+                <div className="p-4 bg-gray-700 rounded-lg">
+                  <h4 className="text-sm font-semibold text-white mb-2">Brief Summary</h4>
+                  <p className="text-gray-300 text-sm leading-relaxed">{briefSummary}</p>
+                </div>
+                
                 <Collapsible open={isBriefExpanded} onOpenChange={setIsBriefExpanded}>
                   <CollapsibleContent className="space-y-4">
                     <div className="p-4 bg-gray-700 rounded-lg">
-                      <h4 className="text-sm font-semibold text-white mb-2">Brief Content</h4>
-                      <p className="text-gray-300 text-sm leading-relaxed">{campaign.brief}</p>
+                      <h4 className="text-sm font-semibold text-white mb-2">Full Brief Content</h4>
+                      <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">{campaign.brief}</p>
                     </div>
-                    
-                    {campaign.briefAnalysis && (
-                      <BriefAnalysis analysis={campaign.briefAnalysis} />
-                    )}
                   </CollapsibleContent>
                 </Collapsible>
-                
-                {!isBriefExpanded && (
-                  <p className="text-gray-400 text-sm">
-                    Brief is available. Click "View Brief" to see the full content and analysis.
-                  </p>
-                )}
               </div>
             ) : (
               <p className="text-gray-400 text-sm">No creative brief uploaded yet. Upload one to provide guidance for this campaign.</p>
@@ -472,6 +471,7 @@ const Campaign = () => {
           </CardContent>
         </Card>
 
+        {/* Campaign Assets section - keep existing code the same */}
         <div className="bg-gray-800 rounded-xl shadow-sm border border-gray-700 p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-semibold text-white">Campaign Assets</h2>
