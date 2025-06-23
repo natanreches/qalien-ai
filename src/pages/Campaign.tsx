@@ -21,6 +21,7 @@ const baseMockCampaigns = [
     name: 'Summer 2024 Collection',
     brandId: 'jello',
     brief: '',
+    briefAnalysis: undefined,
     assets: [
       {
         id: '1',
@@ -83,6 +84,7 @@ const baseMockCampaigns = [
     name: 'Holiday Campaign 2023',
     brandId: 'philadelphia',
     brief: 'Focus on holiday baking and family traditions',
+    briefAnalysis: undefined,
     assets: [
       {
         id: '4',
@@ -127,6 +129,7 @@ const baseMockCampaigns = [
     name: 'Spring Launch 2024',
     brandId: 'caprisun',
     brief: '',
+    briefAnalysis: undefined,
     assets: [
       {
         id: '6',
@@ -243,6 +246,7 @@ const Campaign = () => {
       name: `Campaign ${id}`,
       brandId: referringBrandId || 'jello', // Use referring brand ID if available
       brief: '',
+      briefAnalysis: undefined,
       assets: []
     };
     
@@ -303,10 +307,10 @@ const Campaign = () => {
     localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
   };
 
-  const handleBriefUploaded = (briefContent: string) => {
+  const handleBriefUploaded = (briefContent: string, analysis) => {
     const updatedCampaigns = campaigns.map(c => 
       c.id === campaign.id 
-        ? { ...c, brief: briefContent }
+        ? { ...c, brief: briefContent, briefAnalysis: analysis }
         : c
     );
     setCampaigns(updatedCampaigns);
