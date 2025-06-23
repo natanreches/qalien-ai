@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, Folder, ChevronRight, FileText } from 'lucide-react';
@@ -7,12 +8,13 @@ import { CreativeBriefUpload } from '@/components/CreativeBriefUpload';
 import { BriefAnalysis } from '@/components/BriefAnalysis';
 import { BriefAnalysis as BriefAnalysisType } from '@/services/briefAnalysis';
 
-export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false, onBriefUploaded, brandId }: {
+export const CampaignGrid = ({ campaigns, onAssetClick, showBriefs = false, onBriefUploaded, brandId, onAssetRemoval }: {
   campaigns: any;
   onAssetClick: any;
   showBriefs?: boolean;
   onBriefUploaded: any;
   brandId?: string;
+  onAssetRemoval?: (assetId: any) => void;
 }) => {
   const navigate = useNavigate();
 
