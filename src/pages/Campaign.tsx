@@ -331,24 +331,6 @@ const Campaign = () => {
     }
   };
 
-  const handleCreateCampaign = (campaignData) => {
-    const newCampaign = {
-      id: Date.now().toString(),
-      name: campaignData.name,
-      brandId: campaign.brandId || 'jello',
-      brief: campaignData.brief || '',
-      briefAnalysis: campaignData.briefAnalysis,
-      assets: campaignData.assets || []
-    };
-
-    const updatedCampaigns = [...campaigns, newCampaign];
-    setCampaigns(updatedCampaigns);
-    localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
-    
-    // Navigate to the new campaign
-    navigate(`/campaign/${newCampaign.id}`);
-  };
-
   const handleBatchUploadComplete = (files, campaignId, campaignName) => {
     const newAssets = files.map(file => ({
       id: Math.random().toString(36).substr(2, 9),
@@ -410,12 +392,9 @@ const Campaign = () => {
                 </div>
               </div>
               
-              <div className="flex items-center space-x-6">
-                <div className="text-right">
-                  <div className="text-sm text-gray-400">Avg. Compliance</div>
-                  <div className="text-2xl font-bold text-white">{avgCompliance}%</div>
-                </div>
-                <CreateCampaignDialog onCreateCampaign={handleCreateCampaign} />
+              <div className="text-right">
+                <div className="text-sm text-gray-400">Avg. Compliance</div>
+                <div className="text-2xl font-bold text-white">{avgCompliance}%</div>
               </div>
             </div>
 

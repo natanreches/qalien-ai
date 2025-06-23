@@ -1,11 +1,11 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Upload, X, Plus, Folder } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface UploadFile {
@@ -29,10 +29,11 @@ interface BatchUploadModalProps {
 export const BatchUploadModal = ({ campaigns, onUploadComplete }: BatchUploadModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [files, setFiles] = useState<UploadFile[]>([]);
-  const [selectedCampaign, setSelectedCampaign] = useState<string>('');
-  const [newCampaignName, setNewCampaignName] = useState('');
-  const [isCreatingCampaign, setIsCreatingCampaign] = useState(false);
   const { toast } = useToast();
+
+  // If there's only one campaign, we're in a single campaign context
+  const isSingleCampaign = campaigns.length === 1;
+  const targetCampaign = isSingleCampaign ? campaigns[0] : null;
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || []);
@@ -77,31 +78,8 @@ export const BatchUploadModal = ({ campaigns, onUploadComplete }: BatchUploadMod
       return;
     }
 
-    let campaignId = selectedCampaign;
-    let campaignName = '';
-
-    if (isCreatingCampaign) {
-      if (!newCampaignName.trim()) {
-        toast({
-          title: "Error", 
-          description: "Please enter a campaign name",
-          variant: "destructive"
-        });
-        return;
-      }
-      campaignId = Date.now().toString();
-      campaignName = newCampaignName.trim();
-    } else {
-      if (!selectedCampaign) {
-        toast({
-          title: "Error",
-          description: "Please select a campaign",
-          variant: "destructive"
-        });
-        return;
-      }
-      campaignName = campaigns.find(c => c.id === selectedCampaign)?.name || '';
-    }
+    const campaignId = targetCampaign!.id;
+    const campaignName = targetCampaign!.name;
 
     onUploadComplete(files, campaignId, campaignName);
     
@@ -112,9 +90,6 @@ export const BatchUploadModal = ({ campaigns, onUploadComplete }: BatchUploadMod
 
     // Reset form
     setFiles([]);
-    setSelectedCampaign('');
-    setNewCampaignName('');
-    setIsCreatingCampaign(false);
     setIsOpen(false);
   };
 
@@ -128,7 +103,9 @@ export const BatchUploadModal = ({ campaigns, onUploadComplete }: BatchUploadMod
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] bg-gray-900 border-gray-700 max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-white">Upload Media to Campaign</DialogTitle>
+          <DialogTitle className="text-white">
+            Upload Media to {targetCampaign?.name}
+          </DialogTitle>
         </DialogHeader>
         
         <div className="space-y-6">
@@ -190,53 +167,6 @@ export const BatchUploadModal = ({ campaigns, onUploadComplete }: BatchUploadMod
               </div>
             </div>
           )}
-
-          {/* Campaign Selection */}
-          <div className="space-y-3">
-            <Label className="text-gray-300">Campaign</Label>
-            <div className="flex items-center space-x-2">
-              <Button
-                type="button"
-                variant={!isCreatingCampaign ? "default" : "outline"}
-                onClick={() => setIsCreatingCampaign(false)}
-                className="border-gray-600"
-              >
-                <Folder className="h-4 w-4 mr-2" />
-                Existing
-              </Button>
-              <Button
-                type="button"
-                variant={isCreatingCampaign ? "default" : "outline"}
-                onClick={() => setIsCreatingCampaign(true)}
-                className="border-gray-600"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                New
-              </Button>
-            </div>
-
-            {isCreatingCampaign ? (
-              <Input
-                placeholder="Enter new campaign name"
-                value={newCampaignName}
-                onChange={(e) => setNewCampaignName(e.target.value)}
-                className="bg-gray-800 border-gray-600 text-white"
-              />
-            ) : (
-              <Select value={selectedCampaign} onValueChange={setSelectedCampaign}>
-                <SelectTrigger className="bg-gray-800 border-gray-600 text-white">
-                  <SelectValue placeholder="Select a campaign" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-600">
-                  {campaigns.map(campaign => (
-                    <SelectItem key={campaign.id} value={campaign.id} className="text-white">
-                      {campaign.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
         </div>
 
         <div className="flex justify-end space-x-2 pt-4 border-t border-gray-700">
