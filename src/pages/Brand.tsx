@@ -22,6 +22,7 @@ const brandData = {
         id: '1',
         name: 'Summer Gelatin Campaign 2024',
         brief: 'Focus on refreshing summer treats and family gatherings',
+        briefAnalysis: undefined,
         assets: [
           {
             id: '1',
@@ -45,6 +46,7 @@ const brandData = {
         id: '2',
         name: 'Holiday Baking Campaign',
         brief: 'Promote Philadelphia cream cheese for holiday baking recipes',
+        briefAnalysis: undefined,
         assets: [
           {
             id: '2',
@@ -68,6 +70,7 @@ const brandData = {
         id: '3',
         name: 'Back to School 2024',
         brief: 'Target parents with convenient, fun lunch options for kids',
+        briefAnalysis: undefined,
         assets: [
           {
             id: '3',
@@ -197,6 +200,7 @@ const Brand = () => {
     const newCampaign = {
       id: Date.now().toString(),
       name: campaignData.name,
+      brandId: id, // Ensure new campaigns have the correct brand ID
       brief: campaignData.brief || '',
       briefAnalysis: campaignData.briefAnalysis,
       assets: campaignData.assets || []
