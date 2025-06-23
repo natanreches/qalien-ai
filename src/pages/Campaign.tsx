@@ -8,9 +8,11 @@ import { BatchUploadModal } from '@/components/BatchUploadModal';
 import { CreativeBriefUpload } from '@/components/CreativeBriefUpload';
 import { BriefAnalysis } from '@/components/BriefAnalysis';
 import { CreateCampaignDialog } from '@/components/CreateCampaignDialog';
-import { ArrowLeft, Calendar, Folder, FileText } from 'lucide-react';
+import { ArrowLeft, Calendar, Folder, FileText, ChevronDown, ChevronUp, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 // Mock data - in a real app this would come from an API
 const baseMockCampaigns = [
@@ -173,6 +175,7 @@ const Campaign = () => {
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [campaigns, setCampaigns] = useState(baseMockCampaigns);
   const [isLoading, setIsLoading] = useState(true);
+  const [isBriefExpanded, setIsBriefExpanded] = useState(false);
   
   // Store the referring brand ID when component mounts
   const [referringBrandId, setReferringBrandId] = useState<string | null>(null);
@@ -397,33 +400,73 @@ const Campaign = () => {
                 <div className="text-2xl font-bold text-white">{avgCompliance}%</div>
               </div>
             </div>
+          </div>
+        </div>
 
-            {/* Creative Brief Section */}
-            <div className="mt-6 p-4 bg-gray-700 rounded-lg">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-lg font-semibold text-white flex items-center">
-                  <FileText className="h-5 w-5 mr-2" />
-                  Creative Brief
-                </h3>
+        {/* Enhanced Creative Brief Section */}
+        <Card className="bg-gray-800 border-gray-700 mb-8">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-white flex items-center">
+                <FileText className="h-5 w-5 mr-2" />
+                Creative Brief
+              </CardTitle>
+              <div className="flex items-center space-x-2">
+                {campaign.brief && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsBriefExpanded(!isBriefExpanded)}
+                    className="border-gray-600 text-gray-300"
+                  >
+                    <Eye className="h-4 w-4 mr-2" />
+                    {isBriefExpanded ? 'Hide Brief' : 'View Brief'}
+                    {isBriefExpanded ? (
+                      <ChevronUp className="h-4 w-4 ml-2" />
+                    ) : (
+                      <ChevronDown className="h-4 w-4 ml-2" />
+                    )}
+                  </Button>
+                )}
                 <CreativeBriefUpload 
                   campaignId={campaign.id}
                   onBriefUploaded={handleBriefUploaded}
                   hasExistingBrief={!!campaign.brief}
                 />
               </div>
-              {campaign.brief ? (
-                <div className="space-y-2">
-                  <Badge variant="secondary" className="bg-green-100 text-green-800">
-                    Brief Available
-                  </Badge>
-                  <p className="text-gray-300 text-sm">{campaign.brief}</p>
-                </div>
-              ) : (
-                <p className="text-gray-400 text-sm">No creative brief uploaded yet. Upload one to provide guidance for this campaign.</p>
-              )}
             </div>
-          </div>
-        </div>
+          </CardHeader>
+          <CardContent>
+            {campaign.brief ? (
+              <div className="space-y-4">
+                <Badge variant="secondary" className="bg-green-100 text-green-800">
+                  Brief Available
+                </Badge>
+                
+                <Collapsible open={isBriefExpanded} onOpenChange={setIsBriefExpanded}>
+                  <CollapsibleContent className="space-y-4">
+                    <div className="p-4 bg-gray-700 rounded-lg">
+                      <h4 className="text-sm font-semibold text-white mb-2">Brief Content</h4>
+                      <p className="text-gray-300 text-sm leading-relaxed">{campaign.brief}</p>
+                    </div>
+                    
+                    {campaign.briefAnalysis && (
+                      <BriefAnalysis analysis={campaign.briefAnalysis} />
+                    )}
+                  </CollapsibleContent>
+                </Collapsible>
+                
+                {!isBriefExpanded && (
+                  <p className="text-gray-400 text-sm">
+                    Brief is available. Click "View Brief" to see the full content and analysis.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <p className="text-gray-400 text-sm">No creative brief uploaded yet. Upload one to provide guidance for this campaign.</p>
+            )}
+          </CardContent>
+        </Card>
 
         <div className="bg-gray-800 rounded-xl shadow-sm border border-gray-700 p-6">
           <div className="flex items-center justify-between mb-6">
