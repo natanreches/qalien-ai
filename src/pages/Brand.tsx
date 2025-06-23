@@ -185,6 +185,15 @@ const Brand = () => {
     localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
   };
 
+  const handleAssetRemoval = (assetId) => {
+    const updatedCampaigns = campaigns.map(c => ({
+      ...c,
+      assets: c.assets.filter(asset => asset.id !== assetId)
+    }));
+    setCampaigns(updatedCampaigns);
+    localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
+  };
+
   const handleBriefUploaded = (brief, campaignId, analysis) => {
     const updatedCampaigns = campaigns.map(c => 
       c.id === campaignId 
@@ -262,6 +271,7 @@ const Brand = () => {
               showBriefs={true}
               onBriefUploaded={handleBriefUploaded}
               brandId={id}
+              onAssetRemoval={handleAssetRemoval}
             />
           </TabsContent>
 

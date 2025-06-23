@@ -307,6 +307,19 @@ const Campaign = () => {
     localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
   };
 
+  const handleAssetRemoval = (assetId) => {
+    const updatedCampaigns = campaigns.map(c => 
+      c.id === campaign.id 
+        ? {
+            ...c,
+            assets: c.assets.filter(asset => asset.id !== assetId)
+          }
+        : c
+    );
+    setCampaigns(updatedCampaigns);
+    localStorage.setItem('campaigns', JSON.stringify(updatedCampaigns));
+  };
+
   const handleBriefUploaded = (briefContent: string, analysis) => {
     const updatedCampaigns = campaigns.map(c => 
       c.id === campaign.id 
@@ -471,7 +484,7 @@ const Campaign = () => {
           </CardContent>
         </Card>
 
-        {/* Campaign Assets section - keep existing code the same */}
+        {/* Campaign Assets section */}
         <div className="bg-gray-800 rounded-xl shadow-sm border border-gray-700 p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-semibold text-white">Campaign Assets</h2>
@@ -489,6 +502,7 @@ const Campaign = () => {
                   asset={asset}
                   onClick={() => handleAssetClick(asset)}
                   onApprove={handleAssetApproval}
+                  onRemove={handleAssetRemoval}
                 />
               ))}
             </div>

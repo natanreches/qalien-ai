@@ -1,10 +1,11 @@
 
 import React from 'react';
-import { Eye, Clock, CheckCircle, AlertCircle, XCircle, Video } from 'lucide-react';
+import { Eye, Clock, CheckCircle, AlertCircle, XCircle, Video, Trash2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/button';
 import { AssetApprovalButton } from './AssetApprovalButton';
 
-export const AssetCard = ({ asset, onClick, onApprove }) => {
+export const AssetCard = ({ asset, onClick, onApprove, onRemove }) => {
   const getComplianceColor = (score) => {
     if (score >= 80) return 'text-green-600 bg-green-100';
     if (score >= 60) return 'text-yellow-600 bg-yellow-100';
@@ -99,6 +100,13 @@ export const AssetCard = ({ asset, onClick, onApprove }) => {
     }
   };
 
+  const handleRemove = (e) => {
+    e.stopPropagation(); // Prevent triggering the card click
+    if (onRemove && window.confirm('Are you sure you want to remove this asset?')) {
+      onRemove(asset.id);
+    }
+  };
+
   return (
     <TooltipProvider>
       <Tooltip>
@@ -122,6 +130,18 @@ export const AssetCard = ({ asset, onClick, onApprove }) => {
                   {asset.type === 'video' ? 'Video' : 'Image'}
                 </span>
               </div>
+              {onRemove && (
+                <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={handleRemove}
+                    className="h-8 w-8 p-0"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
             </div>
             
             <div className="p-4">
